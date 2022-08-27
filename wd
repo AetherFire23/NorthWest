@@ -1,0 +1,106 @@
+// Automatically generated code
+public GameObject InputBox;
+public RectTransform InputBoxRectTransform;
+public CanvasRenderer InputBoxCanvasRenderer;
+public Image InputBoxImage;
+public MessageBoxFacade InputBoxMessageBoxFacade;
+
+public GameObject Panel;
+public RectTransform PanelRectTransform;
+public CanvasRenderer PanelCanvasRenderer;
+public Image PanelImage;
+public VerticalLayoutGroup PanelVerticalLayoutGroup;
+public ContentSizeFitter PanelContentSizeFitter;
+
+public GameObject PanelText;
+public RectTransform PanelTextRectTransform;
+public CanvasRenderer PanelTextCanvasRenderer;
+public TextMeshProUGUI PanelTextTextMeshProUGUI;
+
+public GameObject Button;
+public RectTransform ButtonRectTransform;
+public CanvasRenderer ButtonCanvasRenderer;
+public Image ButtonImage;
+public Button ButtonButton;
+
+public GameObject ButtonText;
+public RectTransform ButtonTextRectTransform;
+public CanvasRenderer ButtonTextCanvasRenderer;
+public TextMeshProUGUI ButtonTextTextMeshProUGUI;
+
+public GameObject InputField;
+public RectTransform InputFieldRectTransform;
+public CanvasRenderer InputFieldCanvasRenderer;
+public Image InputFieldImage;
+public TMP_InputField InputFieldTMP_InputField;
+
+public GameObject TextArea;
+public RectTransform TextAreaRectTransform;
+public RectMask2D TextAreaRectMask2D;
+
+public GameObject Placeholder;
+public RectTransform PlaceholderRectTransform;
+public CanvasRenderer PlaceholderCanvasRenderer;
+public TextMeshProUGUI PlaceholderTextMeshProUGUI;
+public LayoutElement PlaceholderLayoutElement;
+
+public GameObject Text;
+public RectTransform TextRectTransform;
+public CanvasRenderer TextCanvasRenderer;
+public TextMeshProUGUI TextTextMeshProUGUI;
+// End of automatically generated code
+
+void Start()
+{
+// Automatically generated code
+InputBox = this.transform.gameObject;
+InputBoxRectTransform = InputBox.GetComponent<RectTransform>();
+InputBoxCanvasRenderer = InputBox.GetComponent<CanvasRenderer>();
+InputBoxImage = InputBox.GetComponent<Image>();
+InputBoxMessageBoxFacade = InputBox.GetComponent<MessageBoxFacade>();
+
+Panel = InputBox.transform.Find("Panel").gameObject;
+PanelRectTransform = Panel.GetComponent<RectTransform>();
+PanelCanvasRenderer = Panel.GetComponent<CanvasRenderer>();
+PanelImage = Panel.GetComponent<Image>();
+PanelVerticalLayoutGroup = Panel.GetComponent<VerticalLayoutGroup>();
+PanelContentSizeFitter = Panel.GetComponent<ContentSizeFitter>();
+
+PanelText = Panel.transform.Find("PanelText").gameObject;
+PanelTextRectTransform = PanelText.GetComponent<RectTransform>();
+PanelTextCanvasRenderer = PanelText.GetComponent<CanvasRenderer>();
+PanelTextTextMeshProUGUI = PanelText.GetComponent<TextMeshProUGUI>();
+
+Button = InputBox.transform.Find("Button").gameObject;
+ButtonRectTransform = Button.GetComponent<RectTransform>();
+ButtonCanvasRenderer = Button.GetComponent<CanvasRenderer>();
+ButtonImage = Button.GetComponent<Image>();
+ButtonButton = Button.GetComponent<Button>();
+
+ButtonText = Button.transform.Find("ButtonText").gameObject;
+ButtonTextRectTransform = ButtonText.GetComponent<RectTransform>();
+ButtonTextCanvasRenderer = ButtonText.GetComponent<CanvasRenderer>();
+ButtonTextTextMeshProUGUI = ButtonText.GetComponent<TextMeshProUGUI>();
+
+InputField = InputBox.transform.Find("InputField").gameObject;
+InputFieldRectTransform = InputField.GetComponent<RectTransform>();
+InputFieldCanvasRenderer = InputField.GetComponent<CanvasRenderer>();
+InputFieldImage = InputField.GetComponent<Image>();
+InputFieldTMP_InputField = InputField.GetComponent<TMP_InputField>();
+
+TextArea = InputField.transform.Find("TextArea").gameObject;
+TextAreaRectTransform = TextArea.GetComponent<RectTransform>();
+TextAreaRectMask2D = TextArea.GetComponent<RectMask2D>();
+
+Placeholder = TextArea.transform.Find("Placeholder").gameObject;
+PlaceholderRectTransform = Placeholder.GetComponent<RectTransform>();
+PlaceholderCanvasRenderer = Placeholder.GetComponent<CanvasRenderer>();
+PlaceholderTextMeshProUGUI = Placeholder.GetComponent<TextMeshProUGUI>();
+PlaceholderLayoutElement = Placeholder.GetComponent<LayoutElement>();
+
+Text = TextArea.transform.Find("Text").gameObject;
+TextRectTransform = Text.GetComponent<RectTransform>();
+TextCanvasRenderer = Text.GetComponent<CanvasRenderer>();
+TextTextMeshProUGUI = Text.GetComponent<TextMeshProUGUI>();
+// End of automatically generated code
+}
