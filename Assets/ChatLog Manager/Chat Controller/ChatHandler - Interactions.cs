@@ -8,33 +8,35 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Assets.ChatLog_Manager.Chat_Controller;
 using Assets.ChatLog_Manager.Private_Rooms.ChatModels;
-using Assets.GameState_Management.Models;
 using Assets.GameState_Management;
+using WebAPI.Models;
 
 // Interactions veut dire que c'est les fonctions accédées par d'autres classes.
 public partial class ChatHandler : ITickable, IInitializable 
 {
     public void ChangeChatRoom(Guid roomId)  
     {
-        this.ClearChatlogC();
+        //Clear
         this.CurrentRoomId = roomId;
-        var playersInChangedRoom = GetPlayersInChatRoom(roomId); 
-        _invitePanel.InitializePlayerEntries(playersInChangedRoom);
+        this.ClearChatlogC(); // messages
+        _invitePanel.ClearPlayerEntries();
+
+        //Post 
         this.PostMessagesInRoom(roomId);
+        var playersInChangedRoom = GetPlayersInChatRoom(roomId);
+        _invitePanel.InitializePlayerEntries(playersInChangedRoom);
     }
 
-    public List<PlayerModel> GetPlayersInChatRoom(Guid roomId)
+    public List<Player> GetPlayersInChatRoom(Guid roomId)
     {
         bool isGlobalId = _mainPlayer.GameId == roomId;
-
-        if(isGlobalId)
-        {
-            return _gameStateManager.Players;
-        }
+        if(isGlobalId) return _gameStateManager.Players;
+        
         // le WEb Api renvoie tous les PRivateRoomParticipants qui partagent une room avec le joueur. Mais là je filtre pour une room spécifique
-        List<PrivateChatRoomParticipant> roomsWithId = _gameStateManager.ParticipantsInPlayerRooms.Where(room => room.RoomId == roomId).ToList(); //refaire avec where et select
-        List<Guid> playersIdsInSelectedRoom = roomsWithId.Select(room => room.ParticipantId).ToList();
-        List<PlayerModel> playerInSelectedRoom = _gameStateManager.Players.Where(player => playersIdsInSelectedRoom.Contains(player.Id)).ToList();
+        List<PrivateChatRoomParticipant> ParticipantsInSameRoom = _gameStateManager.ParticipantsInPlayerRooms.Where(room => room.RoomId == roomId).ToList(); //refaire avec where et select
+        List<Guid> playersIdsInSelectedRoom = ParticipantsInSameRoom.Select(room => room.ParticipantId).ToList();
+        List<Player> playerInSelectedRoom = _gameStateManager.Players.Where(player => playersIdsInSelectedRoom.Contains(player.Id)).ToList(); // nexclut pas le main player
+
         return playerInSelectedRoom;
     }
 }

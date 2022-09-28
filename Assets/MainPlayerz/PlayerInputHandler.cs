@@ -31,7 +31,6 @@ namespace Assets
 
         public void Tick() // remember, jaggy cos physics are 50 fps
         {
-
             if (IsMouseClicked)
             {
                 var mouseAsWorldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -45,7 +44,5 @@ namespace Assets
         public void FixedTick()
         {
         }
-
-       
     }
 }

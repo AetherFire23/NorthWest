@@ -36,16 +36,16 @@ namespace Assets
         {
             var playerModels = GetOtherPlayers().Result;
 
-            foreach (global::PlayerModel player in playerModels)
+            foreach (global::Player player in playerModels)
             {
                 var newOtherPlayerInstance = new OtherPlayerInstance(_otherCharactersObjectContainer.GameObject);
-                newOtherPlayerInstance.InstanceBehaviour.textComp.text = player.Name;
+                newOtherPlayerInstance.AccessScript.textComp.text = player.Name;
                 newOtherPlayerInstance.UnityInstance.name = player.Name;
                 newOtherPlayerInstance.UnityInstance.gameObject.transform.position = player.GetPosition();
             }
         }
 
-        public async Task<List<global::PlayerModel>> GetOtherPlayers()
+        public async Task<List<global::Player>> GetOtherPlayers()
         {
             var players = await _clientCalls.GetPlayers();
             return players.Where(player => player.Id != _mainPlayer.playerModel.Id).ToList(); // excludes main player

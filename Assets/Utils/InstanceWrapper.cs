@@ -7,14 +7,14 @@ using UnityEngine;
 
 public abstract class InstanceWrapper<T> // where T == the script on the main gameobject
 {
+    // Cette classe load un prefab, et le spawn sur un parent. P
     public GameObject UnityInstance;
-    public T InstanceBehaviour;
+    public T AccessScript;
 
     private GameObject _prefab;
     private string _resourceName;
     private string _parentName;
-
-    /// <summary>
+     
     /// This constructor instantiates the unity instance under the given gameobject 
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -23,7 +23,12 @@ public abstract class InstanceWrapper<T> // where T == the script on the main ga
         _resourceName = resourceName;
         _prefab = LoadPrefab();
         UnityInstance = CreateInstanceUnderParent(_prefab, parent);
-        InstanceBehaviour = UnityInstance.GetComponentSafely<T>();
+        AccessScript = UnityInstance.GetComponentSafely<T>();
+    }
+
+    ~InstanceWrapper()
+    {
+        this.UnityInstance.SelfDestroy();
     }
 
     private GameObject LoadPrefab()

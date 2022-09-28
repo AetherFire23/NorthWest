@@ -34,17 +34,17 @@ public class DialogManager
         {
             case DialogType.MessageBox:
                 {
-                    this.CurrentDialog = new NewMessageBoxInstance(_messageCanvas, message);
+                    this.CurrentDialog = new NewMessageBoxUGI(_messageCanvas, message);
                     break;
                 }
             case DialogType.YesNoDialog:
                 {
-                    this.CurrentDialog = new YesNoDialogInstance(_messageCanvas, message);
+                    this.CurrentDialog = new YesNoDialogUGI(_messageCanvas, message);
                     break;
                 }
             case DialogType.AmountDialog:
                 {
-                    this.CurrentDialog = new AmountDialogInstance(_messageCanvas, message);
+                    this.CurrentDialog = new AmountDialogUGI(_messageCanvas, message);
                     break;
                 }
         }
@@ -54,14 +54,8 @@ public class DialogManager
     {
         if (CurrentDialog == null) return false;
 
-        if (CurrentDialog.IsShowing)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return CurrentDialog.IsShowing;
+
         throw new NotImplementedException("IsWaitingForInput() should always return a value before reaching the end of method.");
     }
 }

@@ -5,17 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Zenject;
 using UnityEngine;
-using Assets.GameState_Management.Models;
 using Cysharp.Threading.Tasks;
 using Assets.ChatLog_Manager;
+using WebAPI.GameState_Management;
+using WebAPI.Models;
+using WebAPI.Models.DTOs;
 
 namespace Assets.GameState_Management
 {
     public class GameStateManager : ITickable, IInitializable
     {
         public List<PrivateChatRoomParticipant> ParticipantsInPlayerRooms => _currentGameState.PrivateChatRooms;
-        public List<MessageModel> NewMessages => _currentGameState.NewMessages ?? new();
-        public List<PlayerModel> Players => _currentGameState.Players ?? new();
+        public List<Message> NewMessages => _currentGameState.NewMessages ?? new();
+        public List<Player> Players => _currentGameState.Players ?? new();
+        public PlayerDTO LocalPlayerDTO => _currentGameState.PlayerDTO ?? new();
+        public List<PrivateInvitation> PrivateInvitations => _currentGameState.Invitations ?? new();
+
+        public RoomDTO CurrentRoom => _currentGameState.CurrentRoom ?? new();
         public bool HasTicked => _tickTimer.HasTicked;
 
         private GameState _currentGameState;

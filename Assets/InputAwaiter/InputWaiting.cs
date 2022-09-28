@@ -11,6 +11,10 @@ namespace Assets.InputAwaiter
     public class InputWaiting 
     {
         private readonly DialogManager _dialogManager;
+        // private readonly InputWaiting _inputWaiting;
+
+        // InputWaiting inputWaiting,
+        //_inputWaiting = inputWaiting;
         public InputWaiting(DialogManager dialogManager)
         {
             _dialogManager = dialogManager;
@@ -32,6 +36,20 @@ namespace Assets.InputAwaiter
             while (isWaiting)
             {
                 // isWaiting = _messageManager.IsWaitingForInput(); // need to use new dialog system
+                await UniTask.Yield();
+            }
+        }
+
+        // await _inputManager.WaitForDialogInput()
+        public async UniTask WaitForResult() // comment faire ca clean ? // faire un singleton InputManager
+        {
+            bool isWaiting = true;
+            while (isWaiting)
+            {
+                isWaiting = _dialogManager.IsWaitingForInput();
+
+                Debug.Log($"State of waiting for input : {isWaiting}");
+                //await UniTask.Delay(100); // faudrait tester avec du delay 
                 await UniTask.Yield();
             }
         }

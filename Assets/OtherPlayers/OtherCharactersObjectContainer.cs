@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.OtherPlayers
 {
-    public class OtherCharactersObjectContainer : GameObjectWrapper
+    public class OtherCharactersObjectContainer : UGFWrapper
     {
         public OtherCharactersObjectContainer(OtherCharactersScriptObject otherCharactersScriptObject) : base(otherCharactersScriptObject)
         {

@@ -1,5 +1,4 @@
 ﻿using Assets.ChatLog_Manager;
-using Assets.GameState_Management.Models;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
@@ -9,6 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using WebAPI.GameState_Management;
+using WebAPI.Models;
 
 public class ClientCalls
 {
@@ -27,6 +28,7 @@ public class ClientCalls
     private const string _uriUpdateCurrentRoomId = "https://localhost:7060/TheCrew/UpdateCurrentRoomId"; //require parameter
     private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair"; //require parameter
     private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; //require parameter
+    private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; //require parameter
 
 
     public ClientCalls()
@@ -69,11 +71,11 @@ public class ClientCalls
         return stuff;
     }
 
-    public async UniTask<List<PlayerModel>> GetPlayersCurrentGameChatRoom(Guid playerGuid)
+    public async UniTask<List<Player>> GetPlayersCurrentGameChatRoom(Guid playerGuid)
     {
         var infos = new ControllerRequestInformation(_uriGetPlayersCurrentGameChatRoom, ParameterOptions.RequiresParameter);
         infos.AddParameter("playerGuid", playerGuid.ToString());
-        List<PlayerModel> currentPlayersInChatRoom = GetRequest<List<PlayerModel>>(infos).AsTask().Result;
+        List<Player> currentPlayersInChatRoom = GetRequest<List<Player>>(infos).AsTask().Result;
         return currentPlayersInChatRoom;
     }
 
@@ -99,11 +101,11 @@ public class ClientCalls
         // va falloir je check c quoi qui renvoie un string 
     }
 
-    public List<PlayerModel> GetPlayersCurrentGame(Guid playerGuid)
+    public List<Player> GetPlayersCurrentGame(Guid playerGuid)
     {
         var infos = new ControllerRequestInformation(_uriGetPlayersCurrentGame, ParameterOptions.RequiresParameter);
         infos.AddParameter("playerGuid", playerGuid.ToString());
-        var players = GetRequest<List<PlayerModel>>(infos).AsTask().Result;
+        var players = GetRequest<List<Player>>(infos).AsTask().Result;
         return players;
     }
 
@@ -115,11 +117,11 @@ public class ClientCalls
         return privateGuids;
     }
 
-    public async UniTask<List<MessageModel>> GetGlobalMessages(Guid playerId)
+    public async UniTask<List<Message>> GetGlobalMessages(Guid playerId)
     {
         var infos = new ControllerRequestInformation(_uriGetGlobalMessages, ParameterOptions.RequiresParameter);
         infos.AddParameter("playerGuid", playerId.ToString());
-        var globalMessages = await GetRequest<List<MessageModel>>(infos);
+        var globalMessages = await GetRequest<List<Message>>(infos);
         return globalMessages;
     }
 
@@ -134,23 +136,32 @@ public class ClientCalls
     }
 
 
-    public async UniTask<PlayerModel> GetPlayerByName(string playerName)
+    public async UniTask<Player> GetPlayerByName(string playerName)
     {
         var infos = new ControllerRequestInformation(_uriGetPlayerByName, ParameterOptions.RequiresParameter);
         infos.AddParameter("name", playerName);
-        var player = await GetRequest<PlayerModel>(infos);
+        var player = await GetRequest<Player>(infos);
         return player;
     }
-    public async UniTask<List<PlayerModel>> GetPlayers()
+    public async UniTask<List<Player>> GetPlayers()
     {
         var infos = new ControllerRequestInformation(_GetPlayers);
-        List<PlayerModel> players = await GetRequest<List<PlayerModel>>(infos);
+        List<Player> players = await GetRequest<List<Player>>(infos);
         return players;
     }
-    public async UniTask UpdatePosition(PlayerModel model)
+    public async UniTask UpdatePosition(Player model)
     {
-        var infos = new ControllerRequestInformation(_updatePositionByPlayerModel, ParameterOptions.None, model);
+        var infos = new ControllerRequestInformation(_updatePositionByPlayerModel, ParameterOptions.RequiresBody, model); // p-t parameoptiers a none ?
         await PutRequest(infos);
+    }
+
+    public async UniTask TransferItemOwnerShip(Guid ownerId, Guid targetId, Guid itemId)
+    {
+        var infos = new ControllerRequestInformation(_uriTransferItem, ParameterOptions.RequiresParameter);
+        infos.AddParameter("ownerId", ownerId.ToString());
+        infos.AddParameter("targetId", targetId.ToString());
+        infos.AddParameter("itemId", itemId.ToString());
+        var result = PutRequest(infos).AsTask().Result;
     }
 
     private async UniTask<string> PutRequest(ControllerRequestInformation infos)
@@ -174,7 +185,6 @@ public class ClientCalls
         {
             Debug.LogError($" The followng path <{infos.Path}> is invalid");
             response.EnsureSuccessStatusCode();
-
         }
         string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         T result = JsonConvert.DeserializeObject<T>(responseBody);

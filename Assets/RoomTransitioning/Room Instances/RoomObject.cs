@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.RoomTransitioning.Room_Instances
 {
-    public abstract class RoomObject : GameObjectWrapper
+    public abstract class RoomObject : UGFWrapper
     {
         public RoomType roomType = RoomType.Start; // doit etre hardcoded
         public Vector3 CenterPosition = new Vector3(0, 0, 0); // must be hardcoded in inherited class

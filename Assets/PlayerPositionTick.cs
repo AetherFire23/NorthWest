@@ -47,7 +47,7 @@ namespace Assets
         public void PushLocalPlayerPositionToServer()
         {
             //Pusher notre currentposition au serveur
-            PlayerModel toUpdate = _mainPlayer.playerModel; // pour acceer au bon GUI 
+            Player toUpdate = _mainPlayer.playerModel; // pour acceer au bon GUI 
             toUpdate.X = _playerFacade.Position.x;
             toUpdate.Y = _playerFacade.Position.y;
             toUpdate.Z = _playerFacade.Position.z;
@@ -56,7 +56,7 @@ namespace Assets
 
         public void UpdateOtherCharactersPosition()
         {
-            List<PlayerModel> players = _clientCalls.GetPlayers().AsTask().Result;
+            List<Player> players = _clientCalls.GetPlayers().AsTask().Result;
 
             foreach (var apiPlayer in players)
             {

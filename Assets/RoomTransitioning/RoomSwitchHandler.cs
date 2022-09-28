@@ -1,4 +1,5 @@
-﻿using Assets.Raycasts;
+﻿using Assets.InputAwaiter;
+using Assets.Raycasts;
 using Assets.RoomTransitioning.Room_Instances;
 using Cysharp.Threading.Tasks;
 using System;
@@ -18,20 +19,29 @@ namespace Assets.RoomTransitioning
         private readonly PlayerScript _playerScript;
         private readonly RoomHandler _roomHandler;
         private readonly MainPlayer _mainPlayer;
+        private readonly InputWaiting _inputWaiting;
+        private readonly ClientCalls _clientCalls;
 
-        public RoomSwitchHandler(DialogManager dialogManager, PlayerInputState playerInputState, PlayerScript playerScript, RoomHandler roomHandler, MainPlayer mainPlayer)
+        public RoomSwitchHandler(DialogManager dialogManager,
+            PlayerInputState playerInputState,
+            PlayerScript playerScript,
+            RoomHandler roomHandler,
+            MainPlayer mainPlayer,
+            InputWaiting inputWaiting,
+            ClientCalls clientCalls)
         {
             _dialogManager = dialogManager;
             _playerInputState = playerInputState;
             _playerScript = playerScript;
             _roomHandler = roomHandler;
             _mainPlayer = mainPlayer;
+            _inputWaiting = inputWaiting;
+            _clientCalls = clientCalls;
         }
 
         public async void Tick() // This shows the yesnodialog
         {
             if (!_dialogManager.CanInvokeNewInstance()) return;
-
             if (!Input.GetMouseButton(0)) return;
 
             IIDRaycastResult rayResult = IIDRaycast.MouseRaycast(hit => hit.CompareTag("Door"));
@@ -39,7 +49,7 @@ namespace Assets.RoomTransitioning
 
             _dialogManager.CreateDialog(DialogType.YesNoDialog, "Do you want to spend 1 action point ? ");
 
-            await ForInput();
+            await _inputWaiting.WaitForResult();
 
             if (_dialogManager.DialogResult == DialogResult.Ok) // changed 
             {
@@ -50,7 +60,6 @@ namespace Assets.RoomTransitioning
             _dialogManager.CurrentDialog = null; // must null AFTER using that unless will conflit with CanInvokeNewInstance
         }
 
-
         public void SwitchRooms(RoomType targetRoomType)
         {
             RoomObject targetRoom = _roomHandler.Rooms.FirstOrDefault(room => room.roomType == targetRoomType);
@@ -60,33 +69,9 @@ namespace Assets.RoomTransitioning
             _playerScript.transform.position = targetPosition;
             _playerInputState.TargetPosition = targetPosition; // set le targetposition pour ne pas que y veulent revenir automatic ou est la souris 
 
-            targetRoom.Behaviour.gameObject.SetActive(true);
-            currentRoom.Behaviour.gameObject.SetActive(false);
+            targetRoom.AccessScript.gameObject.SetActive(true);
+            currentRoom.AccessScript.gameObject.SetActive(false);
             _mainPlayer.CurrentRoomType = targetRoomType;
-        }
-
-        public async UniTask ForKeyPress(KeyCode keycode)
-        {
-            bool hasPressedKey = Input.GetKey(keycode);
-
-            Func<KeyCode, bool> input = Input.GetKey;
-            while (input(keycode) == false)
-            {
-                Debug.Log($"{nameof(input)}");
-                await UniTask.Yield();
-            }
-        }
-
-        public async UniTask ForInput()
-        {
-            bool isWaiting = true;
-            while (isWaiting)
-            {
-                isWaiting = _dialogManager.IsWaitingForInput();
-
-                Debug.Log($"State of waiting for input : {isWaiting}");
-                await UniTask.Yield();
-            }
         }
     }
 }

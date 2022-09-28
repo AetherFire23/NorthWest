@@ -4,14 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using Proyecto26;
 using UnityEditor;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using System.Linq;
 using Assets.Raycasts;
 
-public class SimpleManager : MonoBehaviour // chu rendu a fixer les instance (pt pas necessaire finalement de tout loader par binding 
+public class SimpleManager : MonoBehaviour 
 {
     private PlayerScript _playerFacade;
     private MainPlayer _mainPlayer;
@@ -36,7 +35,7 @@ public class SimpleManager : MonoBehaviour // chu rendu a fixer les instance (pt
     {
         string playerName = "lolzida";
 
-        PlayerModel model = _clientCalls.GetPlayerByName(playerName).AsTask().Result;
+        Player model = _clientCalls.GetPlayerByName(playerName).AsTask().Result;
 
         _mainPlayer.playerModel = model;
 
@@ -67,7 +66,7 @@ public class SimpleManager : MonoBehaviour // chu rendu a fixer les instance (pt
         }
     }
 
-    public void DebugLocalPlayer(PlayerModel model)
+    public void DebugLocalPlayer(Player model)
     {
         if (model != null)
         {

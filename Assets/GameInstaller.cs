@@ -8,6 +8,7 @@ using Assets.Dialogs;
 using Assets.GameState_Management;
 using Assets.InputAwaiter;
 using Assets.Inventory;
+using Assets.Inventory.ItemsUGF;
 using Assets.OtherPlayers;
 using Assets.RoomTransitioning;
 using Assets.RoomTransitioning.Room_Instances;
@@ -20,6 +21,8 @@ public class GameInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
+        Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
+
         Container.BindInterfacesAndSelfTo<OtherCharactersManager>().AsSingle();
 
         Container.BindInterfacesAndSelfTo<MainPlayer>().AsSingle();
@@ -36,14 +39,13 @@ public class GameInstaller : MonoInstaller
 
         Container.BindInterfacesTo<GameController>().AsSingle();
 
-        Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle();
 
         Container.Bind<DialogManager>().AsSingle();
 
         Container.Bind<ClientCalls>().AsSingle();
         Container.BindInterfacesAndSelfTo<ChatHandler>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<PlayerPositionTick>().AsSingle();
-        Container.BindInterfacesAndSelfTo<InitializeButtons>().AsSingle();
+        Container.BindInterfacesAndSelfTo<OpenCloseButtonUGF>().AsSingle();
 
 
         Container.BindInterfacesAndSelfTo<FirstRoomObject>().AsSingle();
@@ -59,21 +61,22 @@ public class GameInstaller : MonoInstaller
 
         // Classes wrapping a Zenject binding
         Container.Bind<OtherCharactersObjectContainer>().AsSingle();
-        Container.BindInterfacesAndSelfTo<RoomTabBar>().AsSingle();
+        Container.BindInterfacesAndSelfTo<RoomTabBarUGF>().AsSingle();
 
-        Container.Bind<ChatWrapper>().AsSingle();
-        Container.BindInterfacesAndSelfTo<InvitePanel>().AsSingle();
-        Container.Bind<MessageCanvasObject>().AsSingle();
-        Container.Bind<ChatCanvasWrapper>().AsSingle();
+        Container.Bind<ChatUGF>().AsSingle();
+        Container.BindInterfacesAndSelfTo<PlayerInRoomPanelUGF>().AsSingle();
+        Container.Bind<MessageCanvasUGF>().AsSingle();
+        Container.Bind<ChatCanvasUGF>().AsSingle();
 
-        Container.BindInterfacesAndSelfTo<MinusButtonObject>().AsSingle();
-        Container.BindInterfacesAndSelfTo<PlusButtonObject>().AsSingle();
+        Container.BindInterfacesAndSelfTo<MinusButtonUGF>().AsSingle();
+        Container.BindInterfacesAndSelfTo<PlusButtonUGF>().AsSingle();
 
 
-        Container.BindInterfacesAndSelfTo<MainInviteButtonObject>().AsSingle();
-        Container.BindInterfacesAndSelfTo<MainInvitePanelObject>().AsSingle();
+        Container.BindInterfacesAndSelfTo<MainInviteButtonUGF>().AsSingle();
+        Container.BindInterfacesAndSelfTo<MainInvitePanelUGF>().AsSingle();
 
-        Container.BindInterfacesAndSelfTo<GlobalButtonObject>().AsSingle();
-
+        Container.BindInterfacesAndSelfTo<GlobalButtonUGF>().AsSingle();
+        Container.BindInterfacesAndSelfTo<InventoryPanelUGF>().AsSingle();
+        Container.BindInterfacesAndSelfTo<RoomInventoryUGF>().AsSingle();
     }
 }

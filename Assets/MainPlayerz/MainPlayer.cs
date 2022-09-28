@@ -11,7 +11,7 @@ namespace Assets
 {
     public class MainPlayer : ITickable, IInitializable // je devrais utiliser le inheritance de UnityObject pour gerer linstance et le script
     {
-        public PlayerModel playerModel;
+        public Player playerModel;
         public RoomType CurrentRoomType = RoomType.Start;
         public Guid Id => playerModel.Id;
         public Guid GameId => playerModel.GameId;
@@ -20,24 +20,18 @@ namespace Assets
 
         public MainPlayer(ClientCalls clientCalls )
         {
+            Guid defaultGameGuid = new Guid("DE74B055-BA84-41A2-BAEA-4E380293E227");
+            Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F");
+
             _clientCalls = clientCalls;
-            var FredPlayerModel = new PlayerModel()
+            var FredPlayerModel = new Player()
             {
-                Id = new Guid("F0415BB0-5F22-4E79-1D4C-08DA5F69A35F"),
-                GameId = new Guid("F76A4822-8D96-4073-E7F8-08DA70D59137"),
+                Id = defaultPlayer1Guid, // finir udpater les models de base
+                GameId = defaultGameGuid,
                 CurrentChatRoomId = new Guid("F76A4822-8D96-4073-E7F8-08DA70D59137"),
                 Name = "Fred",
             };
-
-            var benPlayerModel = new PlayerModel()
-            {
-                Id = new Guid("8B30559A-5237-4EE0-5769-08DA60F39FEF"),
-                CurrentChatRoomId = new Guid("F76A4822-8D96-4073-E7F8-08DA70D59137"),
-                Name = "ben",
-                GameId = new Guid("F76A4822-8D96-4073-E7F8-08DA70D59137"),
-            };
-
-            this.playerModel = benPlayerModel;
+            this.playerModel = FredPlayerModel;
         }
 
         public void Initialize()

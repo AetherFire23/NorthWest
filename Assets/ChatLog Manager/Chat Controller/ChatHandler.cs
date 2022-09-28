@@ -8,31 +8,30 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Assets.ChatLog_Manager.Chat_Controller;
 using Assets.ChatLog_Manager.Private_Rooms.ChatModels;
-using Assets.GameState_Management.Models;
 using Assets.GameState_Management;
 
 public partial class ChatHandler : ITickable, IInitializable
 {
-    public List<TextObjectInstance> _messagesInstances { get; set; } = new();
+    public List<TextObjectUGI> _messagesInstances { get; set; } = new();
     public Guid CurrentRoomId { get; set; } // initialized through room tabs 
 
     private readonly MainPlayer _mainPlayer;
-    private readonly ChatWrapper _ChatObject;
+    private readonly ChatUGF _ChatObject;
     private readonly MessageService _messageService;
     private readonly GameStateManager _gameStateManager;
-    private readonly InvitePanel _invitePanel;
+    private readonly PlayerInRoomPanelUGF _invitePanel;
     private SimpleTimer _timer = new SimpleTimer(3);
 
-    private List<MessageModel> LoadedMessages { get; set; } = new();
+    private List<Message> LoadedMessages { get; set; } = new();
     private bool HasNewMessage => _gameStateManager.NewMessages.Any(); // Event pour ne pas check tous les frames ?
     private Guid GlobalGameId => _mainPlayer.GameId;
 
     public ChatHandler( 
         MainPlayer mainPlayer,
-        ChatWrapper chatObject,
+        ChatUGF chatObject,
         MessageService messageService,
         GameStateManager gameState,
-        InvitePanel invitePanel)
+        PlayerInRoomPanelUGF invitePanel)
     {
         _ChatObject = chatObject;
         _mainPlayer = mainPlayer;
@@ -75,7 +74,7 @@ public partial class ChatHandler : ITickable, IInitializable
         }
     }
 
-    private List<MessageModel> RemoveExistingMessages(List<MessageModel> existingMessages, List<MessageModel> newMessages)
+    private List<Message> RemoveExistingMessages(List<Message> existingMessages, List<Message> newMessages)
     {
         var oldMessagesIds = existingMessages.Select(mess => mess.Id);
         var newMessagesOnly = newMessages.Where(mess => !oldMessagesIds.Contains(mess.Id)).ToList();
@@ -88,11 +87,11 @@ public partial class ChatHandler : ITickable, IInitializable
         CreateMessageInstances(roomMessages);
     }
 
-    private void CreateMessageInstances(List<MessageModel> messages)
+    private void CreateMessageInstances(List<Message> messages)
     {
-        foreach (MessageModel message in messages)
+        foreach (Message message in messages)
         {
-            var newInstance = new TextObjectInstance(_ChatObject.ChatBehaviour.ContentObject, message);
+            var newInstance = new TextObjectUGI(_ChatObject.ChatBehaviour.ContentObject, message);
             this._messagesInstances.Add(newInstance);
         }
     }

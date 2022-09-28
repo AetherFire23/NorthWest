@@ -10,7 +10,7 @@ namespace Assets.OtherPlayers
     public class OtherPlayerInstance : InstanceWrapper<OtherCharacterBehaviour>
     {
         private const string otherCharacterPrefabPath = "someOtherCharacter";
-        public global::PlayerModel model; // database 
+        public global::Player model; // database 
 
         public OtherPlayerInstance(GameObject parent) : base(otherCharacterPrefabPath, parent)
         {

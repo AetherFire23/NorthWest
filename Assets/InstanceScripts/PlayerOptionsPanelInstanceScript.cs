@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.ChatLog_Manager.Private_Rooms.PlayerOptionsPanel;
 public class PlayerOptionsPanelInstanceScript : MonoBehaviour
 {
     [SerializeField] public GameObject InvitePanelContainer;
