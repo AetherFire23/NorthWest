@@ -14,16 +14,7 @@ namespace Assets.Raycasts
         public RaycastHit2D FirstResult { get; set; }
         public GameObject HitObject { get; set; }
 
-        public IIDRaycastResult(List<RaycastHit2D> raycastResults)
-        {
-            this.RaycastResults = raycastResults;
-            this.HasFoundHit = RaycastResults.Any();
-
-            if(HasFoundHit)
-            {
-                this.FirstResult = this.RaycastResults.First();
-                this.HitObject = this.FirstResult.transform.gameObject;
-            }
-        }
-    }
+        public MonoBehaviour script { get; set; }
+    };
 }
+

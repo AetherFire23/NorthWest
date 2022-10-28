@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class GameTaskScript : MonoBehaviour
 {
-    public GameTaskType GameTaskType;
+    [SerializeField]
+    public GameTaskType _gameTaskType;
+
+    [SerializeField]
+    public string StationName = "CookStation1";
 
     void Start()
     {

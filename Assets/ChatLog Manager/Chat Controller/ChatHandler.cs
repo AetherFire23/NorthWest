@@ -9,13 +9,14 @@ using Cysharp.Threading.Tasks;
 using Assets.ChatLog_Manager.Chat_Controller;
 using Assets.ChatLog_Manager.Private_Rooms.ChatModels;
 using Assets.GameState_Management;
+using Assets.Big_Tick_Energy;
 
 public partial class ChatHandler : ITickable, IInitializable
 {
     public List<TextObjectUGI> _messagesInstances { get; set; } = new();
     public Guid CurrentRoomId { get; set; } // initialized through room tabs 
 
-    private readonly MainPlayer _mainPlayer;
+    private readonly GlobalTick _globalTick;
     private readonly ChatUGF _ChatObject;
     private readonly MessageService _messageService;
     private readonly GameStateManager _gameStateManager;
@@ -23,18 +24,18 @@ public partial class ChatHandler : ITickable, IInitializable
     private SimpleTimer _timer = new SimpleTimer(3);
 
     private List<Message> LoadedMessages { get; set; } = new();
-    private bool HasNewMessage => _gameStateManager.NewMessages.Any(); // Event pour ne pas check tous les frames ?
-    private Guid GlobalGameId => _mainPlayer.GameId;
+    private bool HasNewMessage => _gameStateManager.NewMessages.Any();
+    private Guid GlobalGameId => _gameStateManager.LocalPlayerDTO.GameId;
 
     public ChatHandler( 
-        MainPlayer mainPlayer,
         ChatUGF chatObject,
         MessageService messageService,
         GameStateManager gameState,
-        PlayerInRoomPanelUGF invitePanel)
-    {
+        PlayerInRoomPanelUGF invitePanel,
+        GlobalTick globalTick)
+    { 
+        _globalTick = globalTick;
         _ChatObject = chatObject;
-        _mainPlayer = mainPlayer;
         _messageService = messageService;
         _gameStateManager = gameState;
         _invitePanel = invitePanel;
@@ -42,36 +43,27 @@ public partial class ChatHandler : ITickable, IInitializable
 
     public void Initialize()
     {
-        this.CurrentRoomId = GlobalGameId;
-
+        this.CurrentRoomId = GlobalGameId; 
         var playersInGlobal = _gameStateManager.Players;
         _invitePanel.InitializePlayerEntries(playersInGlobal);
+
+        CreateMessageInstances(_gameStateManager.NewMessages); // initialiser les messages ici pour pas que le gamestate <oublie> les messages au 1er tick.
+        _globalTick.TimerTicked += this.OnTimerTick;
     }
 
     public void Tick() // faudra implementer du scrolling. 
     {
-        bool userHasPressedEnter = Input.GetKeyDown(KeyCode.Return);
-        if (userHasPressedEnter)
-        {
-            MessageResult messageResult = GetInputMessageResult();
-            if (messageResult.IsEmpty) return;
+        //bool userHasPressedEnter = Input.GetKeyDown(KeyCode.Return);
+        //if (userHasPressedEnter)
+        //{
+        //    MessageResult messageResult = GetInputMessageResult();
+        //    if (messageResult.IsEmpty) return;
 
-            _messageService.SendMessageToDatabase(messageResult.Message, this.CurrentRoomId);
-            _ChatObject.ClearInputField();
-        }
+        //    _messageService.SendMessageToDatabase(messageResult.Message, this.CurrentRoomId);
+        //    _ChatObject.ClearInputField();
+        //}
 
-        LoadNewMessages();
         _timer.AddTime(Time.deltaTime);
-    }
-
-    private void LoadNewMessages()
-    {
-        if (HasNewMessage)
-        {
-            var onlyNewMessages = RemoveExistingMessages(LoadedMessages, _gameStateManager.NewMessages);
-            this.LoadedMessages.AddRange(onlyNewMessages);
-            CreateMessageInstances(onlyNewMessages);
-        }
     }
 
     private List<Message> RemoveExistingMessages(List<Message> existingMessages, List<Message> newMessages)
@@ -100,5 +92,22 @@ public partial class ChatHandler : ITickable, IInitializable
     {
         _messagesInstances.ForEach(message => message.UnityInstance.SelfDestroy());
         _messagesInstances.Clear();
+    }
+
+    private void OnTimerTick(object source, EventArgs e)
+    {
+        _globalTick.SubscribedMembers.Add(this.GetType().Name);
+        LoadNewMessages();
+    }
+
+    private void LoadNewMessages() // subbed to tick
+    {
+        if (HasNewMessage) // naffiche pas les 1ers messages car ceci n<est pas called. en 1er dans levent
+        {
+            var newGameStateMessages = this._gameStateManager.NewMessages;
+           // var onlyNewMessages = RemoveExistingMessages(LoadedMessages, newGameStateMessages); // should be empty by now because im not loading every frame
+            this.LoadedMessages.AddRange(newGameStateMessages);
+            CreateMessageInstances(newGameStateMessages);
+        }
     }
 }

@@ -20,7 +20,6 @@ public class GameController : IInitializable, ITickable // je pourrais mettre le
 
     public void Initialize()
     {
-        Debug.Log("yeah");
     }
 
     public void Tick()

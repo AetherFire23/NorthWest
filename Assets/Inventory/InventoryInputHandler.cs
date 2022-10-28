@@ -8,6 +8,10 @@ using UnityEngine;
 using Assets.GameState_Management;
 using WebAPI.Models;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
+using Assets.Input_Management;
+using UnityEngine.EventSystems;
+using Assets.Raycasts.NewRaycasts;
 
 namespace Assets.Inventory
 {
@@ -15,58 +19,68 @@ namespace Assets.Inventory
     {
         private readonly GameStateManager _gameStateManager;
         private readonly ClientCalls _clientCalls;
-        public InventoryInputHandler(GameStateManager gameStateManager, ClientCalls clientCalls)
+        private readonly NewInputManager _newInputManager;
+        private readonly NewRayCaster _newRayCaster;
+
+        public InventoryInputHandler(GameStateManager gameStateManager, ClientCalls clientCalls, NewInputManager newInputManager, NewRayCaster newRayCaster)
         {
+            _newRayCaster = newRayCaster;
             _gameStateManager = gameStateManager;
             _clientCalls = clientCalls;
+            _newInputManager = newInputManager;
         }
 
         public void Tick()
         {
-            var rayResult = UIRaycast.MouseRaycastResult(hit => hit.gameObject.layer == 6); // 6 = item layer
-            if (!rayResult.HasFoundHit) return;
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = _newInputManager.PointerPosition;
+            List<UnityEngine.EventSystems.RaycastResult> raycastResult = new List<UnityEngine.EventSystems.RaycastResult>();
+             EventSystem.current.RaycastAll(eventData, raycastResult);
 
-            if (Input.GetMouseButtonDown(0))
+            var filteredRaycast = raycastResult.Where(x=> x.gameObject.layer == 6);
+
+            if (!filteredRaycast.Any()) return;
+
+            var rayResult = filteredRaycast.First();
+
+            if (_newInputManager.Pressed)
             {
-                Debug.Log(rayResult.GameObject.name);
+                Debug.Log(rayResult.gameObject.name);
             }
 
             // Devrait override le layer quand yer picked up pour aller par-dessus toute 
             // solution je pense c'était au niveau de Unity et des Canvas 
-            if (Input.GetMouseButton(0))
+            if (_newInputManager.Held)
             {
-                Debug.Log(rayResult.GameObject.name);
+                Debug.Log(rayResult.gameObject.gameObject.name);
 
-                rayResult.GameObject.transform.position = Input.mousePosition; // SetItemAtMousePosition();
+                rayResult.gameObject.transform.position = _newInputManager.PointerPosition; // SetItemAtMousePosition();
             }
 
-            if (Input.GetMouseButtonUp(0)) // quand je lâche la souris
+            if (_newInputManager.Released) // quand je lâche la souris
             {
-                //trouver la slote et set le parent, set la position
-                var slotsBehindMouse = UIRaycast.MouseRaycastResult(hit => hit.gameObject.tag == "Slot");
 
-                if (slotsBehindMouse.HasFoundHit) // Je check si j'ai trouve un slot
+              //  var slotsBehindMouse = UIRaycast.MouseRaycastResult(hit => hit.gameObject.tag == "Slot");
+
+                var slotsBehindMouse2 = _newRayCaster.PointerUIRayCast(x=> x.gameObject.tag == "Slot");
+
+                if (slotsBehindMouse2.HasFoundHit) // Je check si j'ai trouve un slot
                 {
-                    //inserer condition ici pour ne pas mettre  2 items dans le meme slot. 
-                    //faudrait faire en sorte que ca change le contained Item dans le slot class. 
 
-                    //si oui, ce nouveau slot est son parent
-                    rayResult.GameObject.GetComponent<RectTransform>().SetParent(slotsBehindMouse.GameObject.transform);
+                    rayResult.gameObject.GetComponent<RectTransform>().SetParent(slotsBehindMouse2.GameObject.transform);
 
-                    // Mais si ce nouveau slot appartient a linventaire de la piece et que litem venait du joueur, il faut avertir le serveur
 
-                    // Donc est-ce qua la base javais pris un item du joueur ?
-                    Item selectedItem = rayResult.GameObject.GetComponent<ItemScript>().selfWrapper.Item;
+
+                    Item selectedItem = rayResult.gameObject.GetComponent<ItemScript>().selfWrapper.Item;
                     bool IsOwnedByPlayer = selectedItem.OwnerId == _gameStateManager.LocalPlayerDTO.Id; // bug car je nupdate pas 
-                    bool isReleasedOnRoomSlot = slotsBehindMouse.GameObject.GetComponent<SlotScript>().SelfWrapper.IsRoomSlot;
+                    bool isReleasedOnRoomSlot = slotsBehindMouse2.GameObject.GetComponent<SlotScript>().SelfWrapper.IsRoomSlot;
                     if (IsOwnedByPlayer)
                     {
                         
                         if (isReleasedOnRoomSlot)
-                        { // si oui, il faut avertir le serveur. 
-                            // modifier litem et son ownerID ? - nah, on va check periodiquement si ya des changes I guess
+                        {
                             Guid ownerId = _gameStateManager.LocalPlayerDTO.Id;
-                            Guid targetId = _gameStateManager.CurrentRoom.Id; // Target cest la currentroom.
+                            Guid targetId = _gameStateManager.Room.Id; // Target cest la currentroom.
                             Guid itemId = selectedItem.Id; // item id pas found ? 
                             _clientCalls.TransferItemOwnerShip(ownerId, targetId, itemId).AsTask();
                         }
@@ -76,7 +90,7 @@ namespace Assets.Inventory
                     {
                         if(!isReleasedOnRoomSlot) // donc un player slot
                         {
-                            Guid ownerId = _gameStateManager.CurrentRoom.Id;
+                            Guid ownerId = _gameStateManager.Room.Id;
                             Guid targetId = _gameStateManager.LocalPlayerDTO.Id; // Target cest la currentroom.
                             Guid itemId = selectedItem.Id; // item id pas found ? 
                             _clientCalls.TransferItemOwnerShip(ownerId, targetId, itemId).AsTask();
@@ -85,14 +99,8 @@ namespace Assets.Inventory
                     }
                 }
 
-                // pas oublier l'inverse : 
 
-                // peu importe ce qui se passe, on retourne litem a son parent
-                rayResult.GameObject.GetComponent<RectTransform>().localPosition = Vector3.zero.WithOffset(44.5f, 0, 0); // SetItemBackToSlotPosition();
-
-                // Comment savoir si l'objet appartenait au joueur et savoir que je veux le mettre dans la room ? 
-                // Je pourrais changer ItemType a ItemModel
-                // Ensuite 
+                rayResult.gameObject.GetComponent<RectTransform>().localPosition = Vector3.zero.WithOffset(44.5f, 0, 0); // SetItemBackToSlotPosition();
             }
         }
     }

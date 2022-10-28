@@ -14,6 +14,7 @@ using WebAPI.Models;
 public class ClientCalls
 {
     private readonly HttpClient _client;
+
     private const string _uriGetPlayerByName = "https://localhost:7060/TheCrew/GetPlayerByName"; // parameters : name
     private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
     private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionByPlayerModel"; // // requiresbodys
@@ -29,6 +30,9 @@ public class ClientCalls
     private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair"; //require parameter
     private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; //require parameter
     private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; //require parameter
+    private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom"; //require parameter
+
+    private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask"; //require body & param
 
 
     public ClientCalls()
@@ -39,18 +43,32 @@ public class ClientCalls
 
     ~ClientCalls()
     {
+        _client.Dispose();
+    }
+
+    public void DestroyClient()
+    {
         _client.CancelPendingRequests();
         _client.Dispose();
     }
 
     public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
     {
-        var infos = new ControllerRequestInformation(_uriGetGameState, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerId", playerId.ToString());
-        string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
-        infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
-        var gameState = GetRequest<GameState>(infos).AsTask().Result;
-        return gameState;
+        try
+        {
+            var infos = new ControllerRequestInformation(_uriGetGameState, ParameterOptions.RequiresParameter);
+            infos.AddParameter("playerId", playerId.ToString());
+            string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
+            infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
+            var gameState = GetRequest<GameState>(infos).AsTask().Result;
+            return gameState;
+        }
+        catch
+        {
+            Debug.LogError("Web API not found, please exit game");
+            Application.Quit();
+        }
+        return null;
     }
 
     public async UniTask<string> AddPlayerRoomPair(Guid playerId, Guid newRoomGuid)
@@ -60,15 +78,6 @@ public class ClientCalls
         infos.AddParameter("newRoomGuid", newRoomGuid.ToString());
         var yeah = PutRequest(infos).AsTask().Result;
         return yeah;
-    }
-
-    public async UniTask<string> UpdateCurrentRoomId(Guid playerId, Guid currentRoomId)
-    {
-        var infos = new ControllerRequestInformation(_uriUpdateCurrentRoomId, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerGuid", playerId.ToString());
-        infos.AddParameter("currentChatRoom", currentRoomId.ToString());
-        var stuff = PutRequest(infos).AsTask().Result;
-        return stuff;
     }
 
     public async UniTask<List<Player>> GetPlayersCurrentGameChatRoom(Guid playerGuid)
@@ -101,30 +110,6 @@ public class ClientCalls
         // va falloir je check c quoi qui renvoie un string 
     }
 
-    public List<Player> GetPlayersCurrentGame(Guid playerGuid)
-    {
-        var infos = new ControllerRequestInformation(_uriGetPlayersCurrentGame, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerGuid", playerGuid.ToString());
-        var players = GetRequest<List<Player>>(infos).AsTask().Result;
-        return players;
-    }
-
-    public List<Guid> GetPrivateRoomGuids(Guid playerGuid)
-    {
-        var infos = new ControllerRequestInformation(_uriGetPrivateRoomGuids, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerGuid", playerGuid.ToString());
-        List<Guid> privateGuids = GetRequest<List<Guid>>(infos).AsTask().Result;
-        return privateGuids;
-    }
-
-    public async UniTask<List<Message>> GetGlobalMessages(Guid playerId)
-    {
-        var infos = new ControllerRequestInformation(_uriGetGlobalMessages, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerGuid", playerId.ToString());
-        var globalMessages = await GetRequest<List<Message>>(infos);
-        return globalMessages;
-    }
-
     public string PutNewMessageToServer(Guid guid, Guid roomId, string newMessage) // pourrais changer pis Guid du player 
     {
         var infos = new ControllerRequestInformation(_uriPutMessage, ParameterOptions.RequiresParameter);
@@ -135,14 +120,6 @@ public class ClientCalls
         return responseContent;
     }
 
-
-    public async UniTask<Player> GetPlayerByName(string playerName)
-    {
-        var infos = new ControllerRequestInformation(_uriGetPlayerByName, ParameterOptions.RequiresParameter);
-        infos.AddParameter("name", playerName);
-        var player = await GetRequest<Player>(infos);
-        return player;
-    }
     public async UniTask<List<Player>> GetPlayers()
     {
         var infos = new ControllerRequestInformation(_GetPlayers);
@@ -164,12 +141,41 @@ public class ClientCalls
         var result = PutRequest(infos).AsTask().Result;
     }
 
+    public string ChangeRoom(Guid playerId, string targetRoomName)
+    {
+        var infos = new ControllerRequestInformation(_uriChangeRoom, ParameterOptions.RequiresParameter );
+        infos.AddParameter("playerId", playerId.ToString() );
+        infos.AddParameter("targetRoomName", targetRoomName);
+        var result = PutRequest(infos).AsTask().Result;
+
+        return result;
+    }
+
+    public string CookTask(Guid playerId, string stationName)
+    {
+        Dictionary<string, string> parameters = new Dictionary<string, string>()
+        {
+            {"stationName", stationName }
+        };
+        return TryExecuteGameTask(playerId, GameTaskType.Cook, parameters);
+
+    }
+
+    private string TryExecuteGameTask(Guid playerId, GameTaskType taskCode, Dictionary<string, string> parameters)
+    {
+        var infos = new ControllerRequestInformation(_uriTryExeGameTask, ParameterOptions.RequiresBodyAndParameter, parameters);
+        infos.AddParameter("playerId", playerId.ToString());
+        infos.AddParameter("taskCode", Convert.ToInt32(taskCode).ToString());
+        var result = PutRequest(infos).AsTask().Result;
+        return result;
+    }
+
     private async UniTask<string> PutRequest(ControllerRequestInformation infos)
     {
         using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json");
         using HttpResponseMessage response = await _client.PutAsync(infos.Path, stringContent).ConfigureAwait(false);
 
-        if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             Debug.LogError($"The following path : {infos.Path} did not lead to a successful request.");
         }
@@ -181,7 +187,7 @@ public class ClientCalls
     private async UniTask<T> GetRequest<T>(ControllerRequestInformation infos)
     {
         using HttpResponseMessage response = await _client.GetAsync(infos.Path).ConfigureAwait(false);
-        if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
         {
             Debug.LogError($" The followng path <{infos.Path}> is invalid");
             response.EnsureSuccessStatusCode();

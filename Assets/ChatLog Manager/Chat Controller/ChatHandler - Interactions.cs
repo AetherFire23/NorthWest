@@ -29,7 +29,7 @@ public partial class ChatHandler : ITickable, IInitializable
 
     public List<Player> GetPlayersInChatRoom(Guid roomId)
     {
-        bool isGlobalId = _mainPlayer.GameId == roomId;
+        bool isGlobalId = _gameStateManager.LocalPlayerDTO.GameId == roomId;
         if(isGlobalId) return _gameStateManager.Players;
         
         // le WEb Api renvoie tous les PRivateRoomParticipants qui partagent une room avec le joueur. Mais là je filtre pour une room spécifique

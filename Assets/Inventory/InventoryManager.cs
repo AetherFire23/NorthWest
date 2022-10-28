@@ -1,4 +1,5 @@
-﻿using Assets.GameState_Management;
+﻿using Assets.Big_Tick_Energy;
+using Assets.GameState_Management;
 using Assets.Inventory.ItemsUGF;
 using Assets.Inventory.Player_Item;
 using Assets.Inventory.Slot;
@@ -21,15 +22,15 @@ namespace Assets.Inventory
         List<SlotUGI> roomSlots = new List<SlotUGI>();
         List<ItemUGI> roomItems = new List<ItemUGI>();
 
-        private SimpleTimer _simpleTimer = new(7f);
-
         private readonly GameStateManager _gameStateManager;
+        private readonly GlobalTick _globalTick;
         private readonly InventoryPanelUGF _inventoryPanelUGF;
         private readonly RoomInventoryUGF _roomInventoryUGF;
         public InventoryManager(InventoryPanelUGF inventoryPanelUGF,
             GameStateManager gameStateManager,
-            RoomInventoryUGF roomInventoryUGF)
+            RoomInventoryUGF roomInventoryUGF, GlobalTick globalTick)
         {
+            _globalTick = globalTick;
             _inventoryPanelUGF = inventoryPanelUGF;
             _gameStateManager = gameStateManager;
             _roomInventoryUGF = roomInventoryUGF;
@@ -42,18 +43,20 @@ namespace Assets.Inventory
 
             InitializeRoomSlotAmount(2);
             InitializeRoomInventoryItems();
+
+            _globalTick.TimerTicked += this.OnTimerTicked;
+        }
+
+        private void OnTimerTicked(object source, EventArgs args)
+        {
+            _globalTick.SubscribedMembers.Add(this.GetType().Name);
+
+
+            FixItemChanges(); // quest-ce que "fix" veut dire ????
         }
 
         public void Tick()
         {
-            if(_simpleTimer.HasTicked)
-            {
-                FixItemChanges();
-
-                _simpleTimer.Reset();
-            }
-
-            _simpleTimer.AddTime(Time.deltaTime);
         }
 
         public void InitializeSlotAmount(int numberOfSlots)
@@ -97,7 +100,7 @@ namespace Assets.Inventory
 
         public void InitializeRoomInventoryItems()
         {
-            var apiItems = _gameStateManager.CurrentRoom.Items; // devrait renvoyer Item a la place pour comparer le owner 
+            var apiItems = _gameStateManager.Room.Items; // devrait renvoyer Item a la place pour comparer le owner 
             foreach (Item item in apiItems)
             {
                 foreach (SlotUGI slot in this.roomSlots) // va avoir plein de bugs ici avec les items parce que je skip pas les index quand yer pas free
@@ -122,7 +125,7 @@ namespace Assets.Inventory
 
             //BUG ICI (sais pas si va criss deuqoi en fait)
             // Je dedouble litem on dirait 
-            bool containsNewOrLessItems = allItems.Count != _gameStateManager.CurrentRoom.Items.Count + _gameStateManager.LocalPlayerDTO.Items.Count;
+            bool containsNewOrLessItems = allItems.Count != _gameStateManager.Room.Items.Count + _gameStateManager.LocalPlayerDTO.Items.Count;
 
             if (containsNewOrLessItems)
             {
@@ -130,22 +133,27 @@ namespace Assets.Inventory
 
             }
 
-            var gameStateItems = _gameStateManager.CurrentRoom.Items.Union(_gameStateManager.LocalPlayerDTO.Items).ToList();
+            var gameStateItems = _gameStateManager.Room.Items.Union(_gameStateManager.LocalPlayerDTO.Items).ToList();
             var currentShownItems = this.playerItems.Select(x => x.Item).Union(this.roomItems.Select(x => x.Item)).ToList();
 
+
+            // check pour un changement de owner
             foreach (var item in gameStateItems)
             {
                 foreach (var item2 in currentShownItems)
                 {
                     if (item.Id == item2.Id)
                     {
-                        if (item.OwnerId != item2.OwnerId)
+                        if (item.OwnerId != item2.OwnerId) // ici
                         {
                             DeleteAndReinitializeItems();
                         }
                     }
                 }
             }
+
+
+
         }
 
         public void DeleteAndReinitializeItems()

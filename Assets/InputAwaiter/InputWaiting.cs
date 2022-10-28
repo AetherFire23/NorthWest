@@ -41,6 +41,11 @@ namespace Assets.InputAwaiter
         }
 
         // await _inputManager.WaitForDialogInput()
+
+        /// <summary>
+        /// Contains a reference to the DialogManager and will wait until Resolve() has been called.
+        /// </summary>
+        /// <returns></returns>
         public async UniTask WaitForResult() // comment faire ca clean ? // faire un singleton InputManager
         {
             bool isWaiting = true;

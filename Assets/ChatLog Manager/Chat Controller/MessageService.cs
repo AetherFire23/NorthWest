@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.GameState_Management;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +11,22 @@ namespace Assets.ChatLog_Manager
     public class MessageService
     {
         private readonly ClientCalls _clientCalls;
-        private readonly MainPlayer _mainPlayer;
-
-        public MessageService(ClientCalls clientCalls,
-            MainPlayer mainPlayer)
+        private readonly GameStateManager _gameStateManager;
+        public MessageService(ClientCalls clientCalls, GameStateManager gameStateManager)
         {
             _clientCalls = clientCalls;
-            _mainPlayer = mainPlayer;
+            _gameStateManager = gameStateManager;
         }
 
         public void SendMessageToDatabase(string inputMessage, Guid roomId) 
         {
-            if (_mainPlayer.playerModel == null) 
+            if (_gameStateManager.PlayerUID == null) 
             {
                 Debug.Log("You can not send message when the local player is not initialized.");
                 return;
             }
 
-            Guid playerId = _mainPlayer.playerModel.Id;
+            Guid playerId = _gameStateManager.PlayerUID;
             string message = inputMessage;
             _clientCalls.PutNewMessageToServer(playerId, roomId, message);
         }
