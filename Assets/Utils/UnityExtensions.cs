@@ -25,9 +25,29 @@ public static class UnityExtensions
         return new Vector3(self.x, self.y, z);
     }
 
+    public static void MoveTowards(this GameObject self, Vector2 to, float speed)
+    {
+        self.transform.position = Vector3.MoveTowards(self.transform.position, to, speed * Time.deltaTime);
+    }
+
+    public static void SetParent(this GameObject self, GameObject parent)
+    {
+        self.transform.parent = parent.transform;
+    }
+
     public static Vector2 ToVector2(this Vector3 v3)
     {
         return new Vector2(v3.x, v3.y);
+    }
+
+    public static GameObject GetParent(this GameObject self)
+    {
+        return self.transform.parent.gameObject;
+    }
+
+    public static T GetComponentInParent<T>(this GameObject self)
+    {
+        return self.GetParent().GetComponent<T>();
     }
 
     public static T GetComponentSafely<T>(this GameObject self)
@@ -153,7 +173,7 @@ public static class UnityExtensions
         return directionEnum;
     }
 
-    public static Direction GetDirectionEnumFromAngle(float angle)
+    public static Direction GetDirectionEnumFromAngle(float angle) // signed angle
     {
         bool isWest = angle <= -136 && angle <= 180
               || angle <= 180 && angle >= 136;

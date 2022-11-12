@@ -21,11 +21,6 @@ public class DialogManager
         _messageCanvas = messageCanvas.gameObject;
     }
 
-    public bool CanInvokeNewInstance()
-    {
-        return !InstanceExists;
-    }
-
     public void CreateDialog(DialogType dialogType, string message) // adder les diags 
     {
         CurrentDialog = null; // Ne voulons pas ecraser le dialog au clic du bouton pour maintenir lacces au result

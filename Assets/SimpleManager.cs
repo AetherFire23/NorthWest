@@ -15,13 +15,14 @@ public class SimpleManager : MonoBehaviour
     private PlayerScript _playerFacade;
     private ClientCalls _clientCalls;
     private DialogManager _dialogManager;
-
+    [Inject] ClientCalls clientCalls;
     public bool HasInitializedGame { get; set; } = false;
     SimpleTimer timer = new SimpleTimer(0.2f);
     [SerializeField] Vector3 offsetValue;
     async void Start() 
     {
         Screen.SetResolution(960, 720, false);
+        var s = clientCalls.Test();
     }
 
     async void Update() 

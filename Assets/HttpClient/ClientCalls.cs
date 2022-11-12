@@ -1,4 +1,5 @@
 ﻿using Assets.ChatLog_Manager;
+using Assets.HttpClient.Shared_API_Models;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
@@ -33,6 +34,7 @@ public class ClientCalls
     private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom"; //require parameter
 
     private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask"; //require body & param
+    private const string _uriTest = "https://localhost:7060/TheCrew/dwdwdw"; //require body & param
 
 
     public ClientCalls()
@@ -78,6 +80,12 @@ public class ClientCalls
         infos.AddParameter("newRoomGuid", newRoomGuid.ToString());
         var yeah = PutRequest(infos).AsTask().Result;
         return yeah;
+    }
+
+    public ClientCallResult Test()
+    {
+        var info = new ControllerRequestInformation(_uriTest, ParameterOptions.None);
+        return PutRequest2(info).AsTask().Result;
     }
 
     public async UniTask<List<Player>> GetPlayersCurrentGameChatRoom(Guid playerGuid)
@@ -182,6 +190,20 @@ public class ClientCalls
         response.EnsureSuccessStatusCode();
         string responseContent = response.Content.ReadAsStringAsync().Result;
         return responseContent;
+    }
+
+    private async UniTask<ClientCallResult> PutRequest2(ControllerRequestInformation infos)
+    {
+        using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json");
+        using HttpResponseMessage response = await _client.PutAsync(infos.Path, stringContent).ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Debug.LogError($"The following path : {infos.Path} did not lead to a successful request.");
+        }
+        response.EnsureSuccessStatusCode();
+        string responseContent = response.Content.ReadAsStringAsync().Result;
+        return JsonConvert.DeserializeObject<ClientCallResult>(responseContent);
     }
 
     private async UniTask<T> GetRequest<T>(ControllerRequestInformation infos)

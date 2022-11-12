@@ -52,7 +52,7 @@ namespace Assets.Inventory
             _globalTick.SubscribedMembers.Add(this.GetType().Name);
 
 
-            FixItemChanges(); // quest-ce que "fix" veut dire ????
+          //  FixItemChanges(); // quest-ce que "fix" veut dire ????
         }
 
         public void Tick()
@@ -151,9 +151,6 @@ namespace Assets.Inventory
                     }
                 }
             }
-
-
-
         }
 
         public void DeleteAndReinitializeItems()

@@ -32,51 +32,36 @@ namespace Assets.Inventory
 
         public void Tick()
         {
-            PointerEventData eventData = new PointerEventData(EventSystem.current);
-            eventData.position = _newInputManager.PointerPosition;
-            List<UnityEngine.EventSystems.RaycastResult> raycastResult = new List<UnityEngine.EventSystems.RaycastResult>();
-             EventSystem.current.RaycastAll(eventData, raycastResult);
+            var rayResult = _newRayCaster.PointerUIRayCast(x => x.gameObject.layer == 6);
+            if (!rayResult.HasFoundHit) return;
 
-            var filteredRaycast = raycastResult.Where(x=> x.gameObject.layer == 6);
-
-            if (!filteredRaycast.Any()) return;
-
-            var rayResult = filteredRaycast.First();
-
-            if (_newInputManager.Pressed)
-            {
-                Debug.Log(rayResult.gameObject.name);
-            }
-
-            // Devrait override le layer quand yer picked up pour aller par-dessus toute 
-            // solution je pense c'était au niveau de Unity et des Canvas 
+            var hitObject = rayResult.GameObject;
             if (_newInputManager.Held)
             {
-                Debug.Log(rayResult.gameObject.gameObject.name);
+                Debug.Log(hitObject.gameObject.name);
 
-                rayResult.gameObject.transform.position = _newInputManager.PointerPosition; // SetItemAtMousePosition();
+                hitObject.transform.position = _newInputManager.PointerPosition; // SetItemAtMousePosition();
             }
 
             if (_newInputManager.Released) // quand je lâche la souris
             {
+                //  var slotsBehindMouse = UIRaycast.MouseRaycastResult(hit => hit.gameObject.tag == "Slot");
 
-              //  var slotsBehindMouse = UIRaycast.MouseRaycastResult(hit => hit.gameObject.tag == "Slot");
-
-                var slotsBehindMouse2 = _newRayCaster.PointerUIRayCast(x=> x.gameObject.tag == "Slot");
+                var slotsBehindMouse2 = _newRayCaster.PointerUIRayCast(x => x.gameObject.tag == "Slot");
 
                 if (slotsBehindMouse2.HasFoundHit) // Je check si j'ai trouve un slot
                 {
 
-                    rayResult.gameObject.GetComponent<RectTransform>().SetParent(slotsBehindMouse2.GameObject.transform);
+                    hitObject.GetComponent<RectTransform>().SetParent(slotsBehindMouse2.GameObject.transform);
 
 
 
-                    Item selectedItem = rayResult.gameObject.GetComponent<ItemScript>().selfWrapper.Item;
+                    Item selectedItem = hitObject.GetComponent<ItemScript>().selfWrapper.Item;
                     bool IsOwnedByPlayer = selectedItem.OwnerId == _gameStateManager.LocalPlayerDTO.Id; // bug car je nupdate pas 
                     bool isReleasedOnRoomSlot = slotsBehindMouse2.GameObject.GetComponent<SlotScript>().SelfWrapper.IsRoomSlot;
                     if (IsOwnedByPlayer)
                     {
-                        
+
                         if (isReleasedOnRoomSlot)
                         {
                             Guid ownerId = _gameStateManager.LocalPlayerDTO.Id;
@@ -88,7 +73,7 @@ namespace Assets.Inventory
 
                     else // cetait PAS un player item
                     {
-                        if(!isReleasedOnRoomSlot) // donc un player slot
+                        if (!isReleasedOnRoomSlot) // donc un player slot
                         {
                             Guid ownerId = _gameStateManager.Room.Id;
                             Guid targetId = _gameStateManager.LocalPlayerDTO.Id; // Target cest la currentroom.
@@ -100,7 +85,7 @@ namespace Assets.Inventory
                 }
 
 
-                rayResult.gameObject.GetComponent<RectTransform>().localPosition = Vector3.zero.WithOffset(44.5f, 0, 0); // SetItemBackToSlotPosition();
+                hitObject.GetComponent<RectTransform>().localPosition = Vector3.zero.WithOffset(44.5f, 0, 0); // SetItemBackToSlotPosition();
             }
         }
     }

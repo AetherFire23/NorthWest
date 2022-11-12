@@ -16,7 +16,7 @@ using Assets.Big_Tick_Energy;
 
 namespace Assets.GameState_Management
 {
-    public class GameStateManager : ITickable, IInitializable
+    public class GameStateManager : IInitializable
     {
         public List<PrivateChatRoomParticipant> ParticipantsInPlayerRooms => _currentGameState.PrivateChatRooms;
         public List<Message> NewMessages => _currentGameState.NewMessages ?? new();
@@ -41,32 +41,19 @@ namespace Assets.GameState_Management
             _clientCalls = clientCalls;
         }
 
-        public void Initialize() // should verify if I even need a reference to UnityEngine.
+        public void Initialize() 
         {
             var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
+            Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F");
 
             // Load default guid if mainMenu was not loaded
             this.PlayerUID = menuInfo.MainPlayerId == Guid.Empty
-                ? new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F")
+                ? defaultPlayer1Guid
                 : menuInfo.MainPlayerId;
 
             _currentGameState = GetFirstGameState(); // forcing the program to receive gamestate since virtually everything depends on that. Is launched non-lazily from the zen installer.
 
             _globalTick.TimerTicked += OnTimerTick;
-        }
-
-        public void Tick() // seems not needed anymore
-        {
-
-            //// UpdatePeriodicGameState ?
-
-            //if (_tickTimer.HasTicked) // event for everytime it ticks is needed
-            //{
-            //    Debug.Log("The GameState timer has ticked");
-            //    _tickTimer.Reset();
-            //    _currentGameState = GetNextGameState();
-            //}
-            //_tickTimer.AddTime(Time.deltaTime);
         }
 
         private GameState GetFirstGameState() // leaves timeStamp at null so I can initialize the whole thing instead of updating
