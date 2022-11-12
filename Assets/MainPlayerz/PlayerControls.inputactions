@@ -1,0 +1,49 @@
+{
+    "name": "PlayerControls",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "927cc369-97fa-47d1-a5f1-1cbcab2126da",
+            "actions": [
+                {
+                    "name": "PressDown",
+                    "type": "Button",
+                    "id": "78df59e6-f041-47c5-b52b-4843edb83f84",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ReleaseUp",
+                    "type": "Button",
+                    "id": "6046e376-986c-4096-a8fd-5665b5701517",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "752f7c66-e130-493e-a820-d39bd195ca8a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PressDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": []
+        }
+    ]
+}
