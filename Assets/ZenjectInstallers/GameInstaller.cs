@@ -41,7 +41,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<ClientCalls>().AsSingle();
         Container.BindInterfacesAndSelfTo<ChatHandler>().AsSingle().NonLazy();
         Container.BindInterfacesAndSelfTo<OpenCloseButtonUGF>().AsSingle();
-        Container.BindInterfacesAndSelfTo<PrivateRoomInviteHandler>().AsSingle();
+        //Container.BindInterfacesAndSelfTo<PrivateRoomInviteHandler>().AsSingle();
 
 
         Container.BindInterfacesAndSelfTo<MessageService>().AsSingle();

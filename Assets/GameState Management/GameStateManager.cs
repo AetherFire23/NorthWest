@@ -23,7 +23,7 @@ namespace Assets.GameState_Management
         public List<Player> Players => _currentGameState.Players ?? new();
         public List<Player> OtherPlayers { get; set; }
         public PlayerDTO LocalPlayerDTO => _currentGameState.PlayerDTO ?? new();
-        public List<PrivateInvitation> PrivateInvitations => _currentGameState.Invitations ?? new();
+       // public List<PrivateInvitation> PrivateInvitations => _currentGameState.Invitations ?? new();
         public RoomDTO Room => _currentGameState.Room ?? new();
         public bool HasTicked => _tickTimer.HasTicked;
         public List<Player> PlayersInRoom { get; set; }

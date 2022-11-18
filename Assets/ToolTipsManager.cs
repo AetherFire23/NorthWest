@@ -15,9 +15,11 @@ public class ToolTipsManager : MonoBehaviour // faudrait resize au start vu qe c
     [Inject] NewRayCaster _newRayCaster;
     [Inject] NewInputManager input;
     [SerializeField] RectTransform tooltipCanvas;
+
     private List<string> _tooltipableTags = new List<string>() { "Item", };
     private List<int> _tooltipableLayers = new List<int>() { 6, };
     private TooltipUGI _tooltip;
+
     void Start()
     {
 
@@ -40,7 +42,7 @@ public class ToolTipsManager : MonoBehaviour // faudrait resize au start vu qe c
 
         var toolInfo = rayResult.GameObject.GetComponentSafely<TooltipInfo>();
         _tooltip = new TooltipUGI(tooltipCanvas.gameObject, toolInfo);
-        _tooltip.UnityInstance.transform.position = input.PointerPosition.WithOffset(0,-125,0);
+        _tooltip.UnityInstance.transform.position = input.PointerPosition.WithOffset(15, -15,0);
     }
 
     public bool IsTooltipable(string tag, int layer)

@@ -16,18 +16,11 @@ public class ClientCalls
 {
     private readonly HttpClient _client;
 
-    private const string _uriGetPlayerByName = "https://localhost:7060/TheCrew/GetPlayerByName"; // parameters : name
     private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
     private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionByPlayerModel"; // // requiresbodys
-    private const string _uriGetGlobalMessages = "https://localhost:7060/TheCrew/GetMessages"; //require parameter 
-    private const string _uriPutMessage = "https://localhost:7060/TheCrew/PutNewMessageToServer"; //require parameter 
-    private const string _uriGetPlayersCurrentGame = "https://localhost:7060/TheCrew/GetPlayersCurrentGame"; //require parameter 
-    private const string _uriGetPrivateRoomGuids = "https://localhost:7060/TheCrew/GetPrivateRoomGuids"; //require parameter
     private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; //require parameter
     private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations"; //require parameter
-    private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter
     private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom"; //require parameter
-    private const string _uriUpdateCurrentRoomId = "https://localhost:7060/TheCrew/UpdateCurrentRoomId"; //require parameter
     private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair"; //require parameter
     private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; //require parameter
     private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; //require parameter
@@ -35,6 +28,10 @@ public class ClientCalls
 
     private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask"; //require body & param
     private const string _uriTest = "https://localhost:7060/TheCrew/dwdwdw"; //require body & param
+
+    //ChatController
+    private const string _uriPutMessage = "https://localhost:7060/TheCrew/PutNewMessageToServer"; //require parameter 
+    private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter
 
 
     public ClientCalls()
