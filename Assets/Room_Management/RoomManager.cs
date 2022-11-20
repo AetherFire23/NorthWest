@@ -29,11 +29,11 @@ public class RoomManager : MonoBehaviour
         InitRoomsTemplate(); // must be called first
 
         CurrentRoom = GetCurrentRoomScriptFromGameState();
-        EnableSelectedRoomAndDeactivateOthers(CurrentRoom);
+        EnableSelectedRoomAndDisableOthers(CurrentRoom);
         playerScript.PlacePlayerCenterRoom(CurrentRoom);
     }
 
-    public void EnableSelectedRoomAndDeactivateOthers(RoomScript roomScript)
+    public void EnableSelectedRoomAndDisableOthers(RoomScript roomScript)
     {
         this.RoomScripts.ForEach(x => x.gameObject.SetActive(false));
         roomScript.gameObject.SetActive(true);

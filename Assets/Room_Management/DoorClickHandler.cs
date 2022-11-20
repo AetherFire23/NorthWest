@@ -49,7 +49,7 @@ public class DoorClickHandler : MonoBehaviour
             if (mustChangeRoom)
             {
                 RoomScript nextRoomScript = _roomManager.GetRoomScriptFromName(targetRoomName);
-                _roomManager.EnableSelectedRoomAndDeactivateOthers(nextRoomScript);
+                _roomManager.EnableSelectedRoomAndDisableOthers(nextRoomScript);
                _playerScript.PlacePlayerCenterRoom(nextRoomScript);
                 _roomManager.OnRoomChange();
             }

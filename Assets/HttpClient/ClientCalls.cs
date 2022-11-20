@@ -15,7 +15,7 @@ using WebAPI.Models;
 public class ClientCalls
 {
     private readonly HttpClient _client;
-
+    // The Crew Controller
     private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
     private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionByPlayerModel"; // // requiresbodys
     private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; //require parameter

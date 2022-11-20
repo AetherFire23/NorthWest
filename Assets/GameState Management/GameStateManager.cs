@@ -68,6 +68,8 @@ namespace Assets.GameState_Management
         {
             DateTime? currentTimeStamp = _currentGameState.TimeStamp;
             GameState newGameState = _clientCalls.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
+
+            if (true) ;
             UpdateOtherPlayers(newGameState);
             return newGameState;
        }
