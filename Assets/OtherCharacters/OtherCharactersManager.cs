@@ -28,7 +28,7 @@ public class OtherCharactersManager : MonoBehaviour
     private GameObject _roomManagerParent => this.gameObject;
     //private List<OtherCharacterUGI> _otherCharacters = new();
     private List<Player> _playersInRoom => _gameStateManager.PlayersInRoom;
-    private UGICollectionEditor2<OtherCharacterUGI, OtherCharacterAS, Player> _otherPlayersEditor { get; set; }
+    private UGICollectionEditorDbKey<OtherCharacterUGI, OtherCharacterAS, Player> _otherPlayersEditor { get; set; }
     private ReadOnlyCollection<OtherCharacterUGI> _otherPlayersUGIs => _otherPlayersEditor.UGIs;
 
     void Start()

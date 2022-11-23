@@ -17,9 +17,9 @@ public class ToolTipsManager : MonoBehaviour // faudrait resize au start vu qe c
     [SerializeField] RectTransform tooltipCanvas;
 
     private List<string> _tooltipableTags = new List<string>() { "Item", };
-    private List<int> _tooltipableLayers = new List<int>() { 6, };
+    private List<int> _tooltipableLayers = new List<int>() { 0,6, };
     private TooltipUGI _tooltip;
-
+    private float _timeOnToolTip;
     void Start()
     {
 
@@ -28,21 +28,30 @@ public class ToolTipsManager : MonoBehaviour // faudrait resize au start vu qe c
     void Update()
     { // raouter le fait que ca doit prendre du temps 
         var rayResult = _newRayCaster.PointerUIRayCast(x => IsTooltipable(x.gameObject.tag, x.gameObject.layer));
+
+
+
         if (!rayResult.HasFoundHit)
         {
-            if(_tooltip is not null)
+            _timeOnToolTip = 0f;
+
+            if (_tooltip is not null)
             {
                 _tooltip.UnityInstance.SelfDestroy();
                 _tooltip = null;
             }
             return;
         }
+        _timeOnToolTip += Time.deltaTime;
+
+        if (_timeOnToolTip < 0.7f) return;
 
         if (_tooltip is not null) return;
 
         var toolInfo = rayResult.GameObject.GetComponentSafely<TooltipInfo>();
         _tooltip = new TooltipUGI(tooltipCanvas.gameObject, toolInfo);
         _tooltip.UnityInstance.transform.position = input.PointerPosition.WithOffset(15, -15,0);
+        _timeOnToolTip = 0f;
     }
 
     public bool IsTooltipable(string tag, int layer)

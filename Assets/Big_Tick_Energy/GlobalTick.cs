@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,15 +22,25 @@ namespace Assets.Big_Tick_Energy
 
         public void Tick() // From Interface
         {
-            _currentTimeElapsed += Time.deltaTime;
-            bool thresholdReached = _currentTimeElapsed > _maximumTime;
-
-            if (thresholdReached)
+            try
             {
-                _currentTimeElapsed = 0;
-                OnTimerTick();
-                _tickAmount++;
+                _currentTimeElapsed += Time.deltaTime;
+                bool thresholdReached = _currentTimeElapsed > _maximumTime;
+
+                if (thresholdReached)
+                {
+                    _currentTimeElapsed = 0;
+                    //await UniTask.RunOnThreadPool(OnTimerTick);
+                    //UniTask.RunOnThreadPool(OnTimerTick);
+                    OnTimerTick();
+                    _tickAmount++;
+                }
             }
+            catch(Exception e)
+            {
+                Debug.Log("An error related to the tick occurred. Probably caused by async stuff");
+            }
+
         }
 
         private void OnTimerTick()

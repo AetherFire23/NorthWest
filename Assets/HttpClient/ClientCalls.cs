@@ -1,4 +1,5 @@
 ﻿using Assets.ChatLog_Manager;
+using Assets.GameState_Management;
 using Assets.HttpClient.Shared_API_Models;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,10 +12,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using WebAPI.GameState_Management;
 using WebAPI.Models;
-
+using Zenject;
 public class ClientCalls
 {
     private readonly HttpClient _client;
+    public Guid PlayerUID = Guid.Empty;
     // The Crew Controller
     private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
     private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionByPlayerModel"; // // requiresbodys
@@ -70,12 +72,13 @@ public class ClientCalls
         return null;
     }
 
-    public async UniTask<string> AddPlayerRoomPair(Guid playerId, Guid newRoomGuid)
+    public async UniTask<string> AddPlayerRoomPair(Guid newRoomGuid)
     {
         var infos = new ControllerRequestInformation(_uriAddPlayerRoomPair, ParameterOptions.RequiresParameter);
-        infos.AddParameter("playerGuid", playerId.ToString());
+        infos.AddParameter("playerGuid", this.PlayerUID.ToString());
         infos.AddParameter("newRoomGuid", newRoomGuid.ToString());
         var yeah = PutRequest(infos).AsTask().Result;
+        Debug.Log("Testomanyeah!!!!!!");
         return yeah;
     }
 

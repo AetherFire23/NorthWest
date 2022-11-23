@@ -1,5 +1,6 @@
 ﻿
 //using Assets.ChatLog_Manager.Private_Rooms.PlayerOptionsPanel;
+using Assets.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class PlayerInRoomEntryUGI : InstanceWrapper<PlayerInRoomEntryAS>
+public class PlayerInRoomEntryUGI : InstanceWrapper<PlayerInRoomEntryAS>, IDbKey
 {
+    public Guid Key => _selectedPlayer.Key;
    // private List<OptionEntryInstance> options = new List<OptionEntryInstance>();
     private Player _selectedPlayer;
     private const string resourceName = "PlayerInviteEntryPrefab";
-    private readonly PlayerInRoomPanelUGF _invitePanel;
+    //private readonly PlayerInRoomPanelUGF _invitePanel;
 
-    public PlayerInRoomEntryUGI(PlayerInRoomPanelUGF panel, Player playerModel) : base(resourceName, panel.GameObject)
+    public PlayerInRoomEntryUGI(GameObject parent, Player playerModel) : base(resourceName, parent)
     { 
         _selectedPlayer = playerModel;
-        _invitePanel = panel;
         //this.script.ButtonComponent.onClick.AddListener(delegate { GenerateInviteOptions(); });
         InitializeComponents();
     }

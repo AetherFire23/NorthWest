@@ -35,8 +35,8 @@ public class InventoryManagement : MonoBehaviour
 
     private UGICollectionEditor<SlotUGI, SlotScript> _playerSlots = new();
     private UGICollectionEditor<SlotUGI, SlotScript> _roomSlots = new();
-    private UGICollectionEditor2<ItemUGI, ItemScript, Item> _roomItems = new();
-    private UGICollectionEditor2<ItemUGI, ItemScript, Item> _playerItems = new();
+    private UGICollectionEditorDbKey<ItemUGI, ItemScript, Item> _roomItems = new();
+    private UGICollectionEditorDbKey<ItemUGI, ItemScript, Item> _playerItems = new();
 
     private void Awake()
     {

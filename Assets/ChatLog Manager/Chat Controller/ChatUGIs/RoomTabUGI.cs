@@ -7,9 +7,11 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using static UnityEngine.UI.Button;
+using Assets.Utils;
 
-public class RoomTabUGI : InstanceWrapper<RoomTabInstanceScript>
+public class RoomTabUGI : InstanceWrapper<RoomTabInstanceScript>, IDbKey
 {
+    public Guid Key => RoomId;
     public Button ButtonComponent => this.AccessScript.button;
     public ButtonClickedEvent OnClick => this.ButtonComponent.onClick;
     public Guid RoomId { get; set; } = Guid.Empty;

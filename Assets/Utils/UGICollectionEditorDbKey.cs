@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.Utils
+namespace Assets.Utils // Used to compare equality with A GUID.
 {
-    public class UGICollectionEditor2<TUGI, TAccessScript, TModel> 
+    public class UGICollectionEditorDbKey<TUGI, TAccessScript, TModel>
         where TUGI : InstanceWrapper<TAccessScript>, IDbKey
         where TModel : IDbKey// implement with IUGICollection
     {
@@ -18,10 +18,10 @@ namespace Assets.Utils
 
         private List<TUGI> _uGIs = new();
 
-        public UGICollectionEditor2()
+        public UGICollectionEditorDbKey()
         {
         }
-        public UGICollectionEditor2(Func<TModel, TUGI> builderImplementation) // (1) Parent fixe (2) Creation invariable a partir du modele
+        public UGICollectionEditorDbKey(Func<TModel, TUGI> builderImplementation) // (1) Parent fixe (2) Creation invariable a partir du modele
         {
             this.UGIBuilderImplementation = builderImplementation;
         }
@@ -100,21 +100,31 @@ namespace Assets.Utils
             return appearedPlayers;
         }
 
+        /// <summary>
+        /// From a list of ids, will build the missing UGI or delete it. 
+        /// </summary>
+        /// <param name="updatedModels"></param>
+        /// <exception cref="Exception"></exception>
         public void RefreshFromDbModels(List<TModel> updatedModels)
         {
             if (this.UGIBuilderImplementation is null) throw new Exception("Tried to build a UGi without a build method.");
 
             var appearedPlayers = GetAppearedModels(updatedModels);
-            if (appearedPlayers.Count > 0)
+            if (appearedPlayers.Count is not 0)
             {
                 this.BuildMany(appearedPlayers);
             }
 
             var disappearedPlayers = GetDisappearedUGis(updatedModels);
-            if (disappearedPlayers.Count > 0)
+            if (disappearedPlayers.Count is not 0)
             {
                 this.RemoveMany(disappearedPlayers);
             }
+        }
+
+        public void GuidCustomRefresh()
+        {
+
         }
     }
 }

@@ -45,11 +45,14 @@ namespace Assets.GameState_Management
         {
             var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
             Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F");
+            Guid defaultPlayer2Guid = new Guid("B3543B2E-CD81-479F-B99E-D11A8AAB37A0");
 
+            this.PlayerUID = defaultPlayer1Guid;
+            _clientCalls.PlayerUID = this.PlayerUID;
             // Load default guid if mainMenu was not loaded
-            this.PlayerUID = menuInfo.MainPlayerId == Guid.Empty
-                ? defaultPlayer1Guid
-                : menuInfo.MainPlayerId;
+            //this.PlayerUID = menuInfo.MainPlayerId == Guid.Empty
+            //    ? defaultPlayer1Guid
+            //    : menuInfo.MainPlayerId;
 
             _currentGameState = GetFirstGameState(); // forcing the program to receive gamestate since virtually everything depends on that. Is launched non-lazily from the zen installer.
 
