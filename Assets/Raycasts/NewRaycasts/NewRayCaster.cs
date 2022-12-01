@@ -60,7 +60,7 @@ namespace Assets.Raycasts.NewRaycasts
         {
             PointerEventData eventData = new PointerEventData(EventSystem.current);
             eventData.position = _newInputManager.PointerPosition;
-            List<UnityEngine.EventSystems.RaycastResult> raycastResult = new List<UnityEngine.EventSystems.RaycastResult>();
+            List<RaycastResult> raycastResult = new List<UnityEngine.EventSystems.RaycastResult>();
             EventSystem.current.RaycastAll(eventData, raycastResult);
             raycastResult = raycastResult.Where(filter).ToList();
 

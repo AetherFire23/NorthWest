@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Assets.ChatLog_Manager
 {
-    public class Message : IDbKey
+    public class Message : IEntity
     {
-        public Guid Key => Id;
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Text { get; set; }

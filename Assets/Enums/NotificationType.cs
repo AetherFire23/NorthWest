@@ -10,6 +10,6 @@ namespace Assets.Enums
     {
         CycleChanged,
         DoorOpen,
-        PrivateChatRoomInvitation
+        PrivInv
     }
 }

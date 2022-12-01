@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using WebAPI.Enums;
 
-public class Player : IDbKey
+public class Player : IEntity
 {
-    public Guid Key => Id;
     public Guid Id { get; set; }
     public Guid GameId { get; set; }
     public Guid CurrentChatRoomId { get; set; }

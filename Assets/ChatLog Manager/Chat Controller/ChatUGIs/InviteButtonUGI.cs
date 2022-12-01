@@ -11,7 +11,7 @@ namespace Assets.ChatLog_Manager.Private_Rooms.NewInviteSystem
     public class InviteButtonUGI : InstanceWrapper<InviteButtonInstanceScript>
     {
         public const string resourceName = "InviteButtonPrefab";
-        public PrivateInvitation PrivateInvitation;
+        public PrivateInvitation PrivateInvitation { get; set; }
 
         public Player Player;
             // ToUserId

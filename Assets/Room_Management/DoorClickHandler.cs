@@ -1,4 +1,5 @@
 using Assets.GameState_Management;
+using Assets.HttpClient.Shared_API_Models;
 using Assets.Input_Management;
 using Assets.InputAwaiter;
 using Assets.Raycasts.NewRaycasts;
@@ -15,7 +16,7 @@ public class DoorClickHandler : MonoBehaviour
 
     private NewInputManager _newInputManager;
     private NewRayCaster _newRayCaster;
-    private ClientCalls _clientCalls;
+    private ClientCalls _client;
     private PlayerScript _playerScript;
     private DialogManager _dialogManager;
     private InputWaiting _inputWaiter;
@@ -29,31 +30,38 @@ public class DoorClickHandler : MonoBehaviour
         if (_newInputManager.Pressed)
         {
             //  var t = _newRayCaster.PointerPhysicsRaycast(x => x.transform.gameObject.tag == "Door");
-            var t = _newRayCaster.PointerPhysicsRaycast<DoorScript>();
+            var doors = _newRayCaster.PointerPhysicsRaycast<DoorScript>();
 
-
-            if (!t.HasFoundHit) return;
+            if (!doors.HasFoundHit) return;
             if (_dialogManager.IsWaitingForInput()) return;
-            string targetRoomName = t.HitObject.GetComponent<DoorScript>().targetRoom;
 
+            string targetRoomName = doors.HitObject.GetComponent<DoorScript>().targetRoom;
             _dialogManager.CreateDialog(DialogType.YesNoDialog, $"Are you sure you wanna change rooms to : {targetRoomName}");
 
             await _inputWaiter.WaitForResult();
 
-            string webAPiResult = _clientCalls.ChangeRoom(_gameStateManager.PlayerUID, targetRoomName);
+            if (_dialogManager.DialogResult == DialogResult.Cancel)
+            {
+                _dialogManager.CurrentDialog = null;
+                return;
+            }
+
+            ClientCallResult callResult = _client.ChangeRoom(_gameStateManager.PlayerUID, targetRoomName);
 
             // si reussite, tp le player dans la room
 
-            bool mustChangeRoom = webAPiResult == "Tu as change de room!"; // faudra faire une TaskResponse model
-
-            if (mustChangeRoom)
+            //
+            if (callResult.IsSuccessful)
             {
                 RoomScript nextRoomScript = _roomManager.GetRoomScriptFromName(targetRoomName);
                 _roomManager.EnableSelectedRoomAndDisableOthers(nextRoomScript);
-               _playerScript.PlacePlayerCenterRoom(nextRoomScript);
+                _playerScript.PlacePlayerCenterRoom(nextRoomScript);
                 _roomManager.OnRoomChange();
             }
-            Debug.Log($"Web APi result : {webAPiResult}");
+
+            Debug.Log($"Web APi result : {callResult.Message}");
+            _dialogManager.CurrentDialog = null;
+
         }
     }
 
@@ -70,7 +78,7 @@ public class DoorClickHandler : MonoBehaviour
         _dialogManager = dialogManager;
         _inputWaiter = inputWaiter;
         _gameStateManager = gameStateManager;
-        _clientCalls = clientCalls;
+        _client = clientCalls;
         _newInputManager = newInputManager;
         _newRayCaster = newRayCaster;
     }

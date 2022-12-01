@@ -9,8 +9,8 @@ namespace Assets.Utils
     /// <summary>
     /// Used to match identity between database models and unity gameobjects. 
     /// </summary>
-    public interface IDbKey
+    public interface IEntity
     {
-        public Guid Key { get;}
+        public Guid Id { get;}
     }
 }

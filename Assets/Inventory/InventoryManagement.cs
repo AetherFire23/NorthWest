@@ -26,17 +26,23 @@ public class InventoryManagement : MonoBehaviour
     [SerializeField] public List<Button> RoomInventoryButtons;
     [SerializeField] public Canvas RoomItemCanvas;
     [SerializeField] public float moveSpeed;
-
     [Inject] private GameStateManager gameStateManager;
     [Inject] private NewRayCaster _raycasts;
     [Inject] private NewInputManager input;
     [Inject] private GlobalTick _globalTick;
     [Inject] private ClientCalls _clientCalls;
 
+    [SerializeField] float _limit;
+    [SerializeField] float resetPosition;
+    [SerializeField] bool activated;
+    [SerializeField] bool superiorTo;
+
     private UGICollectionEditor<SlotUGI, SlotScript> _playerSlots = new();
     private UGICollectionEditor<SlotUGI, SlotScript> _roomSlots = new();
     private UGICollectionEditorDbKey<ItemUGI, ItemScript, Item> _roomItems = new();
     private UGICollectionEditorDbKey<ItemUGI, ItemScript, Item> _playerItems = new();
+
+    List<string> _stuff = new();
 
     private void Awake()
     {
@@ -54,6 +60,13 @@ public class InventoryManagement : MonoBehaviour
     }
     private async void Update()
     {
+        if(activated)
+        {
+            ClampRightwardsInventoryMovement();
+
+        }
+
+
         if (!input.Interaction) return;
 
         var itemRayResult = _raycasts.PointerUIRayCast(x => x.gameObject.layer == 6);
@@ -90,7 +103,7 @@ public class InventoryManagement : MonoBehaviour
                         Debug.Log($"{ReleaseType.FromPlayerToRoom}");
                         CreateInventorySlotAndPutItemIntoIt(info.TrackedItem);
                         SwapItemBetweenLists(info.TrackedItem);
-                        _clientCalls.TransferItemOwnerShip(Guid.Empty, gameStateManager.Room.Id, info.TrackedItem.Key);
+                        _clientCalls.TransferItemOwnerShip(Guid.Empty, gameStateManager.Room.Id, info.TrackedItem.Id);
                         break;
                     }
                 case ReleaseType.FromRoomToPlayer:
@@ -101,7 +114,7 @@ public class InventoryManagement : MonoBehaviour
                         PutItemInSlot(info.TrackedItem, info.TargetSlot); // je pourrais aussi calculer le besoin de swap dans cette classe en fait vu que je fais tout le temps. 
                         SwapItemBetweenLists(info.TrackedItem);
                         _roomSlots.RemoveAndDestroy(excessRoomSlot);
-                        _clientCalls.TransferItemOwnerShip(Guid.Empty, gameStateManager.PlayerUID, info.TrackedItem.Key);
+                        _clientCalls.TransferItemOwnerShip(Guid.Empty, gameStateManager.PlayerUID, info.TrackedItem.Id);
                         break;
                     }
                 case ReleaseType.FromRoomToRoom:
@@ -124,6 +137,30 @@ public class InventoryManagement : MonoBehaviour
             Debug.Log("test");
         }
     }
+
+    private void ClampRightwardsInventoryMovement()
+    {
+        if (roomInventoryScrollView.localPosition.x > _limit)
+        {
+            roomInventoryScrollView.localPosition = roomInventoryScrollView.localPosition.SetX(resetPosition);
+        }
+    }
+
+    //private void OnGUI()
+    //{
+    //    _stuff.Clear();
+    //    _stuff.Add(this.roomInventoryScrollView.position.ToSafeString());
+    //    _stuff.Add(this.roomInventoryScrollView.localPosition.ToSafeString());
+    //    var rec = new Rect(25, 25, 200, 200);
+
+    //    string empty = string.Empty;
+    //    foreach (string s in _stuff)
+    //    {
+    //        empty += $"{Environment.NewLine} {s}";
+    //    }
+
+    //    GUI.TextField(rec, empty);
+    //}
 
     public ReleaseInfo BuildReleaseContext(GameObject trackedObject, GameObject slotBehindMouse, bool releasedOnInventory)
     {
@@ -222,6 +259,8 @@ public class InventoryManagement : MonoBehaviour
         if (disappearedItemsUgis.Any())
         {
             _roomItems.RemoveMany(disappearedItemsUgis);
+            var slots = disappearedItemsUgis.Select(x => x.CurrentSlot).ToList();
+            _roomSlots.RemoveMany(slots);
 
         }
     }
@@ -230,8 +269,8 @@ public class InventoryManagement : MonoBehaviour
     {
         foreach (var slot in _playerSlots.UGIs) // finds first slot then adding it 
         {
-            bool slotIsOccupied = slot.containedItem is null;
-            if (!slotIsOccupied) continue;
+            bool isFreeSlot = slot.containedItem is null;
+            if (!isFreeSlot) continue;
 
             var itemUGI = _playerItems.Add(new ItemUGI(slot.UnityInstance, item));
             slot.containedItem = itemUGI;

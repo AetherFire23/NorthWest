@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class InviteButtonInstanceScript : MonoBehaviour
 {
-    [SerializeField] public Button Component;
+    [SerializeField] public Button Button;
     [SerializeField] public TextMeshProUGUI textComp;
     // Start is called before the first frame update
     void Start()

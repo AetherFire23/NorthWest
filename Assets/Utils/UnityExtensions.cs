@@ -24,6 +24,14 @@ public static class UnityExtensions
     {
         return new Vector3(self.x, self.y, z);
     }
+    public static Vector2 SetX(this Vector2 self, float x)
+    {
+        return new Vector2(x, self.y);
+    }
+    public static Vector2 SetY(this Vector2 self, float y)
+    {
+        return new Vector2(self.x, y);
+    }
 
     public static void MoveTowards(this GameObject self, Vector2 to, float speed)
     {
@@ -203,6 +211,7 @@ public static class UnityExtensions
             newAction();
         });
     }
+
 
     public static void DestroyAndRemoveUGIFromList<TUGI, TAccessScript>(List<TUGI> toRemove, List<TUGI> removeFrom ) where TUGI : InstanceWrapper<TAccessScript>
     {

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace Assets.Utils // Used to compare equality with A GUID.
 {
     public class UGICollectionEditorDbKey<TUGI, TAccessScript, TModel>
-        where TUGI : InstanceWrapper<TAccessScript>, IDbKey
-        where TModel : IDbKey// implement with IUGICollection
+        where TUGI : InstanceWrapper<TAccessScript>, IEntity
+        where TModel : IEntity 
     {
         public ReadOnlyCollection<TUGI> UGIs => _uGIs.AsReadOnly();
 
@@ -88,15 +88,15 @@ namespace Assets.Utils // Used to compare equality with A GUID.
 
         public List<TUGI> GetDisappearedUGis(List<TModel> updatedModels)
         {
-            var playerInRoomIds = updatedModels.Select(x => x.Key).ToList();
-            var disappearedUGIs = _uGIs.Where(x => !playerInRoomIds.Contains(x.Key)).ToList();
+            var playerInRoomIds = updatedModels.Select(x => x.Id).ToList();
+            var disappearedUGIs = _uGIs.Where(x => !playerInRoomIds.Contains(x.Id)).ToList();
             return disappearedUGIs;
         }
 
         public List<TModel> GetAppearedModels(List<TModel> updatedModels)
         {
-            var playerUGIIds = _uGIs.Select(x => x.Key).ToList();
-            var appearedPlayers = updatedModels.Where(x => !playerUGIIds.Contains(x.Key)).ToList();
+            var playerUGIIds = _uGIs.Select(x => x.Id).ToList();
+            var appearedPlayers = updatedModels.Where(x => !playerUGIIds.Contains(x.Id)).ToList();
             return appearedPlayers;
         }
 

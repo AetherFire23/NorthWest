@@ -12,7 +12,7 @@ using WebAPI.Models;
 
 namespace Assets.Inventory.Player_Item
 {
-    public class ItemUGI : InstanceWrapper<ItemScript>, IDbKey
+    public class ItemUGI : InstanceWrapper<ItemScript>, IEntity
     {
         public SlotUGI CurrentSlot
         {
@@ -24,7 +24,7 @@ namespace Assets.Inventory.Player_Item
                 return slotScript.SelfWrapper;
             }
         }
-        public Guid Key => Item.Id;
+        public Guid Id => Item.Id;
         public const string resourceName = "ItemInstance";
         public Item Item;
 

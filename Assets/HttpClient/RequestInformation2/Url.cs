@@ -25,12 +25,14 @@ public class Url
         if (HasLackingParameters)
             throw new NotImplementedException($"Parameters of a Uri can not be empty when {nameof(HasRequiredParameter)} is set to true.");
 
+        // return empty parameter line if there are no parameters
         bool hasNoParameter = requiredParameters.Count == 0 && !HasRequiredParameter;
         if (hasNoParameter)
         {
             return String.Empty;
         }
 
+        // If there ARE parameters but parameter options is set to false, throw exception
         if (!HasRequiredParameter)
             throw new NotImplementedException($" when {nameof(HasRequiredParameter)} is set to false.");
 
@@ -62,6 +64,7 @@ public class Url
             {
                 parameterLine += parameter.NameValuePair + separator;
             }
+
         }
         return parameterLine;
     }

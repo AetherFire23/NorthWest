@@ -28,7 +28,7 @@ public class ChatManager : MonoBehaviour
     private UGICollectionEditor<InviteButtonUGI, InviteButtonInstanceScript> _inviteButtons;
 
     // Real variables
-    private Guid _currentChatRoom;
+    private Guid _currentChatRoomId;
     private List<Message> MessageBank = new();
 
 
@@ -38,42 +38,39 @@ public class ChatManager : MonoBehaviour
         this.MessageBank.AddRange(_gamestate.NewMessages);
 
         // Define how the buttons works
-        _chatObjectsManager.GlobalButton.AddMethod(()=> this.ReturnToGlobalChatRoom());
-        _chatObjectsManager.AddRoomButton.AddMethod(()=> this.CreateNewPrivateRoom());
+        _chatObjectsManager.GlobalButton.AddMethod(() => this.ReturnToGlobalChatRoom());
+        _chatObjectsManager.AddRoomButton.AddMethod(() => this.CreateNewPrivateRoom());
+        _chatObjectsManager.LeaveRoomButton.AddMethod(RemoveCurrentPrivateRoom);
+        _chatObjectsManager.OpenInvitePanel.AddMethod(() => _chatObjectsManager.enabled = !_chatObjectsManager.enabled);
+
         // Variables
-        _currentChatRoom = _gamestate.LocalPlayerDTO.GameId;
+        _currentChatRoomId = _gamestate.LocalPlayerDTO.GameId;
 
         // Define how the collections should build their UGIs
         _playersInRoom = new((playerModel) => new PlayerInRoomEntryUGI(this._chatObjectsManager.PlayerInRoomContainer, playerModel));
         _messages = new((message) => new TextObjectUGI(_chatObjectsManager.ScrollviewContent, message));
         _roomTabs = new();
+        _inviteButtons = new();
 
         // Run some stuff after dependencies are dealt with
         RefreshPlayersInRoom();
         RefreshMessages();
         RefreshPrivateRoomTabs();
-
-
-        // RefreshRoomTabs();
-        // setup :
-        // Load Players in room
-        // Load Messages
-        // Load Private rooms
-        // Load roomTabs + make the buttons usable
+        LoadPrivateInvitationButtons();
     }
 
     private void RefreshPlayersInRoom()
     {
         var playersInRoom = new List<Player>();
-        // Gets players in room
-        if (_currentChatRoom.Equals(_gamestate.LocalPlayerDTO.GameId))
+
+        if (_currentChatRoomId.Equals(_gamestate.LocalPlayerDTO.GameId))
         {
             playersInRoom = _gamestate.Players;
         }
 
         else
         {
-            playersInRoom = _gamestate.ParticipantsInPlayerRooms.Where(x => _currentChatRoom.Equals(x.RoomId))
+            playersInRoom = _gamestate.ParticipantsInPlayerRooms.Where(x => _currentChatRoomId.Equals(x.RoomId))
                 .Select(x => x.ParticipantId)
                 .Join(_gamestate.Players,
                 (id) => id,
@@ -85,7 +82,7 @@ public class ChatManager : MonoBehaviour
 
     private void RefreshMessages()
     {
-        var messagesInCurrentRoom = this.MessageBank.Where(x=> x.RoomId.Equals(_currentChatRoom)).ToList();
+        var messagesInCurrentRoom = this.MessageBank.Where(x => x.RoomId.Equals(_currentChatRoomId)).ToList();
         _messages.RefreshFromDbModels(messagesInCurrentRoom);
     }
     private void RefreshPrivateRoomTabs()
@@ -98,7 +95,13 @@ public class ChatManager : MonoBehaviour
 
         foreach (Guid guid in appearedRooms)
         {
-            _roomTabs.Add(new RoomTabUGI(_chatObjectsManager.TabsContainer, guid, this._roomTabs.UGIs.Count + 1));
+            var tab = _roomTabs.Add(new RoomTabUGI(_chatObjectsManager.TabsContainer, guid, this._roomTabs.UGIs.Count + 1));
+            tab.ButtonComponent.AddMethod(() =>
+            {
+                _currentChatRoomId = tab.RoomId;
+                this.RefreshMessages();
+                this.RefreshPlayersInRoom();
+            });
         }
 
         foreach (var guid in disappeared)
@@ -111,26 +114,59 @@ public class ChatManager : MonoBehaviour
     // Through addMethod
     private void ReturnToGlobalChatRoom()
     {
-        _currentChatRoom = _gamestate.LocalPlayerDTO.GameId;
+        _currentChatRoomId = _gamestate.LocalPlayerDTO.GameId;
         this.RefreshMessages();
         this.RefreshPlayersInRoom();
     }
 
     private void CreateNewPrivateRoom() // +
     {
-        // var s = _client.AddPlayerRoomPair().AsTask().Result;
-        var s = _client.AddPlayerRoomPair(Guid.NewGuid());
+        Guid guid = Guid.NewGuid();
+        var s = _client.Chat.CreateChatroom(guid).AsTask().Result;
+        var tab = _roomTabs.Add(new RoomTabUGI(_chatObjectsManager.TabsContainer, guid, _roomTabs.UGIs.Count + 1));
+        tab.ButtonComponent.AddMethod(() =>
+        {
+            _currentChatRoomId = tab.RoomId;
+            this.RefreshMessages();
+            this.RefreshPlayersInRoom();
+        });
     }
 
     private void RemoveCurrentPrivateRoom() // -
     {
+        var tabToRemove = _roomTabs.UGIs.First(x => x.RoomId == _currentChatRoomId);
+        _client.Chat.LeaveChatRoom(tabToRemove.RoomId);
+        ReturnToGlobalChatRoom();
+        _roomTabs.RemoveAndDestroy(tabToRemove);
 
+        // reset les noms
+        for (int i = 0; i < _roomTabs.UGIs.Count; i++)
+        {
+            var s = _roomTabs.UGIs.ElementAt(i);
+            s.AccessScript.buttonText.text = $"Room {i}";
+        }
+
+        // remove room in http
     }
 
     private void LoadPrivateInvitationButtons() // ds le invite panel
     {
-
+        foreach (var p in _gamestate.Players)
+        {
+            // le id du targetPlayer est contenu dans le bouton
+            var s = _inviteButtons.Add(new InviteButtonUGI(_chatObjectsManager.InvitePanel, p));
+            s.AccessScript.Button.AddMethod(() => SendPrivateInvitation(p.Id));
+        }
     }
+
+    private void SendPrivateInvitation(Guid targetId)
+    {
+        if (_currentChatRoomId == _gamestate.LocalPlayerDTO.GameId) return;
+
+        _client.Chat.InviteToRoom(targetId);
+    }
+
+
     private void OnTimerTick(object source, EventArgs e)
     {
         _tick.SubscribedMembers.Add(this.GetType().Name);

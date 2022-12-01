@@ -14,7 +14,14 @@ public abstract class InstanceWrapper<T> // where T == the script on the main ga
     private GameObject _prefab;
     private string _resourceName;
     private string _parentName;
-     
+
+    public Vector3 Position
+    {
+        get { return this.UnityInstance.transform.position; }
+        set { UnityInstance.transform.position = value; }
+    }
+
+
     /// This constructor instantiates the unity instance under the given gameobject 
     /// </summary>
     /// <typeparam name="T"></typeparam>

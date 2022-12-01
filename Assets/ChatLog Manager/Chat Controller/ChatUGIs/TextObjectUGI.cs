@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 namespace Assets.ChatLog_Manager
 {
-    public class TextObjectUGI : InstanceWrapper<TextObjectScript>, IDbKey // Eventually make instancehelper a private class maybe ? 
+    public class TextObjectUGI : InstanceWrapper<TextObjectScript>, IEntity // Eventually make instancehelper a private class maybe ? 
     {
-        public Guid Key => MessageModel.Key;
+        public Guid Id => MessageModel.Id;
         public readonly Message MessageModel;
         private const string _resourceName = "ChatTextPrefab";
         private GameObject _parent;

@@ -20,7 +20,6 @@ public class FriendsManager : MonoBehaviour
     [SerializeField] public Canvas InvitePanel;
     private DialogManager _dialogManager;
     private InputWaiting _inputWaiting;
-    
 
     async void Start()
     {
@@ -33,8 +32,6 @@ public class FriendsManager : MonoBehaviour
     {
 
     }
-
-
 
     public async Task AskForFriend()
     {

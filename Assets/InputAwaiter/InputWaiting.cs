@@ -53,7 +53,7 @@ namespace Assets.InputAwaiter
             {
                 isWaiting = _dialogManager.IsWaitingForInput();
 
-                Debug.Log($"State of waiting for input : {isWaiting}");
+                //Debug.Log($"State of waiting for input : {isWaiting}");
                 //await UniTask.Delay(100); // faudrait tester avec du delay 
                 await UniTask.Yield();
             }

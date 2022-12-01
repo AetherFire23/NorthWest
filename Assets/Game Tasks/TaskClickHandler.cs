@@ -35,7 +35,9 @@ public class TaskClickHandler : MonoBehaviour
 
             await _inputWaiter.WaitForResult();
 
-            if(_dialogManager.CurrentDialog.DialogResult == DialogResult.Yes || _dialogManager.CurrentDialog.DialogResult == DialogResult.Ok)
+            DialogResult result = _dialogManager.CurrentDialog.DialogResult;
+
+            if(result == DialogResult.Yes || result == DialogResult.Ok)
             {
                 var t = _clientCalls.CookTask(_gameStateManager.PlayerUID, (rayCast.script as GameTaskScript).StationName);
                 Debug.Log(t);

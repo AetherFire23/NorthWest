@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class PlayerInRoomEntryUGI : InstanceWrapper<PlayerInRoomEntryAS>, IDbKey
+public class PlayerInRoomEntryUGI : InstanceWrapper<PlayerInRoomEntryAS>, IEntity
 {
-    public Guid Key => _selectedPlayer.Key;
+    public Guid Id => _selectedPlayer.Id;
    // private List<OptionEntryInstance> options = new List<OptionEntryInstance>();
     private Player _selectedPlayer;
     private const string resourceName = "PlayerInviteEntryPrefab";

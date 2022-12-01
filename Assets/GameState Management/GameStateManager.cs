@@ -13,6 +13,7 @@ using WebAPI.Models.DTOs;
 using Assets.Room_Management;
 using Assets.MainMenu;
 using Assets.Big_Tick_Energy;
+using Assets.Enums;
 
 namespace Assets.GameState_Management
 {
@@ -23,32 +24,30 @@ namespace Assets.GameState_Management
         public List<Player> Players => _currentGameState.Players ?? new();
         public List<Player> OtherPlayers { get; set; }
         public PlayerDTO LocalPlayerDTO => _currentGameState.PlayerDTO ?? new();
-       // public List<PrivateInvitation> PrivateInvitations => _currentGameState.Invitations ?? new();
         public RoomDTO Room => _currentGameState.Room ?? new();
-        public bool HasTicked => _tickTimer.HasTicked;
         public List<Player> PlayersInRoom { get; set; }
+        public List<TriggerNotificationDTO> Notifications => _currentGameState.TriggerNotifications;
         public Guid PlayerUID { get; set; } // inited through IInitializable
 
         private GameState _currentGameState; // could probably decouple the gamestate and its manager.
-
-        private readonly SimpleTimer _tickTimer = new SimpleTimer(3f);
         private readonly GlobalTick _globalTick;
-        private readonly ClientCalls _clientCalls;
-
+        private readonly ClientCalls _client;
+        private bool _initialized = false;
         public GameStateManager(ClientCalls clientCalls, GlobalTick globalTick)
         {
             _globalTick = globalTick;
-            _clientCalls = clientCalls;
+            _client = clientCalls;
         }
 
         public void Initialize() 
         {
             var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
-            Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F");
-            Guid defaultPlayer2Guid = new Guid("B3543B2E-CD81-479F-B99E-D11A8AAB37A0");
+            Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"); // fred
+            Guid defaultPlayer2Guid = new Guid("B3543B2E-CD81-479F-B99E-D11A8AAB37A0"); // ben
 
             this.PlayerUID = defaultPlayer1Guid;
-            _clientCalls.PlayerUID = this.PlayerUID;
+            _client.Initialize(this.PlayerUID);
+
             // Load default guid if mainMenu was not loaded
             //this.PlayerUID = menuInfo.MainPlayerId == Guid.Empty
             //    ? defaultPlayer1Guid
@@ -62,7 +61,7 @@ namespace Assets.GameState_Management
         private GameState GetFirstGameState() // leaves timeStamp at null so I can initialize the whole thing instead of updating
         {
             DateTime? currentTimeStamp = null;
-            var firstGameState = _clientCalls.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
+            var firstGameState = _client.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
             UpdateOtherPlayers(firstGameState);
             return firstGameState;
         }
@@ -70,7 +69,7 @@ namespace Assets.GameState_Management
         private GameState GetNextGameState()
         {
             DateTime? currentTimeStamp = _currentGameState.TimeStamp;
-            GameState newGameState = _clientCalls.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
+            GameState newGameState = _client.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
 
             if (true) ;
             UpdateOtherPlayers(newGameState);
@@ -83,10 +82,18 @@ namespace Assets.GameState_Management
             PlayersInRoom = OtherPlayers.Where(x => x.CurrentGameRoomId == newGameState.PlayerDTO.CurrentGameRoomId).ToList();
         }
 
+        public List<TriggerNotificationDTO> GetNotifications(NotificationType notificationType)
+        {
+            var notifs = this.Notifications.Where(x => x.NotificationType == notificationType).ToList();
+            return notifs;
+        }
+
         private void OnTimerTick(object source, EventArgs e)
         {
             _globalTick.SubscribedMembers.Add(this.GetType().Name);
            _currentGameState = GetNextGameState();
         }
+
+        
     }
 }
