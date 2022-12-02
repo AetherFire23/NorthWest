@@ -43,8 +43,6 @@ public class TaskClickHandler : MonoBehaviour
                 Debug.Log(t);
             }
 
-
-
             Debug.Log("Dd");
         }
     }
