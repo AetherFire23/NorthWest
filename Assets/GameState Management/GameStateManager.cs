@@ -19,6 +19,8 @@ namespace Assets.GameState_Management
 {
     public class GameStateManager : IInitializable
     {
+
+        [Inject] TemporaryOptionsScript options;
         public List<PrivateChatRoomParticipant> ParticipantsInPlayerRooms => _currentGameState.PrivateChatRooms;
         public List<Message> NewMessages => _currentGameState.NewMessages ?? new();
         public List<Player> Players => _currentGameState.Players ?? new();
@@ -41,17 +43,24 @@ namespace Assets.GameState_Management
 
         public void Initialize() 
         {
-            var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
-            Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"); // fred
-            Guid defaultPlayer2Guid = new Guid("B3543B2E-CD81-479F-B99E-D11A8AAB37A0"); // ben
+            //var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
+            //Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"); // fred
+            //Guid defaultPlayer2Guid = new Guid("B3543B2E-CD81-479F-B99E-D11A8AAB37A0"); // ben
+            // this.PlayerUID = defaultPlayer1Guid;
 
-            this.PlayerUID = defaultPlayer1Guid;
+
+            this.PlayerUID = options.CurrentPlayerID;
             _client.Initialize(this.PlayerUID);
 
             // Load default guid if mainMenu was not loaded
             //this.PlayerUID = menuInfo.MainPlayerId == Guid.Empty
             //    ? defaultPlayer1Guid
             //    : menuInfo.MainPlayerId;
+
+            if(String.IsNullOrEmpty(this.PlayerUID.ToString()))
+            {
+                throw new Exception("PlayerUID must be set");
+            }
 
             _currentGameState = GetFirstGameState(); // forcing the program to receive gamestate since virtually everything depends on that. Is launched non-lazily from the zen installer.
 

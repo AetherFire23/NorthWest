@@ -155,15 +155,15 @@ public class ChatManager : MonoBehaviour
         {
             // le id du targetPlayer est contenu dans le bouton
             var s = _inviteButtons.Add(new InviteButtonUGI(_chatObjectsManager.InvitePanel, p));
-            s.AccessScript.Button.AddMethod(() => SendPrivateInvitation(p.Id));
+            s.AccessScript.Button.AddMethod(() => SendPrivateInvitation(p.Id, _currentChatRoomId));
         }
     }
 
-    private void SendPrivateInvitation(Guid targetId)
+    private void SendPrivateInvitation(Guid targetId, Guid targetRoomId)
     {
         if (_currentChatRoomId == _gamestate.LocalPlayerDTO.GameId) return;
 
-        _client.Chat.InviteToRoom(targetId);
+        _client.Chat.InviteToRoom(targetId, targetRoomId);
     }
 
 

@@ -34,12 +34,15 @@ public class CycleChangeEnqueuer : MonoBehaviour
         {
             var da = new DialogAndAction()
             {
+                TriggerNotification = trigger,  
                 ActionType = () => Debug.Log("Just informed someone!"),
                 DialogType = DialogType.MessageBox,
                 Message = "I am here to inform you that a cycle has changed.",
             };
 
-            _dialogs.DialogQueue.Enqueue(da);
+
+
+                _dialogs.DialogQueue.Enqueue(da);
 
             // add fenetre
         }

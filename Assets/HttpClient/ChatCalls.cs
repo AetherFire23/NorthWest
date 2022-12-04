@@ -22,11 +22,14 @@ namespace Assets.HttpClient
         }
 
         private const string _uriAddPrivateChatInvitation = "https://localhost:7060/Chat/InviteToRoom"; //require parameter
-        public async UniTask<ClientCallResult> InviteToRoom(Guid targetPlayer)
+        public async UniTask<ClientCallResult> InviteToRoom(Guid targetPlayer, Guid targetRoomId)
         {
-            var infos = new UriBuilder(_uriAddPrivateChatInvitation, ParameterOptions.Required);
-            infos.AddParameter("fromId", _playerUID.ToString());
-            infos.AddParameter("targetPlayer", targetPlayer.ToString());
+            var infos = new UriBuilder(_uriAddPrivateChatInvitation, ParameterOptions.Required)
+                .WithParameter("fromId", _playerUID.ToString())
+                .WithParameter("targetPlayer", targetPlayer.ToString())
+                .WithParameter("targetRoomId", targetRoomId.ToString());
+            //infos.AddParameter("fromId", _playerUID.ToString());
+            //infos.AddParameter("targetPlayer", targetPlayer.ToString());
             var yeah = _httpCaller.PutRequest2(infos).AsTask().Result;
             return yeah;
         }
@@ -34,7 +37,7 @@ namespace Assets.HttpClient
         private const string _uriSendInviteResponse = "https://localhost:7060/Chat/SendInviteResponse"; //require parameter
         public ClientCallResult SendInvitationResponse(Guid triggerId, bool isAccepted)
         {
-            var infos = new UriBuilder(_uriSendInviteResponse, ParameterOptions.BodyOnly);
+            var infos = new UriBuilder(_uriSendInviteResponse, ParameterOptions.Required);
             infos.AddParameter("triggerId", triggerId.ToString());
             infos.AddParameter("isAccepted", isAccepted.ToString());
             var None = _httpCaller.PutRequest2(infos).AsTask().Result;

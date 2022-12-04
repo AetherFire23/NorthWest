@@ -40,8 +40,9 @@ public class PrivateInvitationEnqueuer : MonoBehaviour
 
         foreach (var trigger in triggers)
         {
-            //var sex = (Ptrigger.ExtraProperties;
-           var invite = (PrivateInvitationNotification)trigger.ExtraProperties;// bug sur ste ligne 
+            var obj = trigger.ExtraProperties.ToString();
+            var invite = JsonConvert.DeserializeObject<PrivateInvitationProperties>(obj);
+
 
             var da = new DialogAndAction()
             {
@@ -50,11 +51,26 @@ public class PrivateInvitationEnqueuer : MonoBehaviour
                 ActionType = () =>
                 {
                     Debug.Log("Sent invitation");
-                    if (!_dialogs.IsOkResult) return;
 
-                    _client.Chat.SendInvitationResponse(trigger.Id, true);
+                    bool response = _dialogs.IsOkResult;
+
+                    _client.Chat.SendInvitationResponse(trigger.Id, response);
+
                 },
             };
+
+            // dan le fond ca spawn twice. Je pense yavait le same probleme avant...
+            // jai limpression que le gamestate est update apres le tick et que ca fait en sorte que la boucle run 2 fois dans les memes notifications.
+            // au pire je deleterais la notification dans le gamestate ,ou je forcerais le tick 
+           
+            if (_dialogs.DialogQueue.Select(x => x.TriggerNotification).Contains(da.TriggerNotification))
+            {
+                return;
+            }
+
+
+            _dialogs.DialogQueue.Enqueue(da);
         }
+
     }
 }
