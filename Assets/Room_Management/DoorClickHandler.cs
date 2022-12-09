@@ -3,6 +3,7 @@ using Assets.HttpClient.Shared_API_Models;
 using Assets.Input_Management;
 using Assets.InputAwaiter;
 using Assets.Raycasts.NewRaycasts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,15 @@ public class DoorClickHandler : MonoBehaviour
         {
             //  var t = _newRayCaster.PointerPhysicsRaycast(x => x.transform.gameObject.tag == "Door");
             var doors = _newRayCaster.PointerPhysicsRaycast<DoorScript>();
-
             if (!doors.HasFoundHit) return;
+
+            bool isInRoom = doors.HitObject.GetComponent<DoorScript>().RoomName == _roomManager.CurrentRoom.RoomName;
+            if (!isInRoom) return;
+
             if (_dialogManager.IsWaitingForInput()) return;
 
             string targetRoomName = doors.HitObject.GetComponent<DoorScript>().targetRoom;
-            _dialogManager.CreateDialog(DialogType.YesNoDialog, $"Are you sure you wanna change rooms to : {targetRoomName}");
+            _dialogManager.CreateDialog(DialogType.YesNoDialog, $"Are you certain that you want to  change rooms to : {targetRoomName}? {Environment.NewLine} Useless movements will appear as suspicious.");
 
             await _inputWaiter.WaitForResult();
 
@@ -54,8 +58,9 @@ public class DoorClickHandler : MonoBehaviour
             if (callResult.IsSuccessful)
             {
                 RoomScript nextRoomScript = _roomManager.GetRoomScriptFromName(targetRoomName);
-                _roomManager.EnableSelectedRoomAndDisableOthers(nextRoomScript);
+              //  _roomManager.EnableSelectedRoomAndDisableOthers(nextRoomScript);
                 _playerScript.PlacePlayerCenterRoom(nextRoomScript);
+                _roomManager.CurrentRoom = nextRoomScript;
                 _roomManager.OnRoomChange();
             }
 

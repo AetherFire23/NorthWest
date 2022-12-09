@@ -19,7 +19,7 @@ public class ToolTipsManager : MonoBehaviour // faudrait resize au start vu qe c
     [SerializeField] RectTransform tooltipCanvasTransform;
     [SerializeField] Canvas tooltipCanvasComponent;
 
-    private List<string> _tooltipableTags = new List<string>() { "Item", };
+    private List<string> _tooltipableTags = new List<string>() { "Item", "PlayerTaskButton" };
     private List<int> _tooltipableLayers = new List<int>() { 6, };
     private TooltipUGI _tooltip;
     private float _timeOnToolTip;

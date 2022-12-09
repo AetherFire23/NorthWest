@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
+/// <summary>
+/// Base of UGI
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public abstract class InstanceWrapper<T> // where T == the script on the main gameobject
 {
     // Cette classe load un prefab, et le spawn sur un parent. P

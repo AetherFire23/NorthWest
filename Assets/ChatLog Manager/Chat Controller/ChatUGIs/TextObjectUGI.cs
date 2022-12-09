@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 namespace Assets.ChatLog_Manager
 {
-    public class TextObjectUGI : InstanceWrapper<TextObjectScript>, IEntity // Eventually make instancehelper a private class maybe ? 
+    public class TextObjectUGI : InstanceWrapper<TextObjectScript>, IEntity 
     {
         public Guid Id => MessageModel.Id;
         public readonly Message MessageModel;

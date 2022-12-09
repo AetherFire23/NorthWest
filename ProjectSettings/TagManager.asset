@@ -7,6 +7,8 @@ TagManager:
   - Slot
   - Door
   - RoomInventory
+  - PlayerTaskButton
+  - PlayerTaskPanel
   layers:
   - Default
   - TransparentFX

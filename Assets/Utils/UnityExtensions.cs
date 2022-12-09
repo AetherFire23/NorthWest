@@ -221,4 +221,15 @@ public static class UnityExtensions
             removeFrom.Remove(p);
         }
     }
+
+    public static bool IsWithinBounds(Vector2 startPosition, Vector2 maxPosition, Vector2 pointPosition)
+    {
+        bool isOverStartPoint = startPosition.x < pointPosition.x && startPosition.y < pointPosition.y;
+        bool isUnderEndPoint = maxPosition.x > pointPosition.x && maxPosition.y > pointPosition.y;
+
+        bool isContained = isOverStartPoint && isUnderEndPoint;
+
+        return isContained;
+    }
+
 }

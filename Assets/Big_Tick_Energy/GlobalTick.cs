@@ -16,7 +16,7 @@ namespace Assets.Big_Tick_Energy
         public delegate void TimerTickedEventHandler(object source, EventArgs args);
         public event TimerTickedEventHandler TimerTicked;
 
-        private float _maximumTime = 3f;
+        private float _maximumTime = 5f;
         private float _currentTimeElapsed;
         private int _tickAmount;
 

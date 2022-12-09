@@ -20,12 +20,12 @@ public class ChatManager : MonoBehaviour
     [Inject] private GlobalTick _tick;
     [Inject] private ClientCalls _client;
 
-    private UGICollectionEditorDbKey<TextObjectUGI, TextObjectScript, Message> _messages; // Messages have a dbModel
-    private UGICollectionEditorDbKey<PlayerInRoomEntryUGI, PlayerInRoomEntryAS, Player> _playersInRoom;
+    private UGICollectionEntity<TextObjectUGI, TextObjectScript, Message> _messages; // Messages have a dbModel
+    private UGICollectionEntity<PlayerInRoomEntryUGI, PlayerInRoomEntryAS, Player> _playersInRoom;
     //private UGICollectionEditor<RoomTabUGI, RoomTabInstanceScript> _roomTabs;
-    private UGICollectionEditor<RoomTabUGI, RoomTabInstanceScript> _roomTabs;
+    private UGICollection<RoomTabUGI, RoomTabInstanceScript> _roomTabs;
 
-    private UGICollectionEditor<InviteButtonUGI, InviteButtonInstanceScript> _inviteButtons;
+    private UGICollection<InviteButtonUGI, InviteButtonInstanceScript> _inviteButtons;
 
     // Real variables
     private Guid _currentChatRoomId;

@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 
 public class RoomManager : MonoBehaviour
 {
+
     [SerializeField] public Kitchen1Script firstRoomScript;
     [SerializeField] public EntryHallScript secondRoomScript; // tout ecrire la logic dans roomscript, les variables specific cest dans la firstsecond
     [SerializeField] private PlayerScript playerScript;
@@ -29,7 +30,7 @@ public class RoomManager : MonoBehaviour
         InitRoomsTemplate(); // must be called first
 
         CurrentRoom = GetCurrentRoomScriptFromGameState();
-        EnableSelectedRoomAndDisableOthers(CurrentRoom);
+       // EnableSelectedRoomAndDisableOthers(CurrentRoom);
         playerScript.PlacePlayerCenterRoom(CurrentRoom);
     }
 

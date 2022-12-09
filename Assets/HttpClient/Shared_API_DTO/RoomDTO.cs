@@ -10,6 +10,7 @@ namespace WebAPI.Models.DTOs
         public string Name { get; set; }
         public List<Item> Items { get; set; }
         public List<Player> Players { get; set; }
+        public List<RoomDTO> Rooms { get; set; }
         public RoomType RoomType { get; set; }
     }
 }

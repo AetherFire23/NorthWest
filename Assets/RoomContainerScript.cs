@@ -1,17 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GameTaskScript : MonoBehaviour
+public class RoomContainerScript : MonoBehaviour
 {
-    [SerializeField]
-    public GameTaskType _gameTaskType;
-
-    [SerializeField]
-    public string StationName = "CookStation1";
 
     [SerializeField] public string RoomName;
-
+    [SerializeField] public Button Button;
+    // Start is called before the first frame update
     void Start()
     {
         

@@ -43,7 +43,6 @@ public class PrivateInvitationEnqueuer : MonoBehaviour
             var obj = trigger.ExtraProperties.ToString();
             var invite = JsonConvert.DeserializeObject<PrivateInvitationProperties>(obj);
 
-
             var da = new DialogAndAction()
             {
                 Message = $"You have been invited by {invite.FromPlayerName}",
@@ -67,7 +66,6 @@ public class PrivateInvitationEnqueuer : MonoBehaviour
             {
                 return;
             }
-
 
             _dialogs.DialogQueue.Enqueue(da);
         }

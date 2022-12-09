@@ -14,6 +14,7 @@ using Assets.Room_Management;
 using Assets.MainMenu;
 using Assets.Big_Tick_Energy;
 using Assets.Enums;
+using Assets.HttpClient.Shared_Entities;
 
 namespace Assets.GameState_Management
 {
@@ -29,6 +30,11 @@ namespace Assets.GameState_Management
         public RoomDTO Room => _currentGameState.Room ?? new();
         public List<Player> PlayersInRoom { get; set; }
         public List<TriggerNotificationDTO> Notifications => _currentGameState.TriggerNotifications;
+
+        public List<RoomDTO> Rooms => _currentGameState.Rooms;
+
+        public List<Log> Logs => _currentGameState.Logs;
+
         public Guid PlayerUID { get; set; } // inited through IInitializable
 
         private GameState _currentGameState; // could probably decouple the gamestate and its manager.

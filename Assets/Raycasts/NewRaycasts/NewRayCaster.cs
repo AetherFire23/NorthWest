@@ -75,5 +75,23 @@ namespace Assets.Raycasts.NewRaycasts
             };
             return newResult;
         }
+
+        public UIRaycastResult PointerRayAll()
+        {
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = _newInputManager.PointerPosition;
+            List<RaycastResult> raycastResult = new List<UnityEngine.EventSystems.RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, raycastResult);
+            bool foundHit = raycastResult.Any();
+
+            var newResult = new UIRaycastResult()
+            {
+                GameObject = foundHit ? raycastResult.FirstOrDefault().gameObject : null,
+                raycastResults = raycastResult,
+                HasFoundHit = foundHit,
+                FirstResult = foundHit ? raycastResult.FirstOrDefault() : new RaycastResult()
+            };
+            return newResult;
+        }
     }
 }

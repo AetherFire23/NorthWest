@@ -6,4 +6,5 @@ using UnityEngine;
 public class DoorScript : MonoBehaviour
 {
     [SerializeField] public string targetRoom;
+    [SerializeField] public string RoomName;
 }

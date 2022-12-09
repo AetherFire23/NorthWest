@@ -9,6 +9,7 @@ using Zenject;
 
 public class TaskClickHandler : MonoBehaviour
 {
+    [Inject] RoomManager _roomManager;
     private GameStateManager _gameStateManager;
     private PlayerScript _playerScript;
     private DialogManager _dialogManager;
@@ -27,6 +28,9 @@ public class TaskClickHandler : MonoBehaviour
         if(_newInputManager.Pressed)
         {
             if (!rayCast.HasFoundHit) return;
+
+            bool isInRoom = rayCast.HitObject.GetComponent<GameTaskScript>().RoomName == _roomManager.CurrentRoom.RoomName;
+            if (!isInRoom) return;
 
             _dialogManager.CreateDialog(DialogType.YesNoDialog, "Do you want to cook ?");
 

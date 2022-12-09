@@ -4,7 +4,7 @@ using System;
 
 namespace WebAPI.Models
 {
-    public class PrivateInvitation
+    public class PrivateInvitation // obsolete je pense 
     {
         public Guid Id { get; set; }
         public Guid FromPlayerId { get; set; } // localPlayer
