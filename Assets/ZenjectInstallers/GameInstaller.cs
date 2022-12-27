@@ -33,7 +33,7 @@ public class GameInstaller : MonoInstaller
 
         
 
-        Container.BindInterfacesTo<GameController>().AsSingle();
+       // Container.BindInterfacesTo<GameController>().AsSingle();
 
 
         Container.Bind<DialogManager>().AsSingle();
