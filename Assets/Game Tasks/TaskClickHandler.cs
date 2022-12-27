@@ -24,28 +24,28 @@ public class TaskClickHandler : MonoBehaviour
     // Update is called once per frame
     async void Update()
     {
+        if (!_newInputManager.Pressed) return;
         var rayCast = _newRayCaster.PointerPhysicsRaycast<GameTaskScript>();
-        if(_newInputManager.Pressed)
+
+        if (!rayCast.HasFoundHit) return;
+
+        bool isInRoom = rayCast.HitObject.GetComponent<GameTaskScript>().RoomName == _roomManager.CurrentRoom.RoomName;
+        if (!isInRoom) return;
+
+        _dialogManager.CreateDialog(DialogType.YesNoDialog, "Do you want to cook ?");
+
+        await _inputWaiter.WaitForResult();
+
+        DialogResult result = _dialogManager.CurrentDialog.DialogResult;
+
+        if (result == DialogResult.Yes || result == DialogResult.Ok)
         {
-            if (!rayCast.HasFoundHit) return;
-
-            bool isInRoom = rayCast.HitObject.GetComponent<GameTaskScript>().RoomName == _roomManager.CurrentRoom.RoomName;
-            if (!isInRoom) return;
-
-            _dialogManager.CreateDialog(DialogType.YesNoDialog, "Do you want to cook ?");
-
-            await _inputWaiter.WaitForResult();
-
-            DialogResult result = _dialogManager.CurrentDialog.DialogResult;
-
-            if(result == DialogResult.Yes || result == DialogResult.Ok)
-            {
-                var t = _clientCalls.CookTask(_gameStateManager.PlayerUID, (rayCast.script as GameTaskScript).StationName);
-                Debug.Log(t);
-            }
-
-            Debug.Log("Dd");
+            var t = _clientCalls.CookTask(_gameStateManager.PlayerUID, (rayCast.script as GameTaskScript).StationName);
+            Debug.Log(t);
         }
+
+        Debug.Log("Dd");
+
     }
 
     [Inject]

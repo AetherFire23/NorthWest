@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class DoorClickHandler : MonoBehaviour
+public class RoomChangeHandler : MonoBehaviour
 {
     [SerializeField] RoomManager _roomManager;
 
@@ -22,6 +22,7 @@ public class DoorClickHandler : MonoBehaviour
     private DialogManager _dialogManager;
     private InputWaiting _inputWaiter;
     GameStateManager _gameStateManager;
+
     public void Start()
     {
     }
@@ -34,15 +35,36 @@ public class DoorClickHandler : MonoBehaviour
             var doors = _newRayCaster.PointerPhysicsRaycast<DoorScript>();
             if (!doors.HasFoundHit) return;
 
-            bool isInRoom = doors.HitObject.GetComponent<DoorScript>().RoomName == _roomManager.CurrentRoom.RoomName;
+            bool isInRoom = doors.HitObject.GetComponent<DoorScript>().RoomName == _roomManager.CurrentRoom.
+                RoomName;
             if (!isInRoom) return;
 
             if (_dialogManager.IsWaitingForInput()) return;
 
             string targetRoomName = doors.HitObject.GetComponent<DoorScript>().targetRoom;
+
+            // ici on check si cest une expedition. 
+            bool isExpedition = new List<string>() { "Expedition1" }.Contains(targetRoomName);
+
+            if(isExpedition)
+            {
+                //client.JoinExpedition()
+                // Let the server handle all the shenanigans of whether to initialize, set leader, etc. 
+
+                // check if the expedition is valid.
+                // If it is, check if it must be created and thus become leader
+                // if not
+
+
+                
+            }
+            Debug.Log(isExpedition);
+
             _dialogManager.CreateDialog(DialogType.YesNoDialog, $"Are you certain that you want to  change rooms to : {targetRoomName}? {Environment.NewLine} Useless movements will appear as suspicious.");
 
             await _inputWaiter.WaitForResult();
+
+
 
             if (_dialogManager.DialogResult == DialogResult.Cancel)
             {

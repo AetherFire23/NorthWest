@@ -10,16 +10,16 @@ using System.Runtime.CompilerServices;
 
 public class RoomManager : MonoBehaviour
 {
+    // Editor variables 
+    [SerializeField] private PlayerScript playerScript; // pour bouger le perso principal quand il change de room
+    [SerializeField] List<RoomScript> RoomScripts;
 
-    [SerializeField] public Kitchen1Script firstRoomScript;
-    [SerializeField] public EntryHallScript secondRoomScript; // tout ecrire la logic dans roomscript, les variables specific cest dans la firstsecond
-    [SerializeField] private PlayerScript playerScript;
+    // Local variables 
+    public RoomScript CurrentRoom;
 
+    // Event 
     public delegate void RoomChangeEventHandler(object source, EventArgs args);
     public event RoomChangeEventHandler OnRoomChanged;
-
-    public RoomScript CurrentRoom;
-    private List<RoomScript> RoomScripts = new();
 
     // DI
     private ClientCalls _clientCalls;
@@ -27,14 +27,21 @@ public class RoomManager : MonoBehaviour
 
     void Start()
     {
-        InitRoomsTemplate(); // must be called first
-
         CurrentRoom = GetCurrentRoomScriptFromGameState();
-       // EnableSelectedRoomAndDisableOthers(CurrentRoom);
         playerScript.PlacePlayerCenterRoom(CurrentRoom);
+       // InitDbRooms();
     }
 
-    public void EnableSelectedRoomAndDisableOthers(RoomScript roomScript)
+    public void InitDbRooms()
+    {
+        foreach (var room in this.RoomScripts)
+        {
+            var dbRoom = this._gameStateManager.Rooms.First(x => x.Name == room.name);
+            room.RoomDTO = dbRoom;
+        }
+    }
+
+    public void EnableSelectedRoomAndDisableOthers(RoomScript roomScript) // porlly plus jamais utilisee vu que c rendu un gros board game 
     {
         this.RoomScripts.ForEach(x => x.gameObject.SetActive(false));
         roomScript.gameObject.SetActive(true);
@@ -50,24 +57,38 @@ public class RoomManager : MonoBehaviour
         return this.RoomScripts.First(x => x.RoomName == roomName);
     }
 
-    private void InitRoomsTemplate()
-    {
-        RoomScripts.Add(firstRoomScript);
-        RoomScripts.Add(secondRoomScript);
-        InitRoomNamesInScripts(); // Doit etre initialise ici parce que Start() run avant le start() des autres scripts...
-    }
-
-    private void InitRoomNamesInScripts()
-    {
-        this.firstRoomScript.RoomName = nameof(LevelTemplate.Kitchen1);
-        this.secondRoomScript.RoomName = nameof(LevelTemplate.EntryHall);
-    }
-
     private void OnApplicationQuit()
     {
         Debug.Log("Attempting close client.");
         _clientCalls.DestroyClient();
         Debug.Log("Client disposed");
+    }
+
+    public void CheckExpeditionDoorVisibility()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CheckExpeditionRoomVisibility()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CheckExpeditionStationVisibility()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void CheckExpeditionEnded()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void OnTimerTick(object source, EventArgs e)
+    {
+        CheckExpeditionDoorVisibility();
+        CheckExpeditionRoomVisibility();
+        CheckExpeditionStationVisibility(); // Should include taks I guess 
     }
 
     [Inject]

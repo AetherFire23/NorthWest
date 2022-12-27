@@ -89,6 +89,8 @@ public class DialogManager
 
     private async void OnTimerTick(object source, EventArgs e)
     {
+
+
         if (CurrentDialog is not null) return;
         if (QueueIsRunning) return;
         if (DialogQueue.Count == 0) return;
@@ -98,6 +100,8 @@ public class DialogManager
 
     private async UniTask StartDequeuingNotifications()
     {
+        // roule les dialogs 1 par un, ne permet pas de faire des nodes de dialog par contre. 
+
         QueueIsRunning = true;
         while (DialogQueue.Count >= 1)
         {

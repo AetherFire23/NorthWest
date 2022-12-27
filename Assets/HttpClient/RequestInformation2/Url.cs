@@ -9,6 +9,10 @@ public class Url
 {
 
     public string Path => _path + GetParameterLine();
+
+
+
+
     public List<UriParameter> requiredParameters = new List<UriParameter>(); // add through field initializer
     private string _path;
     private bool HasRequiredParameter;

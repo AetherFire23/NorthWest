@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WebAPI.Models.DTOs;
 
-public abstract class RoomScript : MonoBehaviour
+public class RoomScript : MonoBehaviour
 {
     public RoomTemplate DbRoom = new RoomTemplate();
     public string RoomName;
+    public RoomDTO RoomDTO;
 }
