@@ -1,4 +1,5 @@
-﻿using Assets.ChatLog_Manager;
+﻿
+using Assets.ChatLog_Manager;
 using System;
 using System.Collections.Generic;
 using WebAPI.Models;
@@ -20,6 +21,7 @@ namespace WebAPI.GameState_Management
 
         public List<Log> Logs { get; set; }
         public List<RoomDTO> Rooms { get; set; }
+
         public DateTime? TimeStamp { get; set; }
     }
 }

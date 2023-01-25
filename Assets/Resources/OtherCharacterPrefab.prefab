@@ -263,10 +263,11 @@ GameObject:
   - component: {fileID: 1551233873539345483}
   - component: {fileID: 1423866336784330952}
   - component: {fileID: 447945155230441671}
-  - component: {fileID: 6281608478213408636}
-  - component: {fileID: -8375724251443634937}
-  - component: {fileID: -5415372340352847219}
   - component: {fileID: 8327072974929528208}
+  - component: {fileID: 3183376308867513011}
+  - component: {fileID: 3732395854559010595}
+  - component: {fileID: 8084810474180451421}
+  - component: {fileID: 6300246204312485123}
   m_Layer: 0
   m_Name: OtherCharacterPrefab
   m_TagString: Player
@@ -362,50 +363,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6281608478213408636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2747691485317418151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff7f2796347fe7344abc408adcd5b7cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TextOverHead: {fileID: 1973383573961742241}
-  CharacterMovement: {fileID: -8375724251443634937}
-  ProfessionText: {fileID: 6889404316368122188}
-  professionHeight: 25
---- !u!114 &-8375724251443634937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2747691485317418151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4aa8f7be2c9f9f4fb6d0060bae0cbdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetPosition: {x: 0, y: 0}
-  MovementSpeed: 3.5
---- !u!114 &-5415372340352847219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2747691485317418151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b0e76f18fb349a4ab023079ab68bd9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _characterMovement: {fileID: -8375724251443634937}
-  _animator: {fileID: 447945155230441671}
 --- !u!61 &8327072974929528208
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -432,6 +389,64 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.64, y: 0.64}
   m_EdgeRadius: 0
+--- !u!114 &3183376308867513011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747691485317418151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3dfa08a103c27428e752708edf39d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterMovement: {fileID: 6300246204312485123}
+  _animator: {fileID: 447945155230441671}
+--- !u!114 &3732395854559010595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747691485317418151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3dfa08a103c27428e752708edf39d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterMovement: {fileID: 6300246204312485123}
+  _animator: {fileID: 447945155230441671}
+--- !u!114 &8084810474180451421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747691485317418151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5e75ea0e381b354a9d01aca003b46d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextOverHead: {fileID: 1973383573961742241}
+  CharacterMovement: {fileID: 6300246204312485123}
+  ProfessionText: {fileID: 6889404316368122188}
+  professionHeight: 0
+--- !u!114 &6300246204312485123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2747691485317418151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a7ce1f1cd9a5f64eb2f2e471df8be67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetPosition: {x: 0, y: 0}
+  MovementSpeed: 0.000003
 --- !u!1 &7641319962121981307
 GameObject:
   m_ObjectHideFlags: 0

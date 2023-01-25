@@ -28,10 +28,8 @@ namespace Assets.HttpClient
                 .WithParameter("fromId", _playerUID.ToString())
                 .WithParameter("targetPlayer", targetPlayer.ToString())
                 .WithParameter("targetRoomId", targetRoomId.ToString());
-            //infos.AddParameter("fromId", _playerUID.ToString());
-            //infos.AddParameter("targetPlayer", targetPlayer.ToString());
-            var yeah = _httpCaller.PutRequest2(infos).AsTask().Result;
-            return yeah;
+            var clientCallResult = _httpCaller.PutRequest2(infos).AsTask().Result;
+            return clientCallResult;
         }
 
         private const string _uriSendInviteResponse = "https://localhost:7060/Chat/SendInviteResponse"; //require parameter

@@ -85,6 +85,7 @@ public class ChatManager : MonoBehaviour
         var messagesInCurrentRoom = this.MessageBank.Where(x => x.RoomId.Equals(_currentChatRoomId)).ToList();
         _messages.RefreshFromDbModels(messagesInCurrentRoom);
     }
+
     private void RefreshPrivateRoomTabs()
     {
         var privateRoomIds = _gamestate.ParticipantsInPlayerRooms.Select(x => x.RoomId).Distinct().ToList();
@@ -92,6 +93,7 @@ public class ChatManager : MonoBehaviour
 
         var appearedRooms = privateRoomIds.Where(x => !currentRoomIds.Contains(x)).ToList();
         var disappeared = currentRoomIds.Where(x => !privateRoomIds.Contains(x)).ToList();
+        
 
         foreach (Guid guid in appearedRooms)
         {
