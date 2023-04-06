@@ -15,7 +15,7 @@ public class OtherCharacterAS : MonoBehaviour
     public OtherCharacterUGI SelfWrapper;
     void Start()
     {
-        
+
     }
 
     void Update()

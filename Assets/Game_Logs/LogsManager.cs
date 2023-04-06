@@ -1,8 +1,8 @@
 using Assets.Big_Tick_Energy;
 using Assets.Game_Logs;
 using Assets.GameState_Management;
-using Assets.HttpClient.Shared_Entities;
 using Assets.Utils;
+using Shared_Resources.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -90,7 +90,7 @@ public class LogsManager : MonoBehaviour
             var roomButton = this.RoomFilterButtons.Add(new NormalButtonUGI(_roomFilterContentTransform.gameObject, room.Name));
             roomButton.AccessScript.ButtonComponent.AddMethod(() =>
             {
-                _filter = () =>RefreshByRoomId(room.Id);
+                _filter = () => RefreshByRoomId(room.Id);
                 _filter();
             }
             );

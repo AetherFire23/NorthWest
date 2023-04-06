@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 using static UnityEngine.UI.Button;
 using Assets.Utils;
+using Shared_Resources.Interfaces;
 
 public class RoomTabUGI : InstanceWrapper<RoomTabInstanceScript>, IEntity
 {

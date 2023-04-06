@@ -2,6 +2,7 @@ using Assets.Big_Tick_Energy;
 using Assets.Dialogs;
 using Assets.Enums;
 using Assets.GameState_Management;
+using Shared_Resources.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;

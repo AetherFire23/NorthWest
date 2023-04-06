@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
-using Assets.HttpClient.Shared_API_Models;
 using Cysharp.Threading.Tasks;
-using WebAPI.Models;
 using Assets.Raycasts.NewRaycasts;
+using Shared_Resources.Models;
 
 namespace Assets.HttpClient
 {

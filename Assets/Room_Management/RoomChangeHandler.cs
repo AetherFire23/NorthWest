@@ -1,8 +1,8 @@
 using Assets.GameState_Management;
-using Assets.HttpClient.Shared_API_Models;
 using Assets.Input_Management;
 using Assets.InputAwaiter;
 using Assets.Raycasts.NewRaycasts;
+using Shared_Resources.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;

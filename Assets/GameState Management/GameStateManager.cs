@@ -7,14 +7,14 @@ using Zenject;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Assets.ChatLog_Manager;
-using WebAPI.GameState_Management;
-using WebAPI.Models;
-using WebAPI.Models.DTOs;
 using Assets.Room_Management;
 using Assets.MainMenu;
 using Assets.Big_Tick_Energy;
 using Assets.Enums;
-using Assets.HttpClient.Shared_Entities;
+using Shared_Resources.Entities;
+using Shared_Resources.DTOs;
+using Shared_Resources.Models;
+using Shared_Resources.Enums;
 
 namespace Assets.GameState_Management
 {

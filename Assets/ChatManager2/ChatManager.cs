@@ -9,8 +9,8 @@ using Zenject;
 using System.Linq;
 using System;
 using Assets.Big_Tick_Energy;
-using WebAPI.Models;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.Entities;
 
 public class ChatManager : MonoBehaviour
 {
@@ -167,7 +167,6 @@ public class ChatManager : MonoBehaviour
 
         _client.Chat.InviteToRoom(targetId, targetRoomId);
     }
-
 
     private void OnTimerTick(object source, EventArgs e)
     {

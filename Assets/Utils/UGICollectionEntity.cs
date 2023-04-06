@@ -1,4 +1,5 @@
 ﻿using Assets.OtherCharacters;
+using Shared_Resources.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

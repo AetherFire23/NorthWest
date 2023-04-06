@@ -1,8 +1,8 @@
-﻿namespace WebAPI.Enums
-{
-    public enum ItemType
-    {
-        Wrench,
-        Hose
-    }
-}
+﻿//namespace WebAPI.Enums
+//{
+//    public enum ItemType
+//    {
+//        Wrench,
+//        Hose
+//    }
+//}

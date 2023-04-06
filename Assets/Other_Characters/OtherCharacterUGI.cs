@@ -1,4 +1,6 @@
 ﻿using Assets.Utils;
+using Shared_Resources.Entities;
+using Shared_Resources.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

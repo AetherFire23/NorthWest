@@ -1,9 +1,9 @@
 ﻿using Assets.ChatLog_Manager;
 using Assets.GameState_Management;
 using Assets.HttpClient;
-using Assets.HttpClient.Shared_API_Models;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
+using Shared_Resources.Entities;
+using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +11,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using WebAPI.GameState_Management;
-using WebAPI.Models;
 using Zenject;
+using Newtonsoft.Json;
 
 public class ClientCalls
 {

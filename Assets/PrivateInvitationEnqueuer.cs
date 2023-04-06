@@ -2,14 +2,15 @@ using Assets.Big_Tick_Energy;
 using Assets.Dialogs;
 using Assets.Enums;
 using Assets.GameState_Management;
-using Assets.HttpClient.Shared_API_Models;
-using Newtonsoft.Json;
+using Shared_Resources.Enums;
+using Shared_Resources.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
+using Newtonsoft.Json;
 
 public class PrivateInvitationEnqueuer : MonoBehaviour
 {

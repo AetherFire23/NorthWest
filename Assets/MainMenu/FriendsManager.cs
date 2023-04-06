@@ -1,5 +1,4 @@
 using Assets.Dialogs;
-using Assets.HttpClient.Shared_API_Db_Models;
 using Assets.InputAwaiter;
 using Assets.MainMenu.UGIs;
 using Assets.Utils;

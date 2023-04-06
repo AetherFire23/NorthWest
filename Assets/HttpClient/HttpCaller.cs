@@ -1,6 +1,6 @@
-﻿using Assets.HttpClient.Shared_API_Models;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

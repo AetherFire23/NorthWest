@@ -6,16 +6,14 @@ using Assets.Inventory.Player_Item;
 using Assets.Inventory.Slot;
 using Assets.Raycasts.NewRaycasts;
 using Assets.Utils;
+using Shared_Resources.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using WebAPI.Models;
 using Zenject;
-
-using Item = WebAPI.Models.Item;
 
 public class InventoryManagement : MonoBehaviour
 {

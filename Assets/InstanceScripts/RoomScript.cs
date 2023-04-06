@@ -1,8 +1,8 @@
 ﻿using Assets.Room_Management;
+using Shared_Resources.DTOs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WebAPI.Models.DTOs;
 
 public class RoomScript : MonoBehaviour
 {

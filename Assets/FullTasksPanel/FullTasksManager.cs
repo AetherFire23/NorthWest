@@ -2,6 +2,7 @@ using Assets.Big_Tick_Energy;
 using Assets.FullTasksPanel;
 using Assets.GameState_Management;
 using Assets.Utils;
+using Shared_Resources.Enums;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ public class FullTasksManager : MonoBehaviour
 
         switch (_gameState.LocalPlayerDTO.Profession)
         {
-            case WebAPI.Enums.ProfessionType.Commander:
+            case RoleType.Commander:
                 {
                     localPlayerTasks.Actions.Add(new GameTaskAction()
                     {

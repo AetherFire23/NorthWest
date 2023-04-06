@@ -1,5 +1,9 @@
 ﻿using Assets.Inventory.Slot;
 using Assets.Utils;
+using Shared_Resources;
+using Shared_Resources.Entities;
+using Shared_Resources.Enums;
+using Shared_Resources.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using WebAPI.Enums;
-using WebAPI.Models;
 
 namespace Assets.Inventory.Player_Item
 {

@@ -5,6 +5,7 @@ using Assets.InputAwaiter;
 using Assets.OtherCharacters;
 using Assets.Raycasts.NewRaycasts;
 using Assets.Utils;
+using Shared_Resources.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,9 +24,6 @@ public class OtherCharactersManager : MonoBehaviour
     private ClientCalls _clientCalls;
     private NewInputManager _newInputManager;
     private NewRayCaster _newRayCaster;
-
-
-
     private GameObject _roomManagerParent => this.gameObject;
     //private List<OtherCharacterUGI> _otherCharacters = new();
     private List<Player> _playersInRoom => _gameStateManager.PlayersInRoom;
