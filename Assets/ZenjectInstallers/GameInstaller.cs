@@ -22,7 +22,6 @@ public class GameInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.BindInterfacesAndSelfTo<GameStateManager>().AsSingle().NonLazy();
-
         //Container.BindInterfacesTo<PlayerInputHandler>().AsSingle();
         //Container.BindInterfacesTo<PlayerMovement>().AsSingle();
         //Container.Bind<PlayerInputState>().AsSingle();
@@ -71,6 +70,14 @@ public class GameInstaller : MonoInstaller
         Container.BindInterfacesAndSelfTo<NewRayCaster>().AsSingle();
 
 
-        Container.BindInterfacesAndSelfTo<GlobalTick>().AsSingle();
+        Container.BindInterfacesAndSelfTo<GlobalTick>().AsSingle(); // NonLazy I guess
+        
+
+    }
+
+
+    private static void RegisterTaskTypes()
+    {
+
     }
 }

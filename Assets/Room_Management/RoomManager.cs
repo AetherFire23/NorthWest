@@ -12,7 +12,7 @@ public class RoomManager : MonoBehaviour
 {
     // Editor variables 
     [SerializeField] private PlayerScript playerScript; // pour bouger le perso principal quand il change de room
-    [SerializeField] List<RoomScript> RoomScripts;
+    [SerializeField] List<RoomScript> RoomScripts; // Les roomScript sont faits a la main dans le editor
 
     // Local variables 
     public RoomScript CurrentRoom;

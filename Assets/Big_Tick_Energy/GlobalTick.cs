@@ -1,6 +1,9 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Interfaces;
+using Cysharp.Threading.Tasks;
+using Shared_Resources.GameTasks;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +23,33 @@ namespace Assets.Big_Tick_Energy
         private float _currentTimeElapsed;
         private int _tickAmount;
 
+        [Inject] private DiContainer _container;
+
+        // Could be in fact subscribed in a script with maximum execution order.
+        public void SubscribeAll() // should I make a function like S
+        {
+            // Monobehaviour subscriptions
+            foreach (GameObject go in GameObject.FindObjectsOfType(typeof(GameObject)))
+            {
+                // has a tickable method
+                var scripts = go.GetComponents<MonoBehaviour>().Where(x => typeof(IGlobalTickable).IsAssignableFrom(x.GetType()))
+                    .Select(x => x as IGlobalTickable);
+                // should work honestly
+                foreach (var tickable in scripts)
+                {
+                    this.TimerTicked += tickable.OnTimerTick;
+                }
+            }
+
+            // DI container subscriptions
+
+            //foreach (object obj in _container.)
+            //{
+
+            //}
+        }
+
+
         public void Tick() // From Interface
         {
             try
@@ -36,7 +66,7 @@ namespace Assets.Big_Tick_Energy
                     _tickAmount++;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.Log("An error related to the tick occurred. Probably caused by async stuff");
             }

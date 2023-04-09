@@ -25,6 +25,7 @@ public class RoomChangeHandler : MonoBehaviour
 
     public void Start()
     {
+
     }
 
     async void Update()

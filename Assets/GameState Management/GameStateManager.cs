@@ -15,6 +15,7 @@ using Shared_Resources.Entities;
 using Shared_Resources.DTOs;
 using Shared_Resources.Models;
 using Shared_Resources.Enums;
+using Shared_Resources.GameTasks;
 
 namespace Assets.GameState_Management
 {
@@ -22,22 +23,22 @@ namespace Assets.GameState_Management
     {
 
         [Inject] TemporaryOptionsScript options;
-        public List<PrivateChatRoomParticipant> ParticipantsInPlayerRooms => _currentGameState.PrivateChatRooms;
-        public List<Message> NewMessages => _currentGameState.NewMessages ?? new();
-        public List<Player> Players => _currentGameState.Players ?? new();
+        public List<PrivateChatRoomParticipant> ParticipantsInPlayerRooms => CurrentGameState.PrivateChatRooms;
+        public List<Message> NewMessages => CurrentGameState.NewMessages ?? new();
+        public List<Player> Players => CurrentGameState.Players ?? new();
         public List<Player> OtherPlayers { get; set; }
-        public PlayerDTO LocalPlayerDTO => _currentGameState.PlayerDTO ?? new();
-        public RoomDTO Room => _currentGameState.Room ?? new();
+        public PlayerDTO LocalPlayerDTO => CurrentGameState.PlayerDTO ?? new();
+        public RoomDTO Room => CurrentGameState.Room ?? new();
         public List<Player> PlayersInRoom { get; set; }
-        public List<TriggerNotificationDTO> Notifications => _currentGameState.TriggerNotifications;
+        public List<TriggerNotificationDTO> Notifications => CurrentGameState.TriggerNotifications;
 
-        public List<RoomDTO> Rooms => _currentGameState.Rooms;
+        public List<RoomDTO> Rooms => CurrentGameState.Rooms;
 
-        public List<Log> Logs => _currentGameState.Logs;
+        public List<Log> Logs => CurrentGameState.Logs;
 
         public Guid PlayerUID { get; set; } // inited through IInitializable
 
-        private GameState _currentGameState; // could probably decouple the gamestate and its manager.
+        public GameState CurrentGameState; // could probably decouple the gamestate and its manager.
         private readonly GlobalTick _globalTick;
         private readonly ClientCalls _client;
         private bool _initialized = false;
@@ -47,7 +48,7 @@ namespace Assets.GameState_Management
             _client = clientCalls;
         }
 
-        public void Initialize() 
+        public void Initialize()
         {
             //var menuInfo = Resources.Load<MainMenuPersistence>("mainMenuPersistence");
             //Guid defaultPlayer1Guid = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"); // fred
@@ -63,12 +64,12 @@ namespace Assets.GameState_Management
             //    ? defaultPlayer1Guid
             //    : menuInfo.MainPlayerId;
 
-            if(String.IsNullOrEmpty(this.PlayerUID.ToString()))
+            if (String.IsNullOrEmpty(this.PlayerUID.ToString()))
             {
                 throw new Exception("PlayerUID must be set");
             }
 
-            _currentGameState = GetFirstGameState(); // forcing the program to receive gamestate since virtually everything depends on that. Is launched non-lazily from the zen installer.
+            CurrentGameState = GetFirstGameState(); // forcing the program to receive gamestate since virtually everything depends on that. Is launched non-lazily from the zen installer.
 
             _globalTick.TimerTicked += OnTimerTick;
         }
@@ -83,13 +84,13 @@ namespace Assets.GameState_Management
 
         private GameState GetNextGameState()
         {
-            DateTime? currentTimeStamp = _currentGameState.TimeStamp;
+            DateTime? currentTimeStamp = CurrentGameState.TimeStamp;
             GameState newGameState = _client.GetGameState(this.PlayerUID, currentTimeStamp).AsTask().Result;
 
             if (true) ;
             UpdateOtherPlayers(newGameState);
             return newGameState;
-       }
+        }
 
         private void UpdateOtherPlayers(GameState newGameState)
         {
@@ -106,9 +107,7 @@ namespace Assets.GameState_Management
         private void OnTimerTick(object source, EventArgs e)
         {
             _globalTick.SubscribedMembers.Add(this.GetType().Name);
-           _currentGameState = GetNextGameState();
+            CurrentGameState = GetNextGameState();
         }
-
-        
     }
 }
