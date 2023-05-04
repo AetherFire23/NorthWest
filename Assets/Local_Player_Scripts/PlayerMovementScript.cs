@@ -1,5 +1,6 @@
 using Assets.Input_Management;
 using Assets.Raycasts.NewRaycasts;
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,57 +10,66 @@ public class PlayerMovementScript : MonoBehaviour
 {
     public bool IsMoving = false;
 
-    [SerializeField] 
+    [SerializeField]
     private Rigidbody2D rb;
 
-    [SerializeField] 
+    [SerializeField]
     private float _moveSpeed = 55;
 
-    private NewInputManager _newInputManager;
-    [Inject] private NewRayCaster _raycasts;
+    // private NewInputManager _newInputManager;
+    // [Inject] private NewRayCaster _raycasts;
 
-    public Vector2 PointerInWorldPosition => Camera.main.ScreenToWorldPoint(_newInputManager.PointerPosition);
-    void Start()
+    private Vector2 PointerInWorldPosition => Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public Vector2 _targetPosition = Vector2.zero;
+
+
+    private void Update()
     {
-
-    }
-
-    void Update()
-    {
-    }
-
-    private void FixedUpdate()
-    {
-        // block le movement ici
-
-
-        bool pressedOrHeld = _newInputManager.Pressed || _newInputManager.Held;
-        if (!pressedOrHeld)
+        if (Input.GetMouseButtonDown(0))
         {
-            this.IsMoving = false;
-            return;
+            IsMoving = true;
+            _targetPosition = PointerInWorldPosition;
         }
 
-        if (MustBlockMovement()) return;
+        bool isPlayerAtTargetPosition = rb.position.Equals(_targetPosition);
+        if (IsMoving && isPlayerAtTargetPosition)
+        {
+            IsMoving = false;
+            Debug.Log("Reached destination");
+        }
+    }
 
 
-        this.IsMoving = true;
+    private async void FixedUpdate()
+    {
+        if (!IsMoving) return;
+
+
 
         Vector2 currentPosition = this.rb.position;
-        float maxDistance = _moveSpeed * Time.deltaTime;
-        Vector2 moveAmount = Vector3.MoveTowards(currentPosition, PointerInWorldPosition, maxDistance);
+        float maxMoveDistance = _moveSpeed * Time.deltaTime;
+        Vector2 moveAmount = Vector3.MoveTowards(currentPosition, _targetPosition, maxMoveDistance);
         this.rb.MovePosition(moveAmount);
+
     }
 
-    public bool MustBlockMovement()
+    public async UniTask MoveCharacterCoroutine()
     {
-        var raycasts = _raycasts.PointerRayAll();
-        return raycasts.HasFoundHit;
+        while (rb.position != _targetPosition)
+        {
+            Vector2 currentPosition = this.rb.position;
+            float maxMoveDistance = _moveSpeed * Time.deltaTime;
+            Vector2 moveAmount = Vector3.MoveTowards(currentPosition, _targetPosition, maxMoveDistance);
+            this.rb.MovePosition(moveAmount);
+            await UniTask.WaitForFixedUpdate();
+
+        }
+
     }
 
-    [Inject]
-    public void Construct(NewInputManager newInputManager)
-    {
-        _newInputManager = newInputManager;
-    }
+    //public bool MustBlockMovement()
+    //{
+    //    var raycasts = _raycasts.PointerRayAll();
+    //    return raycasts.HasFoundHit;
+    //}
 }

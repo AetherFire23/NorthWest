@@ -24,5 +24,20 @@ namespace Assets.Raycasts
 
             return rayResult;
         }
+
+        public static T MouseRaycastScriptOrDefault<T>() where T : MonoBehaviour
+        {
+            Vector3 mouseScreenPosInWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            var hits = Physics2D.RaycastAll(mouseScreenPosInWorldPosition, Vector2.zero);
+
+            foreach (var item in hits)
+            {
+                var script = item.transform.gameObject.GetComponent<T>();
+                if (script is not null) return script;
+            }
+
+            return null;
+        }
     }
 }

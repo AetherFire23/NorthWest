@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public enum GameTaskType
-{
-    Cook,
-    Drone,
-    Chisel
+//public enum GameTaskType
+//{
+//    Cook,
+//    Drone,
+//    Chisel
 
-}
+//}

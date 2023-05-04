@@ -1,82 +1,111 @@
-using Assets.Big_Tick_Energy;
-using Assets.FullTasksPanel;
-using Assets.GameState_Management;
-using Assets.Utils;
-using Shared_Resources.Enums;
 using Shared_Resources.GameTasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using Zenject;
-using Shared_Resources.GameTasks.Implementations_Unity;
-using Assets.Game_Tasks;
-using System.Reflection;
-using Assets.Scratch;
+using Assets.GameLaunch;
+using Shared_Resources.Models;
+using Assets.FACTOR3;
+using Cysharp.Threading.Tasks;
+using Assets.AssetLoading;
 
-public class FullTasksManager : MonoBehaviour
+public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 {
-    [Inject] GameStateManager _gameStateManager;
-    [Inject] GlobalTick _tick;
-    [Inject] ClientCalls _client;
-
+    [SerializeField] private Calls Calls;
+    [SerializeField] private PrefabLoader _prefabLoader;
     [SerializeField] private GameObject _taskScrollViewContent;
 
-    // Includes both emitter text separation and 
-    // task buttons. I will probably delete and refresh everything every Tick since
-    // tehre wont be many tasks and the code for task comparison will probably be tedious.
+    private List<GameTaskBase> _gameTasks = new();
+    private GameState _gameState;
 
-    private UGICollection<TaskEmitterText, BasicTextScript> _emitterTexts = new(); // is this bugging ?
-    private UGICollection<TaskButton, BasicButtonScript> _taskButtons = new();
-    private List<IGameTask> _gameTasks;
-
-    private void Start()
+    private List<TaskEmitterText> _emittorButtons = new();
+    private List<FullTaskButton> _fullTaskButtons = new();
+    public async UniTask Initialize(GameState gameState)
     {
-        StaticScratch.Lolzida();
+        // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
+        _gameState = gameState;
+        _gameTasks = typeof(GameTaskBase).Assembly.GetTypes()
+            .Where(x => x.IsClass && !x.IsAbstract
+            && typeof(GameTaskBase).IsAssignableFrom(x))
+            .Select(x => (Activator.CreateInstance(x) as GameTaskBase)).ToList();
 
-        var s = typeof(IGameTask).Assembly.GetTypes();
-        var z = s.Where(x => typeof(IGameTask).IsAssignableFrom(x) && x.IsClass && !x.IsAbstract).ToList();
+        var taskProviders = UnityExtensions.GetEnumValues<GameTaskProvider>();
 
-        var activated = Activator.CreateInstance(z.First());
-
-        _tick.TimerTicked += this.OnTimerTick;
-
-
-        try
+        foreach (GameTaskProvider provider in taskProviders)
         {
-            var ttt = GameTaskReflection.GetGameTaskTypes();
+            var visible = _gameTasks.Where(x => x.Provider.Equals(provider))
+                .Where(x => x.CanShow(_gameState)).ToList();
 
-        }
-        catch (TypeLoadException ex)
-        {
-            Debug.LogError(ex.Message);
+            // createButton
         }
 
 
-        var zzz = GameTaskReflection.CreateGameTaskInstances();
-        //_emitterTexts = new();
-        //_taskButtons = new();
-        //RefreshAvailableTasks();
+
+
+
+        // this works
+        // var t = _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
+        // var z = _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent);
+    }
+
+    public async UniTask Refresh(GameState gameState)
+    {
+        _gameState = gameState;
+    }
+
+
+    private async UniTask RefreshAvailableTasks(GameState gameState) // compare with gameTaskCodes
+    {
+        foreach (var taskProvider in UnityExtensions.GetEnumValues<GameTaskProvider>())
+        {
+            var getVisibleTasks = await GetVisibleTasksForTaskEmittor(taskProvider);
+
+            var appeared =
+
+        }
+    }
+
+    private async UniTask<List<GameTaskBase>> GetAppearedTasks(List<FullTaskButton> oldAvailableTasks, List<GameTaskBase> visibleTasks)
+    {
+        var currentTasks = oldAvailableTasks.Select(x => x.GameTask).ToList();
+
+        var appearedTasks = visibleTasks.Where(task => !currentTasks.Contains(task)).ToList();
+    }
+
+    private async UniTask<List<GameTaskBase>> GetDisappeared()
+    {
+
+
     }
 
     public void BuildTaskButtons()
     {
-        var visibleTasks = _gameTasks.Where(x => x.CanShow(_gameStateManager.CurrentGameState)).ToList();
+        //  var visibleTasks = _gameTasks.Where(x => x.CanShow()).ToList();
+        var allEmittorTypes = UnityExtensions.GetEnumValues<GameTaskProvider>();
 
         // foreach emittor type, place the appropriate visible tasks
-        foreach (var gameTaskEmittor in (GameTaskEmittorTypes[])Enum.GetValues(typeof(GameTaskEmittorTypes)))
+        foreach (GameTaskProvider emittor in allEmittorTypes)
         {
-            var tasks = new TaskEmitterText(_taskScrollViewContent, gameTaskEmittor.ToSafeString(), "temp");
+            //var taskEmittorGameObject = new TaskEmitterText(_taskScrollViewContent, emittor.ToSafeString(), "temp");
 
-            var tasksFromEmittor = visibleTasks.Where(task => task.EmittorType.Equals(gameTaskEmittor));
+            //var tasksFromEmittor = visibleTasks.Where(task => task.Provider.Equals(emittor))
+            //    .Select(x => new TaskButton(taskEmittorGameObject.UnityInstance, );
 
-            //var emulation = tasksFromEmittor. 
+            // choisir une playerTarget dans un Window juste après ?
+
+            // faut maintenant associer une fonction a un GameTask. 
+
+            // GameTask avec ou sans Target ?
 
         }
     }
 
+    public async UniTask<List<GameTaskBase>> GetVisibleTasksForTaskEmittor(GameTaskProvider provider)
+    {
+        var tasks = _gameTasks.Where(x => x.Provider == provider).ToList();
+        var validTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
+        return validTasks;
+    }
 
     public void RefreshAvailableTasks()
     {
@@ -201,8 +230,5 @@ public class FullTasksManager : MonoBehaviour
     //    return roomTasksInfos;
     //}
 
-    private void OnTimerTick(object source, EventArgs e)
-    {
-        //RefreshAvailableTasks();
-    }
+
 }

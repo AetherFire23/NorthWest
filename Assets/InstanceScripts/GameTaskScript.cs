@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameTaskScript : MonoBehaviour
 {
-    [SerializeField]
-    public GameTaskType _gameTaskType;
+    //[SerializeField]
+    //public GameTaskType _gameTaskType;
 
     [SerializeField]
     public string StationName = "CookStation1";

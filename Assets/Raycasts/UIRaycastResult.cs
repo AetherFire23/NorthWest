@@ -8,6 +8,6 @@ public class UIRaycastResult
 {
     public List<RaycastResult> raycastResults;
     public bool HasFoundHit;
-    public RaycastResult FirstResult;
+    public RaycastResult? FirstResult;
     public GameObject GameObject;
 }

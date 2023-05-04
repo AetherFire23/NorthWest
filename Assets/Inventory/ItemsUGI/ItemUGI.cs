@@ -26,6 +26,7 @@ namespace Assets.Inventory.Player_Item
                 return slotScript.SelfWrapper;
             }
         }
+
         public Guid Id => Item.Id;
         public const string resourceName = "ItemInstance";
         public Item Item;

@@ -12,6 +12,6 @@ namespace Assets.Dialogs.New_System
         public bool IsShowing { get; set; } // must start as false
         public DialogResult DialogResult { get; set; }
         public void Resolve();
-        public void AddButtonAction(Button button, Action action);
+        //public void AddButtonAction(Button button, Action action); // qq meme sceptique, ca devrait etre au window initializer de decider
     }
 }

@@ -13,7 +13,6 @@ namespace Assets.Room_Management
         public List<Guid> AdjacentRoomIds { get; set; }
         public List<string> AdjacentNames { get; set; }
 
-
         public RoomTemplate Clone()
         {
             RoomTemplate newRoom = new RoomTemplate()

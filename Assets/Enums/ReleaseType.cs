@@ -12,7 +12,6 @@ namespace Assets
         FromPlayerToRoom,
         FromRoomToPlayer,
         FromRoomToRoom,
-        OnOccupiedSlot,
-        Anywhere
+        Invalid
     }
 }

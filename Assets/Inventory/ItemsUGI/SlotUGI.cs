@@ -11,8 +11,8 @@ namespace Assets.Inventory.Slot
 {
     public class SlotUGI : InstanceWrapper<SlotScript>
     {
-        public const string resourceName = "SlotPrefab"; 
-        public ItemUGI containedItem;
+        public const string resourceName = "SlotPrefab";
+        public ItemUGI containedItem { get; set; }
         public bool IsRoomSlot = false;
         public SlotUGI(GameObject parent, bool isRoomSlot = false) : base(resourceName, parent)
         {

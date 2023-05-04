@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 953db62a084be9c47941df12e3a4c5a7
+  m_SerializeEntries:
+  - m_GUID: c9635b1d15a53b14bbd7a6a1e6f7abb5
+    m_Address: Assets/Addressable_Assets 1/ChatTextPrefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b44ee846fb02364599cd56a8bf73248
+    m_Address: PlayerInRoomButton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6dca0855f9f18c346b69a8cd4ac60aac
+    m_Address: Assets/Addressable_Assets 1/RoomTabPrefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea3cab39ad607af468b3e187f8b0c19e
+    m_Address: Assets/Addressable_Assets 1/MessageBox.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da22d6e5259f19546892564b41182f81
+    m_Address: Assets/Addressable_Assets 1/InviteButtonPrefab.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef5c39fa2b8f2d54fbad237c84f4a6d6
+    m_Address: SlotPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ac515b3354041f42825586f81a2e78c
+    m_Address: ItemInstance
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3ab889f4705812a43941752d999e5d9c
+    m_Address: RoomChanger
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d265d45c4f86234ca5eab526dd67561
+    m_Address: Assets/Addressable_Assets 1/YesNoDialog.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2788f4faddd33404a928a11cfee2aac7
+    m_Address: LogTextPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b427cc00f8dc91842b51b6a3ae8bcb0d
+    m_Address: Toggle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da9ca87870d77664e86c15dea1ec41a0
+    m_Address: OptionsDialog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7bc0925c13c6f74fab756b1ae9f9880
+    m_Address: EmitterText
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7a4bff723293c245a24f8b2d77adbd0
+    m_Address: TaskButton
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 790e86d84fd08df44942867f4551ce4c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1d77a3790e95b57478976b43952a5702, type: 2}
+    - {fileID: 11400000, guid: 11a14cee4be4b7b449b6190fcbfbcf7f, type: 2}

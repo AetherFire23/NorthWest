@@ -54,7 +54,7 @@ public class PlayerAnimation : MonoBehaviour
     public Direction GetPlayerDirection()
     {
         Vector2 playerPosition = this.gameObject.transform.position;
-        Vector2 targetPosition = _movementScript.PointerInWorldPosition;
+        Vector2 targetPosition = _movementScript._targetPosition;
         return UnityExtensions.GetDirectionsBetweenPositions(playerPosition, targetPosition);
     }
 }

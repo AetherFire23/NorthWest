@@ -1,14 +1,17 @@
 ﻿using Assets.Enums;
+using Cysharp.Threading.Tasks;
+using Shared_Resources.GameTasks;
+using Shared_Resources.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 public static class UnityExtensions
 {
@@ -206,16 +209,16 @@ public static class UnityExtensions
 
     public static void AddMethod(this Button button, Action newAction)
     {
+        UnityEngine.Debug.Log($"Just executed action {newAction.GetType().DeclaringType}");
         button.onClick.AddListener(delegate
         {
             newAction();
         });
     }
 
-
-    public static void DestroyAndRemoveUGIFromList<TUGI, TAccessScript>(List<TUGI> toRemove, List<TUGI> removeFrom ) where TUGI : InstanceWrapper<TAccessScript>
+    public static void DestroyAndRemoveUGIFromList<TUGI, TAccessScript>(List<TUGI> toRemove, List<TUGI> removeFrom) where TUGI : InstanceWrapper<TAccessScript>
     {
-        foreach(var p in toRemove)
+        foreach (var p in toRemove)
         {
             p.UnityInstance.SelfDestroy();
             removeFrom.Remove(p);
@@ -232,4 +235,65 @@ public static class UnityExtensions
         return isContained;
     }
 
+    public static List<T> GetEnumValues<T>() where T : Enum
+    {
+        var allEnumTypes = (T[])Enum.GetValues(typeof(T));
+        return allEnumTypes.ToList();
+    }
+
+    public static void ThrowAnyNull<T>(this IEnumerable<T> sequence, Func<T, string> logMessageFunc = null)
+        where T : class // reference type constraint
+    {
+        var nullItems = sequence
+            .Select((item, index) => (Item: item, Index: index))
+            .Where(x => x.Item == null)
+            .ToList();
+
+        foreach (var (item, index) in nullItems)
+        {
+            string logMessage = logMessageFunc != null ? logMessageFunc(item) : $"Null item at index {index}: {item}";
+            UnityEngine.Debug.Log(logMessage);
+        }
+
+        throw new ArgumentNullException($"An element was null in list {sequence}");
+    }
+
+    /// <summary>
+    /// Needs to be a delegate with syntax: async() => await task 
+    /// </summary>
+    /// <param name="self"></param>
+    /// <param name="task"></param>
+    public static void AddTaskFunc(this Button self, Func<UniTask> task)
+    {
+        self.onClick.AddListener(async () => await task.Invoke());
+    }
+
+    public static Func<UniTask> ToDelegate(this UniTask task)
+    {
+        Func<UniTask> z = async () => await task;
+        return z;
+    }
+
+    public static IEnumerable<T2> GetAppearedEntities<T, T2>(IEnumerable<T> oldEntities, IEnumerable<T2> upToDateEntities) 
+        where T : PrefabScriptBase, IEntity
+        where T2 : IEntity
+    {
+        var oldEntityIds = oldEntities.Select(x => x.Id);
+        var appeared = upToDateEntities.Where(x => !oldEntityIds.Contains(x.Id));
+        return appeared;
+    }
+
+    public static IEnumerable<T> GetDisappearedGameObjects<T, T2>(IEnumerable<T> oldEntities, IEnumerable<T2> upToDateEntities)
+        where T : PrefabScriptBase, IEntity
+         where T2 : IEntity
+    {
+        var upToDateEntityIds = upToDateEntities.Select(x => x.Id);
+        var disappeared = oldEntities.Where(x => !upToDateEntityIds.Contains(x.Id));
+        return disappeared;
+    }
+
+    public static void IamHere()
+    {
+        Debug.Log("I am here !");
+    }
 }
