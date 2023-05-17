@@ -8,18 +8,25 @@ using Shared_Resources.Models;
 using Assets.FACTOR3;
 using Cysharp.Threading.Tasks;
 using Assets.AssetLoading;
+using Assets.FullTasksPanel;
+using Unity.VisualScripting;
 
 public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 {
     [SerializeField] private Calls Calls;
     [SerializeField] private PrefabLoader _prefabLoader;
     [SerializeField] private GameObject _taskScrollViewContent;
+    [SerializeField] private TaskBuilder _taskBuilder;
 
+    // models
     private List<GameTaskBase> _gameTasks = new();
     private GameState _gameState;
 
-    private List<TaskEmitterText> _emittorButtons = new();
+    //prefabs
+    private List<TaskEmitterText> _emittorTexts = new();
     private List<FullTaskButton> _fullTaskButtons = new();
+    private List<GameTaskBase> _currentDisplayedGameTasks => _fullTaskButtons.Select(x => x.GameTask).ToList();
+
     public async UniTask Initialize(GameState gameState)
     {
         // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
@@ -31,204 +38,88 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
         var taskProviders = UnityExtensions.GetEnumValues<GameTaskProvider>();
 
-        foreach (GameTaskProvider provider in taskProviders)
-        {
-            var visible = _gameTasks.Where(x => x.Provider.Equals(provider))
-                .Where(x => x.CanShow(_gameState)).ToList();
-
-            // createButton
-        }
-
-
-
-
-
-        // this works
-        // var t = _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
-        // var z = _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent);
+        await RefreshAvailableTasks();
     }
 
     public async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
+        await RefreshAvailableTasks();
     }
 
-
-    private async UniTask RefreshAvailableTasks(GameState gameState) // compare with gameTaskCodes
+    private async UniTask RefreshAvailableTasks() // compare with gameTaskCodes
     {
-        foreach (var taskProvider in UnityExtensions.GetEnumValues<GameTaskProvider>())
+        foreach (var appearedTask in await GetAppearedTasks())
         {
-            var getVisibleTasks = await GetVisibleTasksForTaskEmittor(taskProvider);
+            FullTaskButton button = await _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
 
-            var appeared =
+            // CreateButtons?
+            Func<UniTask> taskAction = async () => await _taskBuilder.SendGameTaskAfterTargetSelections(_gameState, appearedTask);
 
+            await button.Initialize(appearedTask, taskAction);
+            _fullTaskButtons.Add(button);
+            await PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(button);
+        }
+
+        foreach (var disappearedTask in await GetDisappearedTasks())
+        {
+            FullTaskButton buttonToDelete = FindButtonFromGameTask(disappearedTask);
+            _fullTaskButtons.Remove(buttonToDelete);
+            buttonToDelete.gameObject.SelfDestroy();
+
+            // TODO : 
+            // faire disparaitre les empty enums 
+            DeleteEmittorTextOrDoNothing(disappearedTask.Provider);
         }
     }
 
-    private async UniTask<List<GameTaskBase>> GetAppearedTasks(List<FullTaskButton> oldAvailableTasks, List<GameTaskBase> visibleTasks)
+    private FullTaskButton FindButtonFromGameTask(GameTaskBase taskBase)
     {
-        var currentTasks = oldAvailableTasks.Select(x => x.GameTask).ToList();
+        var taskButton = _fullTaskButtons.FirstOrDefault(x => x.GameTask.Code.Equals(taskBase.Code));
 
-        var appearedTasks = visibleTasks.Where(task => !currentTasks.Contains(task)).ToList();
+        if (taskButton is null) throw new Exception($"Tried to find a button with a gameTask that did not exist : {taskBase.Code}");
+
+        return taskButton;
     }
 
-    private async UniTask<List<GameTaskBase>> GetDisappeared()
+    private void DeleteEmittorTextOrDoNothing(GameTaskProvider taskProvider)
     {
+        var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Provider == taskProvider);
 
+        // already deleted
+        if (emittorToDelete is null) return;
 
+        _emittorTexts.Remove(emittorToDelete);
+        GameObject.Destroy(emittorToDelete.gameObject);
     }
 
-    public void BuildTaskButtons()
+    private async UniTask<List<GameTaskBase>> GetAppearedTasks()
     {
-        //  var visibleTasks = _gameTasks.Where(x => x.CanShow()).ToList();
-        var allEmittorTypes = UnityExtensions.GetEnumValues<GameTaskProvider>();
+        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
+        var appearedTasks = newCalculatedTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
 
-        // foreach emittor type, place the appropriate visible tasks
-        foreach (GameTaskProvider emittor in allEmittorTypes)
+        return appearedTasks;
+    }
+
+    private async UniTask<List<GameTaskBase>> GetDisappearedTasks()
+    {
+        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
+        var disappearedTasks = _currentDisplayedGameTasks.Where(x => !newCalculatedTasks.Contains(x)).ToList();
+
+        return disappearedTasks;
+    }
+
+    private async UniTask PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(FullTaskButton fullTaskButton)
+    {
+        var emittorText = _emittorTexts.FirstOrDefault(x => x.Provider == fullTaskButton.GameTask.Provider);
+        if (emittorText is null)
         {
-            //var taskEmittorGameObject = new TaskEmitterText(_taskScrollViewContent, emittor.ToSafeString(), "temp");
-
-            //var tasksFromEmittor = visibleTasks.Where(task => task.Provider.Equals(emittor))
-            //    .Select(x => new TaskButton(taskEmittorGameObject.UnityInstance, );
-
-            // choisir une playerTarget dans un Window juste après ?
-
-            // faut maintenant associer une fonction a un GameTask. 
-
-            // GameTask avec ou sans Target ?
-
+            emittorText = await _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent.gameObject);
+            await emittorText.Initialize(fullTaskButton.GameTask.Provider);
+            _emittorTexts.Add(emittorText);
         }
+
+        int emittorTextIndex = emittorText.transform.GetSiblingIndex();
+        fullTaskButton.transform.SetSiblingIndex(emittorTextIndex + 1);
     }
-
-    public async UniTask<List<GameTaskBase>> GetVisibleTasksForTaskEmittor(GameTaskProvider provider)
-    {
-        var tasks = _gameTasks.Where(x => x.Provider == provider).ToList();
-        var validTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
-        return validTasks;
-    }
-
-    public void RefreshAvailableTasks()
-    {
-        //_emitterTexts.Clear();
-        //_taskButtons.Clear();
-
-        //List<EmittorGameTasks> gameTaskInfos = new();
-        //gameTaskInfos.Add(GetLocalPlayerTasks());
-
-        //gameTaskInfos.Add(GetRoomTasks());
-
-        //BuildTasks(gameTaskInfos);
-    }
-
-    //public void BuildTasks(List<EmittorGameTasks> tasks)
-    //{
-    //    foreach (EmittorGameTasks info in tasks)
-    //    {
-    //        _emitterTexts.Add(new TaskEmitterText(this._taskScrollViewContent, info.EmitterType, info.EmitterName));
-
-    //        foreach(GameTaskAction gameTaskAction in info.Actions)
-    //        {
-
-    //            _taskButtons.Add(new TaskButton(_taskScrollViewContent, gameTaskAction));
-    //        }
-    //    }
-    //}
-
-    //public EmittorGameTasks GetLocalPlayerTasks()
-    //{
-    //    var localPlayerTasks = new EmittorGameTasks("Player", _gameState.LocalPlayerDTO.Name);
-
-    //    localPlayerTasks.Actions.Add(new GameTaskAction()
-    //    {
-    //        taskName = "Sleep",
-    //        action = () => Debug.Log("I did not currently program any task executed on self")
-    //    });
-
-    //    switch (_gameState.LocalPlayerDTO.Profession)
-    //    {
-    //        case RoleType.Commander:
-    //            {
-    //                localPlayerTasks.Actions.Add(new GameTaskAction()
-    //                {
-    //                    action = () => Debug.Log("This is a profession Task!"),
-    //                    taskName = "Commander"
-    //                });
-    //                break;
-
-    //            }
-    //    }
-
-    //    return localPlayerTasks;
-    //}
-
-    //public EmittorGameTasks GetRoomTasks()
-    //{
-    //    string emitterType = "Room";
-    //    var roomTasksInfos = new EmittorGameTasks(emitterType, _gameState.Room.Name);
-    //    switch (_gameState.Room.Name)
-    //    {
-    //        case "Kitchen1":
-    //            {
-    //                GameTaskAction cookTaskInfo = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-    //                break;
-    //            }
-
-    //        case "EntryHall":
-    //            {
-    //                GameTaskAction cookTaskInfo = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-
-    //                GameTaskAction cookTaskInfo2 = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-    //                break;
-    //            }
-
-    //        case "Expedition1":
-    //            {
-    //                GameTaskAction cookTaskInfo = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-
-    //                GameTaskAction cookTaskInfo2 = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-
-    //                GameTaskAction cookTaskInfo3 = new GameTaskAction()
-    //                {
-    //                    action = () => _client.CookTask(_client.PlayerUID, "CookStation1"),
-    //                    taskName = "CookTask"
-    //                };
-    //                roomTasksInfos.Actions.Add(cookTaskInfo);
-    //                break;
-    //            }
-
-    //        default:
-    //            {
-    //                throw new Exception("Room name does not exist.");
-    //            }
-    //    }
-
-    //    return roomTasksInfos;
-    //}
-
-
 }

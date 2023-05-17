@@ -1,39 +1,46 @@
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OptionsDialogScript : DialogBase
 {
-    [SerializeField] public OptionsDialogObjects OptionsDialogObjects;
-
+    [SerializeField]
+    public OptionsDialogObjects OptionsDialogObjects;
     public List<ToggleOption> ToggleOptions { get; set; } = new();
     public List<ToggleOption> ToggledOptions => ToggleOptions.Where(x => x.Toggled).ToList();
-    private bool AllowMultipleChecks;
-    private int _maximumChecks;
+    private bool _allowMultipleChecks { get; set; }
+    private int _minimumChecks { get; set; }
+    private int _maximumChecks { get; set; }
+    private Button _resolveButton => this.OptionsDialogObjects.ResolveButton;
+
     // initialized through dialogManager
-    public async UniTask Initialize(bool allowMultipleChecks = false, int maximumChecks = 99)
+    public async UniTask Initialize(bool allowMultipleChecks, int minimumChecks, int maximumChecks) // must add minimum validation
     {
-        OptionsDialogObjects.ResolveButton.AddTaskFunc(async () => await this.ResolveDialog(DialogResult.Ok));
-        this.AllowMultipleChecks = allowMultipleChecks;
+        _resolveButton.AddTaskFunc(async () => await this.ValidateThenResolveDialog());
+        _allowMultipleChecks = allowMultipleChecks;
+
+        _minimumChecks = minimumChecks;
         _maximumChecks = maximumChecks;
     }
 
     // Update to prevent multiple checkcs from being made if multiple targets are allowed
-
     private void Update()
     {
         // janky behaviour. Will have to incorporate OnToggle or something and have to initialize the toggleOptions in the DIalog manager
         // The toggle method will save the current toggled option and if allowMUltiple = false, erase this last one to check the current checked one
-        if (!AllowMultipleChecks && ToggledOptions.Count > 1)
+        if (!_allowMultipleChecks && ToggledOptions.Count > 1)
         {
             ToggledOptions.First().Toggled = false;
         }
 
-        if (AllowMultipleChecks && ToggledOptions.Count > _maximumChecks)
+        if (_allowMultipleChecks && ToggledOptions.Count > _maximumChecks)
         {
             ToggledOptions.First().Toggled = false;
         }
@@ -49,5 +56,27 @@ public class OptionsDialogScript : DialogBase
     {
         var selections = ToggledOptions.Select(x => x.Option).ToList();
         return selections;
+    }
+
+    public List<KeyValuePair<string, string>> GetSelectionsAsDialogParameters()
+    {
+        bool incorrectType = this.ToggledOptions.Any(x => x.Option is not ITaskParameter);
+        if (incorrectType)
+        {
+            Debug.LogError("YOu tried to convert toggled options to parameters when the options do not inherit from ITaskParameter.");
+            return new List<KeyValuePair<string, string>>();
+        }
+
+        var valuePairs = this.ToggledOptions.Select((x, i) => (x.Option as ITaskParameter).GetKeyValuePairParameter(i)).ToList();
+        return valuePairs;
+    }
+
+    // replace button action with this
+    private async UniTask ValidateThenResolveDialog()
+    {
+        bool isValid = ToggledOptions.Count >= _minimumChecks;
+        if (!isValid) return; // could show a messageBox or what the behaviour is when not enough inputs have been entered
+
+        await this.ResolveDialog(DialogResult.Ok);
     }
 }

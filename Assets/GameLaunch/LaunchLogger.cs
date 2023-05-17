@@ -29,6 +29,7 @@ namespace Assets.GameLaunch
 
                     foreach (var nullField in nulls)
                     {
+                        // Reflection finds some default unity gameobjects that are not actually valid in-game
                         if (nullField.FieldType.Assembly != Assembly.GetExecutingAssembly()) continue;
                         Debug.LogError($"Gameobject {gameObject.name} has monobehaviour ${monoBehaviour} with null field ${nullField.Name} with type {nullField.FieldType.Name}");
                     }

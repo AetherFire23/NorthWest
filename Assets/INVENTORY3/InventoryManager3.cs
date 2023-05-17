@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Zenject.SpaceFighter;
 
 namespace Assets.INVENTORY3
 {

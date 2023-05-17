@@ -12,5 +12,6 @@ public class TaskEmitterText : PrefabScriptBase
     public async UniTask Initialize(GameTaskProvider provider)
     {
         this.Provider = provider;
+        _text.text = provider.ToString();
     }
 }

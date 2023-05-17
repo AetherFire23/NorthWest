@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.VisualScripting;
-using Zenject.Asteroids;
 
 namespace Assets.GameState_Management
 {
@@ -68,6 +67,12 @@ namespace Assets.GameState_Management
             if (room is null) throw new Exception($"ROom not found: {roomName} ");
 
             return room;
+        }
+
+        public static List<RoomDTO> GetLandmassRooms(this GameState gameState)
+        {
+            var landmassRooms = gameState.Rooms.Where(x => x.IsLandmass).ToList();
+            return landmassRooms;
         }
     }
 }

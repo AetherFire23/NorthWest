@@ -16,7 +16,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TaskBui : MonoBehaviour
+public class TaskBuilder : MonoBehaviour
 {
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private Calls _calls;
@@ -27,7 +27,7 @@ public class TaskBui : MonoBehaviour
     // 3. special dialogs
     // 4. common dialogs
 
-    public async UniTask ExecuteTask(GameState gameState, GameTaskBase gameTask)
+    public async UniTask SendGameTaskAfterTargetSelections(GameState gameState, GameTaskBase gameTask)
     {
         var targetPrompts = gameTask.GetValidTargetPrompts(gameState);
         Dictionary<string, string> parameters = new Dictionary<string, string>();
@@ -35,32 +35,41 @@ public class TaskBui : MonoBehaviour
         // let it break in task validation for now
         foreach (var prompt in targetPrompts.CheckLists)
         {
-            var toListOfObjects = prompt.GetPromptsAsObjects();
-            OptionsDialogScript dialog;
-            if (prompt.IsMultipleChecks)
-            {
-                dialog = await _dialogManager.CreateAndInitializeOptionsDialog(toListOfObjects, true, prompt.MaximumChecks);
-            }
-            else
-            {
-                dialog = await _dialogManager.CreateAndInitializeOptionsDialog(toListOfObjects);
-            }
+            var options = prompt.GetPromptsAsObjects();
+            OptionsDialogScript dialog = await _dialogManager.CreateAndInitializeOptionsDialog(options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
             await dialog.WaitForResolveCoroutine();
 
-            int i = 0;
-            // build parameters dictionary...
-            var parameterizedTargets = dialog.ToggledOptions.Select(x => x.Option as ITaskParameter).ToList();
-            var parametesrs = parameterizedTargets.Select((x, i) => x.GetKeyValuePairParameter(i)).ToList();
-            // avertir ici si il manque un TaskParameterization
-            parametesrs.ForEach(x => parameters.Add(x.Key, x.Value));
+            var parameterizedTargets = dialog.GetSelectionsAsDialogParameters();
+            parameterizedTargets.ForEach(x => parameters.Add(x.Key, x.Value));
 
             await dialog.Destroy();
         }
 
-
         // validate here
+        var gameTaskContext = new GameTaskContext()
+        {
+            GameState = gameState,
+            Parameters = parameters
+        };
+        var validationREsult = gameTask.Validate(gameTaskContext);
+
+        if (!validationREsult.IsValid)
+        {
+            Debug.LogError($"The task{gameTask.Code} could not be executed.");
+            return;
+        }
+
 
 
         var callResult = await _calls.TryExecuteGameTask(gameState.PlayerDTO.Id, gameTask.Code, parameters);
+
+        if (callResult.IsSuccessful)
+        {
+            Debug.Log("Task executed gracefully!");
+        }
+        else
+        {
+            Debug.Log("Task went wrong in webapi boi");
+        }
     }
 }

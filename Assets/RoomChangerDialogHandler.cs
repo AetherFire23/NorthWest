@@ -42,7 +42,6 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
             return;
         }
 
-
         // end of guard clauses
         _dialog = await _dialogManager.CreateDialog<YesNoDialog>();
         await _dialog.Initialize("Yeah so u wanna change door bro");
@@ -51,12 +50,11 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
         // when it is resolved
         if (!_dialog.DialogResult.Equals(DialogResult.Ok)) return;
 
-
         var callResult = await _calls.ChangeRoom(PlayerInfo.UID, door.TargetRoomName);
 
         if (!callResult.IsSuccessful)
         {
-            Debug.LogError($"Something went wonr when changing door : {callResult.Message}");
+            Debug.LogError($"Something went wrong in the API when changing door Message: {callResult.Message}");
         }
         else
         {
@@ -64,5 +62,6 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
         }
 
         await _dialog.Destroy();
+        _dialog = null;
     }
 }

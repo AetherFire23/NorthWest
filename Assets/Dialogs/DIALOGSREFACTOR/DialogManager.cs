@@ -40,10 +40,13 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
         /// <summary>
         /// Dont forget to override ToString();
         /// </summary>
-        public async UniTask<OptionsDialogScript> CreateAndInitializeOptionsDialog(List<object> options, bool allowMultipleChecks = false, int maximumChecks = 99)
+        public async UniTask<OptionsDialogScript> CreateAndInitializeOptionsDialog(List<object> options, bool allowMultipleChecks, int minimumChecks, int maximumChecks)
         {
             var optionsDialog = await _prefabLoader.CreateInstanceOfAsync<OptionsDialogScript>(_dialogCanvas.gameObject);
-            await optionsDialog.Initialize(allowMultipleChecks, maximumChecks);
+            await optionsDialog.Initialize(allowMultipleChecks, minimumChecks, maximumChecks);
+
+            // create the ToggleOptions from outside the optionsDialog because I don't have reference to the prefabloader inside of classes... Maybe I should make it a singleton?
+            // SHould verify if this is an async hazard
             foreach (var option in options)
             {
                 var toggleOption = await _prefabLoader.CreateInstanceOfAsync<ToggleOption>(optionsDialog.OptionsDialogObjects.TogglesPanel.gameObject);

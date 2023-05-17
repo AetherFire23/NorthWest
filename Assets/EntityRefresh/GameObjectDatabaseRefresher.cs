@@ -51,13 +51,13 @@ namespace Assets
             _deleteMissing = deleteMissing;
         }
 
-        public async UniTask RefreshEntities(List<TEntity> entities)
+        public async UniTask RefreshEntities(List<TEntity> uptoDate)
         {
             try
             {
                 var existingEntitiesids = GameObjectsAndEntities.Keys.Select(x => x.Id);
 
-                foreach (TEntity entity in await GetAppearedEntities(entities))
+                foreach (TEntity entity in await GetAppearedEntities(uptoDate))
                 {
                     var newGameObject = await _createGameObjectFromEntity(entity);
                     GameObjectsAndEntities.Add(newGameObject, entity);
@@ -65,7 +65,7 @@ namespace Assets
 
                 if (_deleteMissing) // cest que 
                 {
-                    foreach (TPrefab missingEntity in await GetDisappeardEntities(entities))
+                    foreach (TPrefab missingEntity in await GetDisappeardEntities(uptoDate))
                     {
                         _destroyFunction(missingEntity);
                         GameObjectsAndEntities.Remove(missingEntity);

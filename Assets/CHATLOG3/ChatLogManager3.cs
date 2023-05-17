@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
-using Zenject.Asteroids;
 
 public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
 {
@@ -84,12 +83,9 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     // --- Initialization Methods ---
     public async UniTask InitializeGameObjectUpdaters() // runnable on threadpool ?
     {
-        await UniTask.RunOnThreadPool(() =>
-        {
-            _chatTexts = new(CreateChatText);
-            _playersInChatRoom = new(CreatePlayerInRoomButton);
-            _roomTabs = new(CreateRoomTab);
-        });
+        _chatTexts = new(CreateChatText);
+        _playersInChatRoom = new(CreatePlayerInRoomButton);
+        _roomTabs = new(CreateRoomTab);
     }
 
     public async UniTask InitializeInviteButtons(List<Player> playersInGame)
@@ -154,7 +150,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     public async UniTask CreateInviteButton(RoomInvitationParameters parameters)
     {
         var inviteButton = await _prefabLoader.CreateInstanceOfAsync<InviteButton>(_chatObjects.InvitePanel);
-        
+
         Func<UniTask> invitePerson = async () =>
         {
             var response = await _calls.InviteToRoom(parameters);

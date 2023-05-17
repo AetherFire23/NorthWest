@@ -22,7 +22,7 @@ namespace Assets.Scratch
         [SerializeField] DialogManager _dialogManager;
         [SerializeField] Transform _dropDownTransform;
         [SerializeField] TMPro.TMP_Dropdown _dropDownComponent;
-        [SerializeField] private TaskBui _taskBuilder;
+        [SerializeField] private TaskBuilder _taskBuilder;
         //[SerializeField] Text 
 
 
