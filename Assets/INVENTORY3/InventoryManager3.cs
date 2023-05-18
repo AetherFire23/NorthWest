@@ -29,9 +29,8 @@ namespace Assets.INVENTORY3
         [SerializeField] private Calls _calls;
         [SerializeField] private SlotAndItemsManager _slotManager;
 
-        private GameState _gameState;
-        private ItemInventory _trackedItem;
-
+        private GameState _gameState { get; set; }
+        private ItemInventory _trackedItem { get; set; }
         private Guid _currentInventoryShownRoomId { get; set; }
         public RoomDTO CurrentShownRoom => _gameState.GetRoomById(_currentInventoryShownRoomId);
 
@@ -47,17 +46,19 @@ namespace Assets.INVENTORY3
 
         public async UniTask Refresh(GameState gameState)
         {
+            _isRefreshing = true;
             _gameState = gameState;
             await RefreshItems(CurrentShownRoom.Name);
+            _isRefreshing = false;
         }
 
-        // should also block when refreshing And think about making a coroutine out of the whole operation and such to not repeatedly call
-        // update 
         private bool _isInitialized = false;
         private bool _isTracking => _trackedItem != null;
+        private bool _isRefreshing = false;
         public async UniTask Update()
         {
             if (!_isInitialized) return;
+            if (_isRefreshing) return;
             if (_isTracking) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
@@ -66,7 +67,9 @@ namespace Assets.INVENTORY3
 
             _trackedItem = itemClick;
 
-            await HandleItemTrackingUntilMouseReleaseCoroutine();
+            await HandleItemTrackingUntilMouseReleaseCoroutine();// si la coroutine roule pendant que ca refresh ca fuck up peu 
+            // Check if items were refreshed while handling ??
+
 
             ReleaseType context = await GetItemReleasedContext();
             Debug.Log(context);
@@ -168,9 +171,9 @@ namespace Assets.INVENTORY3
 
         private async UniTask HandleItemTrackingUntilMouseReleaseCoroutine() // devrais quasiment faire 2 manager differents
         {
-            // changing the parent to prevent the mask from hiding the gameObject.
+            // changing the tracked item parent to prevent the mask from hiding the gameObject.
             _trackedItem.transform.parent = _inventoryObjects.RoomInventoryCanvas.transform;
-            while (Input.GetMouseButton(0))
+            while (Input.GetMouseButton(0) && !_isRefreshing)
             {
                 _trackedItem.Position = Input.mousePosition;
                 await UniTask.Yield();
@@ -225,6 +228,7 @@ namespace Assets.INVENTORY3
             {
                 bool outOfPlayerSlots = _slotManager.GetPlayerSlots().Count == 0;
                 if (outOfPlayerSlots) throw new Exception("Player does not have enough inventory slots");
+
                 await this.CreateItemInNextPlayerSlot(item);
             }
             foreach (var item in refreshResult.Disappeared)
@@ -246,8 +250,8 @@ namespace Assets.INVENTORY3
             }
         }
 
-        public async UniTask SetRoomInventory(string roomName)
-        {
+        public async UniTask SetRoomInventory(string roomName) // ca ici puisque ca refresh ca remove
+        { // la prediction de si tas mis un item dans ton inventaire de player avant
             RoomDTO room = _gameState.GetRoomByName(roomName);
             _currentInventoryShownRoomId = room.Id;
             this._inventoryObjects.RoomNameText.text = room.Name;

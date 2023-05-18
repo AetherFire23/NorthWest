@@ -22,7 +22,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
     [SerializeField] private PrefabLoader _prefabLoader;
     private Guid _playerUID => _temporaryOptionsScript.CurrentPlayerID;
 
-
+    
     private List<IStartupBehavior> _managers = new List<IStartupBehavior>();
     private List<IRefreshable> _refreshables = new List<IRefreshable>();
 

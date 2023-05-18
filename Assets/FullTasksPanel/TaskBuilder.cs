@@ -58,8 +58,6 @@ public class TaskBuilder : MonoBehaviour
             return;
         }
 
-
-
         var callResult = await _calls.TryExecuteGameTask(gameState.PlayerDTO.Id, gameTask.Code, parameters);
 
         if (callResult.IsSuccessful)
