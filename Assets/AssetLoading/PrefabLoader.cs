@@ -21,7 +21,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 // [DefaultExecutionOrder(-2)]
 namespace Assets.AssetLoading
 {
-    public class PrefabLoader : MonoBehaviour
+    public class PrefabLoader : MonoBehaviour // should consider converting this to static so I can do PrefabLoader.Destroy()
     {
         // 1. Crate prefab
         // 2. drag prefab in editor to prefabAssetReferences
@@ -46,10 +46,10 @@ namespace Assets.AssetLoading
                 if (assetReference is null) continue;
 
                 var asset = await assetReference.LoadAssetAsync();
-                Type componentType = asset.GetComponent<PrefabScriptBase>().GetType();
-                if (componentType is null) throw new ArgumentException($"{componentType.FullName} was null !");
+                var componentType = asset.GetComponent<PrefabScriptBase>();
+                if (componentType is null) throw new ArgumentException($"The following prefab {assetReference.Asset.name}  does not have any script that inherits from PrefabScriptBase!");
 
-                _references.Add(componentType, assetReference);
+                _references.Add(componentType.GetType(), assetReference);
             }
         }
 
@@ -60,7 +60,7 @@ namespace Assets.AssetLoading
             if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");
 
             AssetReference assetReference = _references[typeof(T)];
-            GameObject gameObject = await assetReference.InstantiateAsync(parent.transform).Task; // lets try to convert this to a unitask
+            GameObject gameObject = await assetReference.InstantiateAsync(parent.transform).Task.AsUniTask(); // lets try to convert this to a unitask
             T component = gameObject.GetComponent<T>();
             return component;
         }

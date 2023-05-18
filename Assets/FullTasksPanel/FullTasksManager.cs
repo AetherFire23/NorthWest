@@ -75,6 +75,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private FullTaskButton FindButtonFromGameTask(GameTaskBase taskBase)
     {
+
         var taskButton = _fullTaskButtons.FirstOrDefault(x => x.GameTask.Code.Equals(taskBase.Code));
 
         if (taskButton is null) throw new Exception($"Tried to find a button with a gameTask that did not exist : {taskBase.Code}");
@@ -84,6 +85,11 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private void DeleteEmittorTextOrDoNothing(GameTaskProvider taskProvider)
     {
+        bool hasEmittorRemainingTasks = _currentDisplayedGameTasks.Where(x => x.Provider == taskProvider)
+            .ToList().Count != 0;
+
+        if (hasEmittorRemainingTasks) return;
+
         var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Provider == taskProvider);
 
         // already deleted

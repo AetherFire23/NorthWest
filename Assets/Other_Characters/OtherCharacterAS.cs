@@ -7,7 +7,6 @@ using UnityEngine;
 public class OtherCharacterAS : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI TextOverHead;
-    [SerializeField] public OtherCharacterMovement CharacterMovement;
     [SerializeField] public TextMeshProUGUI ProfessionText;
     [SerializeField] public float professionHeight;
     private Vector2 PlayerScreenPosition => Camera.main.WorldToScreenPoint(this.transform.position);

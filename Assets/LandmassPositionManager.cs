@@ -39,7 +39,7 @@ public class LandmassPositionManager : MonoBehaviour, IStartupBehavior
                 Debug.LogError($"The following landmassRoom : {landmassRoom.Name} could not be found in the scene.");
                 continue;
             }
-            float offsetForFun = 2;
+            float offsetForFun = 4;
             gameObjectRoom.transform.position = new Vector2(landmassRoom.X *offsetForFun, landmassRoom.Y * offsetForFun);
         }
     }

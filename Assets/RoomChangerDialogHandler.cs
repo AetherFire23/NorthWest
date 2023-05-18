@@ -6,6 +6,7 @@ using Assets.GameLaunch;
 using Assets.Raycasts;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
@@ -44,7 +45,10 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
 
         // end of guard clauses
         _dialog = await _dialogManager.CreateDialog<YesNoDialog>();
-        await _dialog.Initialize("Yeah so u wanna change door bro");
+        string message = $"You are about to change room to : {door.TargetRoomName}. " +
+            $"{Environment.NewLine}Unncessary movement will appear suspicious. " +
+            $"{Environment.NewLine}This action will be logged as full public.";
+        await _dialog.Initialize(message);
         await _dialog.WaitForResolveCoroutine();
 
         // when it is resolved
