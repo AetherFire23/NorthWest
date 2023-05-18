@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Zenject;
+
 public class SimpleTimer
 {
     public float duration;

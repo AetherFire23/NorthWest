@@ -52,7 +52,12 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
         await _dialog.WaitForResolveCoroutine();
 
         // when it is resolved
-        if (!_dialog.DialogResult.Equals(DialogResult.Ok)) return;
+        if (!_dialog.DialogResult.Equals(DialogResult.Ok))
+        {
+            await _dialog.Destroy();
+            _dialog = null;
+            return;
+        }
 
         var callResult = await _calls.ChangeRoom(PlayerInfo.UID, door.TargetRoomName);
 

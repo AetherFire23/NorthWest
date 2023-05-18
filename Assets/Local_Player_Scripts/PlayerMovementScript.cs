@@ -1,10 +1,8 @@
-using Assets.Input_Management;
-using Assets.Raycasts.NewRaycasts;
+
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
 public class PlayerMovementScript : MonoBehaviour
 {
@@ -66,10 +64,4 @@ public class PlayerMovementScript : MonoBehaviour
         }
 
     }
-
-    //public bool MustBlockMovement()
-    //{
-    //    var raycasts = _raycasts.PointerRayAll();
-    //    return raycasts.HasFoundHit;
-    //}
 }

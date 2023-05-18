@@ -57,6 +57,12 @@ namespace Assets.AssetLoading
         // Might happen that I query some stuff and it is not spawened until finished loading
         public async UniTask<T> CreateInstanceOfAsync<T>(GameObject parent) where T : PrefabScriptBase
         {
+            if(typeof(T) == typeof(YesNoDialog))
+            {
+                int i = 0;
+            }
+
+
             if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");
 
             AssetReference assetReference = _references[typeof(T)];

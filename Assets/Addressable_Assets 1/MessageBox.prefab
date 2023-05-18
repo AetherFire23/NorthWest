@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6930557878497523621}
   - component: {fileID: 6930557878497523622}
   - component: {fileID: 1762999536954318553}
-  - component: {fileID: 7240202902261736192}
+  - component: {fileID: 1030083786185424}
   m_Layer: 5
   m_Name: MessageBox
   m_TagString: Untagged
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MessageBoxButtonComponent: {fileID: 6930557878793119076}
   PanelTextComponent: {fileID: 6930557879641453637}
---- !u!114 &7240202902261736192
+--- !u!114 &1030083786185424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6930557878497523616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e149869609e1d4a982c3e9b37e30c8, type: 3}
+  m_Script: {fileID: 11500000, guid: ac40d56e059d7424a992a56641686f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Text: {fileID: 6930557879641453637}
