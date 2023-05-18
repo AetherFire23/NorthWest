@@ -15,7 +15,7 @@ public class RoomChangeManager : MonoBehaviour
     [SerializeField] LocalPLayerManager _localPlayer;
     private void Awake() // dangerous behaviour in Awake, should check if placing this in IInitializable Breaks anything
     {
-        // finds all objects in room...
+        // finds all roomInfoScripts in scene so that i can map name  + room 
         var rooms = FindObjectsOfType<RoomInfoScript>().ToList();
         foreach (var room in rooms)
         {

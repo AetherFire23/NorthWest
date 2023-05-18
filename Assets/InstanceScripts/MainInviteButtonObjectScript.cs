@@ -1,22 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+//using System.Collections;
+//using System.Collections.Generic;
+//using TMPro;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class MainInviteButtonObjectScript : MonoBehaviour
-{
-    [SerializeField] public Button button;
-    [SerializeField] public TextMeshProUGUI textPro;
+//public class MainInviteButtonObjectScript : MonoBehaviour
+//{
+//    [SerializeField] public Button button;
+//    [SerializeField] public TextMeshProUGUI textPro;
 
-    void Start()
-    {
+//    void Start()
+//    {
         
-    }
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
         
-    }
-}
+//    }
+//}

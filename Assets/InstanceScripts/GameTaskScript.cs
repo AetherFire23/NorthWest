@@ -1,25 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class GameTaskScript : MonoBehaviour
-{
-    //[SerializeField]
-    //public GameTaskType _gameTaskType;
+//public class GameTaskScript : MonoBehaviour
+//{
+//    //[SerializeField]
+//    //public GameTaskType _gameTaskType;
 
-    [SerializeField]
-    public string StationName = "CookStation1";
+//    [SerializeField]
+//    public string StationName = "CookStation1";
 
-    [SerializeField] public string RoomName;
+//    [SerializeField] public string RoomName;
 
-    void Start()
-    {
+//    void Start()
+//    {
         
-    }
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
         
-    }
-}
+//    }
+//}

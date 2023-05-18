@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class InvitePanelObjectScript : MonoBehaviour
-{
-    [SerializeField] public GameObject InvitePanelContainer;
-    void Start()
-    {
+//public class InvitePanelObjectScript : MonoBehaviour
+//{
+//    [SerializeField] public GameObject InvitePanelContainer;
+//    void Start()
+//    {
         
-    }
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
         
-    }
-}
+//    }
+//}

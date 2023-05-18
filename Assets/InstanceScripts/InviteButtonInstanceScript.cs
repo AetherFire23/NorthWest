@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InviteButtonInstanceScript : MonoBehaviour
+public class InviteButtonInstanceScript : MonoBehaviour //  addressable
 {
     [SerializeField] public Button Button;
     [SerializeField] public TextMeshProUGUI textComp;

@@ -1,20 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class GlobalButtonObjectScript : MonoBehaviour
-{
-    [SerializeField] public Button button;
-    // Start is called before the first frame update
-    void Start()
-    {
+//public class GlobalButtonObjectScript : MonoBehaviour
+//{
+//    [SerializeField] public Button button;
+//    // Start is called before the first frame update
+//    void Start()
+//    {
         
-    }
+//    }
 
-    // Update is called once per frame
-    void Update()
-    {
+//    // Update is called once per frame
+//    void Update()
+//    {
         
-    }
-}
+//    }
+//}

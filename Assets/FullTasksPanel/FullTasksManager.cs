@@ -101,7 +101,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private async UniTask<List<GameTaskBase>> GetAppearedTasks()
     {
-        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
+        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.Requires(_gameState)).ToList();
         var appearedTasks = newCalculatedTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
 
         return appearedTasks;
@@ -109,7 +109,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private async UniTask<List<GameTaskBase>> GetDisappearedTasks()
     {
-        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.CanShow(_gameState)).ToList();
+        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.Requires(_gameState)).ToList();
         var disappearedTasks = _currentDisplayedGameTasks.Where(x => !newCalculatedTasks.Contains(x)).ToList();
 
         return disappearedTasks;
