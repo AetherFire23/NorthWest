@@ -22,6 +22,8 @@ namespace Assets.INVENTORY3
 {
     public class InventoryManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     {
+        // problemes identifies :
+        // quand tu drag un item q
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private InventoryStaticGameObjects _inventoryObjects;
         [SerializeField] private Calls _calls;
