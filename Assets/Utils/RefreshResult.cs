@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Utils
 {
-    public class RefreshResult<TPrefab, TEntity> 
+    public class RefreshResult<TPrefab, TEntity> // fait juste donner appear-disappear ss rien stocker et va tout prendre en parameter
         where TPrefab : PrefabScriptBase, IEntity
         where TEntity : IEntity
     {

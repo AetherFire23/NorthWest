@@ -26,7 +26,7 @@ namespace Assets.Automation
         {
             var gameAssembly = typeof(IRefreshable).Assembly;
             var monos = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>().Where(x => x is not null);
-
+            int referencesFixed = 0;
             foreach (MonoBehaviour mono in monos)
             {
                 var superAssembly = typeof(IRefreshable).Assembly;
@@ -39,7 +39,7 @@ namespace Assets.Automation
 
                 foreach (FieldInfo nullField in nullfields)
                 {
-                    var missingReference = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>()
+                    var referencesFound = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>()
                                                                              .Where(x => x is not null)
                                                                              .Where(x => x.GetType() == nullField.FieldType).ToList();
 
@@ -54,7 +54,7 @@ namespace Assets.Automation
                         $"{Environment.NewLine}" +
                         $"{Environment.NewLine}";
 
-                    if (missingReference.Count == 0)
+                    if (referencesFound.Count == 0)
                     {
                         string missingMessage = $"{baseMissingMessage}However, no monoBehaviour was found in the scene that could fulfill this dependency.";
                         EditorUtility.DisplayDialog("Null reference", missingMessage, "Continue");
@@ -63,9 +63,9 @@ namespace Assets.Automation
 
                     string referenceFoundMessage = $"{baseMissingMessage}A monobehaviour was found in the scene that could fulfill this dependency.";
 
-                    if (missingReference.Count > 1)
+                    if (referencesFound.Count > 1)
                     {
-                        string multipleFound = $"{referenceFoundMessage}However, a count of [{missingReference.Count}] of such depdencies were found. Therefore we will not proceed into fulfilling this dependency";
+                        string multipleFound = $"{referenceFoundMessage}However, a count of [{referencesFound.Count}] of such depdencies were found. Therefore we will not proceed into fulfilling this dependency";
                         EditorUtility.DisplayDialog("Null reference", multipleFound, "Continue");
                         continue;
                     }
@@ -81,8 +81,14 @@ namespace Assets.Automation
                         continue;
                     }
 
-                    nullField.SetValue(mono, missingReference.First());
+                    nullField.SetValue(mono, referencesFound.First());
+                    referencesFixed++;
                 }
+            }
+
+            if(referencesFixed ==0)
+            {
+                EditorUtility.DisplayDialog("No changes", "No changes were made to the scene", "Ok");
             }
         }
     }
