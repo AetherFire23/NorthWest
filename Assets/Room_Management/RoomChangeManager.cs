@@ -22,7 +22,7 @@ public class RoomChangeManager : MonoBehaviour
             _roomNameObjectMap.Add(room.TargetRoomName, room);
         }
 
-        
+
 
         // TODO:
         // warning pour les pieces qui manquent dans le editor
@@ -30,7 +30,10 @@ public class RoomChangeManager : MonoBehaviour
 
     public void PlaceLocalPlayerInRoomAndSnapCamera(string roomName) // should I load the local player last ?
     {
-        var room = _roomNameObjectMap[roomName];
+        var room = _roomNameObjectMap.GetValueOrDefault(roomName);
+
+        if (room is null) throw new System.Exception($"The following room script : {roomName} was not found in the scene");
+
         var roomPosition = room.transform.position;
         _localPlayer.PlayerPosition = roomPosition;
 

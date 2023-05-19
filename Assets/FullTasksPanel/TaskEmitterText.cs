@@ -1,18 +1,17 @@
-﻿using System;
+using Cysharp.Threading.Tasks;
+using Shared_Resources.GameTasks;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
-namespace Assets.FullTasksPanel
+public class TaskEmitterText : PrefabScriptBase
 {
-    public class TaskEmitterText : InstanceWrapper<BasicTextScript>
+    [SerializeField] private TextMeshProUGUI _text;
+    public GameTaskProvider Provider { get; private set; }
+    public async UniTask Initialize(GameTaskProvider provider)
     {
-        public TaskEmitterText(GameObject parent, string emitterType, string emitterName) : base("FullTaskPanel/TaskEmitterText", parent)
-        {
-            string emitterFormatted = $"{emitterType}:{emitterName}";
-            this.AccessScript.TextMesh.text = emitterFormatted;
-        }
+        this.Provider = provider;
+        _text.text = provider.ToString();
     }
 }

@@ -216,14 +216,7 @@ public static class UnityExtensions
         });
     }
 
-    public static void DestroyAndRemoveUGIFromList<TUGI, TAccessScript>(List<TUGI> toRemove, List<TUGI> removeFrom) where TUGI : InstanceWrapper<TAccessScript>
-    {
-        foreach (var p in toRemove)
-        {
-            p.UnityInstance.SelfDestroy();
-            removeFrom.Remove(p);
-        }
-    }
+
 
     public static bool IsWithinBounds(Vector2 startPosition, Vector2 maxPosition, Vector2 pointPosition)
     {

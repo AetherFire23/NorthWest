@@ -2,28 +2,19 @@
 using Assets.FACTOR3;
 using Assets.GameLaunch;
 using Assets.GameState_Management;
-using Assets.Raycasts;
 using Assets.Utils;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.DTOs;
 using Shared_Resources.Entities;
-using Shared_Resources.Interfaces;
 using Shared_Resources.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Assets.INVENTORY3
 {
     public class InventoryManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     {
-        // problemes identifies :
-        // quand tu drag un item q
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private InventoryStaticGameObjects _inventoryObjects;
         [SerializeField] private Calls _calls;

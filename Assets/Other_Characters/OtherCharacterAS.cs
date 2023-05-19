@@ -1,4 +1,4 @@
-using Assets.OtherCharacters;
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,7 +11,6 @@ public class OtherCharacterAS : MonoBehaviour
     [SerializeField] public float professionHeight;
     private Vector2 PlayerScreenPosition => Camera.main.WorldToScreenPoint(this.transform.position);
 
-    public OtherCharacterUGI SelfWrapper;
     void Start()
     {
 
