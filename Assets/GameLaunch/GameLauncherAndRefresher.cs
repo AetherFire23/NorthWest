@@ -14,15 +14,12 @@ public class GameLauncherAndRefresher : MonoBehaviour
 {
     [SerializeField] bool _allowRefresh;
 
-
-
     [SerializeField] private TemporaryOptionsScript _temporaryOptionsScript;
     [SerializeField] private Calls _client;
     [SerializeField] private GameStateFetcher _gameStateFetcher;
     [SerializeField] private PrefabLoader _prefabLoader;
-    private Guid _playerUID => _temporaryOptionsScript.CurrentPlayerID;
 
-    
+
     private List<IStartupBehavior> _managers = new List<IStartupBehavior>();
     private List<IRefreshable> _refreshables = new List<IRefreshable>();
 
@@ -36,7 +33,14 @@ public class GameLauncherAndRefresher : MonoBehaviour
         Debug.Log("Loading");
         await LaunchLogger.WarnForMissingSerializables();
         await _prefabLoader.InitializeAsync();  // TODO check for semi-injection of unique manager ? 
-        PlayerInfo.UID = _temporaryOptionsScript.CurrentPlayerID;
+        //PlayerInfo.UID = _temporaryOptionsScript.CurrentPlayerID; // for optionsScript in scene
+
+
+
+        Guid id = TemporaryOptionsScript2.Instance is null
+            ? new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F")
+            : new Guid(TemporaryOptionsScript2.Instance.CurrentPlayerUID);
+        PlayerInfo.UID = id; // for persistent options script
         FindManagers();
 
         await InitializeManagersAsync();
@@ -72,10 +76,15 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
     private async UniTask InitializeManagersAsync() // enforce order ?, LOADING SCREEN ! Rien mettre dinteraction ici
     {
-        var firstGameState = await _gameStateFetcher.FetchFirstGameStateAsync(_playerUID);
+        var firstGameState = await _gameStateFetcher.FetchFirstGameStateAsync(PlayerInfo.UID);
 
-        var tasks = _managers.Select(x => x.Initialize(firstGameState));
-        await UniTask.WhenAll(tasks);
+        foreach (var manager in _managers)
+        {
+            await manager.Initialize(firstGameState);
+        }
+
+        //var tasks = _managers.Select(x => x.Initialize(firstGameState));
+        //await UniTask.WhenAll(tasks);
     }
 
     // on peut pas await un dialog dans le Initialize pour dire que Cest loaded. 
@@ -84,7 +93,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
     private async UniTask RefreshManagersAsync()
     {
-        GameState gameState = await _gameStateFetcher.FetchNextGameStateAsync(_playerUID);
+        GameState gameState = await _gameStateFetcher.FetchNextGameStateAsync(PlayerInfo.UID);
         var tasks = _refreshables.Select(x => x.Refresh(gameState));
         await UniTask.WhenAll(tasks);
     }

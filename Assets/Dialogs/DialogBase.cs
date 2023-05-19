@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Dialogs.DIALOGSREFACTOR
 {
@@ -29,9 +30,9 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
             bool resolved = false;
             while (!resolved)
             {
-                await UniTask.DelayFrame(3);
+                await UniTask.DelayFrame(25);
                 resolved = _resolved;
-                //  Debug.Log($"iswaiting : {resolved}");
+                 Debug.Log($"iswaiting : {resolved}");
 
                 await UniTask.Yield();
             }
@@ -39,6 +40,11 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
         public async UniTask Destroy()
         {
             GameObject.Destroy(this.gameObject);
+        }
+
+        public async UniTask ConfigureResolveButton(Button button, DialogResult result)
+        {
+            button.AddTaskFunc(async () => await  this.ResolveDialog(result));
         }
     }
 }
