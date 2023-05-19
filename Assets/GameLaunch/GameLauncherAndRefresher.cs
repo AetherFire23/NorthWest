@@ -1,7 +1,7 @@
 using Assets;
 using Assets.AssetLoading;
-using Assets.FACTOR3;
 using Assets.GameLaunch;
+using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
 using System;
@@ -69,7 +69,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
         }
         _isRefreshing = false;
     }
-
 
     private async UniTask InitializeManagersAsync() // enforce order ?, LOADING SCREEN ! Rien mettre dinteraction ici
     {

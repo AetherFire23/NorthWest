@@ -1,4 +1,5 @@
 ﻿using Assets.AssetLoading;
+using Assets.Dialogs.DIALOGSREFACTOR;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Dialogs.DIALOGSREFACTOR
+namespace Assets.Dialogs
 {
     public class DialogManager : MonoBehaviour
     {

@@ -423,12 +423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 29369172}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &29369176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,7 +519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14261286, y: 7570484.5}
+  m_AnchoredPosition: {x: -15023340, y: 7978941}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &32877274
@@ -925,7 +919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6688f35e0e04de74a80d548c2228b573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomName: Expedition1
 --- !u!1 &142288759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,7 +1077,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -7876179.5, y: -10551685}
+  m_AnchoredPosition: {x: -8295864.5, y: -11115510}
   m_SizeDelta: {x: 718, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &146369523
@@ -1704,7 +1697,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 393578934}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9760921
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2214,12 +2207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 264914730}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!1 &266381237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2396,8 +2383,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdfa6d70821361c4daa1388f51e07807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: {fileID: 275242482}
-  textPro: {fileID: 879566486}
 --- !u!114 &275242481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2410,12 +2395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 275242480}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &275242482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2697,12 +2676,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 286712565}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!1 &289995730
 GameObject:
   m_ObjectHideFlags: 0
@@ -2884,8 +2857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8095652dc60562944875172daf751fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StationName: CookStation1
-  RoomName: Kitchen1
 --- !u!61 &304890675
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3349,7 +3320,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00012207031, y: 368.0988}
+  m_AnchoredPosition: {x: -0.00012207031, y: 367.6594}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &355891053
@@ -3425,12 +3396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 359080590}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &359080590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3560,7 +3525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14261286, y: -1857465.8}
+  m_AnchoredPosition: {x: -15023340, y: -1952890.8}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &361294114
@@ -5398,7 +5363,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -2416820, y: -1477583.6}
+  m_AnchoredPosition: {x: -2938506.5, y: -1796589.9}
   m_SizeDelta: {x: 820, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &530996072
@@ -5629,15 +5594,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 533945057}
-  - {fileID: 533945050}
-  - {fileID: 533945054}
-  - {fileID: 533945053}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!95 &533945053
 Animator:
   serializedVersion: 5
@@ -6232,14 +6188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76d43a4b40aa8f4ba942e7c3dc40bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipCanvasTransform: {fileID: 1806486722}
-  tooltipCanvasComponent: {fileID: 1806486725}
-  _tooltipableTags:
-  - Item
-  - PlayerTaskButton
-  _tooltipableLayers: 06000000
-  _timeOnToolTip: 0
-  s: []
 --- !u!1 &599009831
 GameObject:
   m_ObjectHideFlags: 0
@@ -9630,7 +9578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6688f35e0e04de74a80d548c2228b573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomName: Kitchen1
 --- !u!1 &876937785
 GameObject:
   m_ObjectHideFlags: 0
@@ -13039,8 +12986,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f197373ad1974040ad0bae5c4a04f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRoom: EntryHall
-  RoomName: 
 --- !u!61 &1003096442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13458,7 +13403,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6688f35e0e04de74a80d548c2228b573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomName: EntryHall
 --- !u!1 &1072846297
 GameObject:
   m_ObjectHideFlags: 0
@@ -13535,14 +13479,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76d43a4b40aa8f4ba942e7c3dc40bb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipCanvasTransform: {fileID: 1806486722}
-  tooltipCanvasComponent: {fileID: 1806486725}
-  _tooltipableTags:
-  - Item
-  - PlayerTaskButton
-  _tooltipableLayers: 06000000
-  _timeOnToolTip: 0
-  s: []
 --- !u!1 &1109286109
 GameObject:
   m_ObjectHideFlags: 0
@@ -14079,12 +14015,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1128383562}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &1128383562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14097,7 +14027,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35f08334e243d114f9ba0ae858810072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InvitePanelContainer: {fileID: 728606065}
 --- !u!1 &1142417828
 GameObject:
   m_ObjectHideFlags: 0
@@ -14234,12 +14163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1142417834}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &1142417834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14850,12 +14773,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1207118176}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &1207118176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15199,8 +15116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f197373ad1974040ad0bae5c4a04f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRoom: Expedition1
-  RoomName: Kitchen1
 --- !u!61 &1240458763
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16200,8 +16115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f197373ad1974040ad0bae5c4a04f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRoom: Kitchen1
-  RoomName: EntryHall
 --- !u!1 &1382788254
 GameObject:
   m_ObjectHideFlags: 0
@@ -17529,12 +17442,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1468554549}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!1 &1483096609
 GameObject:
   m_ObjectHideFlags: 0
@@ -19204,8 +19111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8095652dc60562944875172daf751fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StationName: CookStation1
-  RoomName: EntryHall
 --- !u!61 &1690520447
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21405,8 +21310,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f197373ad1974040ad0bae5c4a04f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRoom: Kitchen1
-  RoomName: Expedition1
 --- !u!61 &1811416407
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21707,12 +21610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1817676245}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &1817676245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22202,12 +22099,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 1838741371}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!114 &1838741373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22416,7 +22307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12479738, y: -0.000015258789}
+  m_AnchoredPosition: {x: -13068562, y: -0.000015258789}
   m_SizeDelta: {x: 0, y: 175.56}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1846583233
@@ -23152,6 +23043,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2138783943}
     m_Modifications:
+    - target: {fileID: 29292884673021199, guid: 3ab889f4705812a43941752d999e5d9c, type: 3}
+      propertyPath: FromRoomName
+      value: EntryHall
+      objectReference: {fileID: 0}
     - target: {fileID: 29292884673021199, guid: 3ab889f4705812a43941752d999e5d9c, type: 3}
       propertyPath: TargetRoomName
       value: Kitchen1
@@ -24488,8 +24383,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f197373ad1974040ad0bae5c4a04f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRoom: EntryHall
-  RoomName: Kitchen1
 --- !u!1 &1983982518
 GameObject:
   m_ObjectHideFlags: 0
@@ -25957,12 +25850,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _components:
-  - {fileID: 2098699563}
-  _identifier: 
-  _useSceneContext: 0
-  _context: {fileID: 0}
-  _bindType: 0
 --- !u!1 &2122318524
 GameObject:
   m_ObjectHideFlags: 0

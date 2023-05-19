@@ -270,8 +270,8 @@ GameObject:
   - component: {fileID: 6598121723760138203}
   - component: {fileID: 2333714678510688467}
   - component: {fileID: 673619945043464863}
-  - component: {fileID: 7433215890225198480}
-  - component: {fileID: 7177591288748453504}
+  - component: {fileID: 8599222316115559835}
+  - component: {fileID: 5375276492647405325}
   m_Layer: 5
   m_Name: OptionsDialog
   m_TagString: Untagged
@@ -380,7 +380,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &7433215890225198480
+--- !u!114 &8599222316115559835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TogglesPanel: {fileID: 3643003700542254738}
   ResolveButton: {fileID: 7710892823910814054}
---- !u!114 &7177591288748453504
+--- !u!114 &5375276492647405325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9159ef7fd851f894797642ea21734189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OptionsDialogObjects: {fileID: 7433215890225198480}
+  OptionsDialogObjects: {fileID: 8599222316115559835}
 --- !u!1 &4744581687981572243
 GameObject:
   m_ObjectHideFlags: 0

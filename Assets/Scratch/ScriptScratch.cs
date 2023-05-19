@@ -1,4 +1,5 @@
-﻿using Assets.Dialogs.DIALOGSREFACTOR;
+﻿using Assets.Dialogs;
+using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;

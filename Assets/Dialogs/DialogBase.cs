@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Assets.Dialogs.DIALOGSREFACTOR
 {
-    public abstract class DialogBase : PrefabScriptBase
+    public class DialogBase : PrefabScriptBase
     {
         public void SetPosition(float x, float y)
         {

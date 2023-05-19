@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.FACTOR3
+namespace Assets.HttpStuff
 {
     public class Calls : MonoBehaviour
     {
