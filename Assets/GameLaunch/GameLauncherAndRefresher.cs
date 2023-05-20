@@ -33,14 +33,15 @@ public class GameLauncherAndRefresher : MonoBehaviour
         Debug.Log("Loading");
         await LaunchLogger.WarnForMissingSerializables();
         await _prefabLoader.InitializeAsync();  // TODO check for semi-injection of unique manager ? 
-        //PlayerInfo.UID = _temporaryOptionsScript.CurrentPlayerID; // for optionsScript in scene
+
+        PlayerInfo.UID = _temporaryOptionsScript.CurrentPlayerID; // for optionsScript in scene
 
 
+        //Guid id = TemporaryOptionsScript2.Instance is null
+        //    ? new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F")
+        //    : new Guid(TemporaryOptionsScript2.Instance.CurrentPlayerUID);
+        //PlayerInfo.UID = id; // for persistent options script
 
-        Guid id = TemporaryOptionsScript2.Instance is null
-            ? new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F")
-            : new Guid(TemporaryOptionsScript2.Instance.CurrentPlayerUID);
-        PlayerInfo.UID = id; // for persistent options script
         FindManagers();
 
         await InitializeManagersAsync();
@@ -51,8 +52,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
     private float _maximumTime = 3f;
     private float _currentTimeElapsed = 0;
     private int _tickAmount = 0;
-
-
     private bool _isRefreshing = false;
     // Handles refresh ticks
     async UniTask Update() // Ticks 

@@ -16,7 +16,7 @@ namespace Assets
         where TPrefab : PrefabScriptBase, IEntity
         where TEntity : IEntity// Avec du inheritance problablmement genre que UpdateEntities cest virtual au pire cest dans les tick jsp  
     {
-        private Dictionary<TPrefab, TEntity> GameObjectsAndEntities = new Dictionary<TPrefab, TEntity>();
+        public Dictionary<TPrefab, TEntity> GameObjectsAndEntities = new Dictionary<TPrefab, TEntity>();
         private List<Guid> _gameObjectIds => GameObjectsAndEntities.Keys.Select(x => x.Id).ToList();
         private List<TPrefab> _gameObjects => GameObjectsAndEntities.Keys.ToList();
 

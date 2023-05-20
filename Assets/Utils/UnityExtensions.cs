@@ -1,5 +1,6 @@
 ﻿using Assets.Enums;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.Entities;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Interfaces;
 using System;
@@ -34,6 +35,12 @@ public static class UnityExtensions
     public static Vector2 SetY(this Vector2 self, float y)
     {
         return new Vector2(self.x, y);
+    }
+
+    public static Vector3 GetPosition(this Player player)
+    {
+        Vector3 position = new Vector3(player.X, player.Y, player.Z);
+        return position;
     }
 
     public static void MoveTowards(this GameObject self, Vector2 to, float speed)
@@ -267,7 +274,7 @@ public static class UnityExtensions
         return z;
     }
 
-    public static IEnumerable<T2> GetAppearedEntities<T, T2>(IEnumerable<T> oldEntities, IEnumerable<T2> upToDateEntities) 
+    public static IEnumerable<T2> GetAppearedEntities<T, T2>(IEnumerable<T> oldEntities, IEnumerable<T2> upToDateEntities)
         where T : PrefabScriptBase, IEntity
         where T2 : IEntity
     {

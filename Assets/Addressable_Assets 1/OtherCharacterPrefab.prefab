@@ -482,6 +482,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textOverHead: {fileID: 1973383573961742241}
   _professionText: {fileID: 6889404316368122188}
+  _movement: {fileID: 6300246204312485123}
 --- !u!1 &7641319962121981307
 GameObject:
   m_ObjectHideFlags: 0

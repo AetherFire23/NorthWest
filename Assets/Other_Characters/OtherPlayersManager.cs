@@ -26,21 +26,25 @@ public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
     public async UniTask Initialize(GameState gameState)
     {
         _databaseRefresh = new GameObjectDatabaseRefresher<OtherCharacterScript, Player>(CreatePlayer);
-        var excludeLocalPlayer = gameState.Players.Where(x => x.Id == gameState.PlayerUID).ToList();
+        var excludeLocalPlayer = gameState.Players.Where(x => x.Id != gameState.PlayerUID).ToList();
         await _databaseRefresh.RefreshEntities(excludeLocalPlayer);
     }
     public async UniTask Refresh(GameState gameState)
     {
-        var excludeLocalPlayer = gameState.Players.Where(x=> x.Id != gameState.PlayerUID).ToList();
+        var excludeLocalPlayer = gameState.Players.Where(x => x.Id != gameState.PlayerUID).ToList();
         await _databaseRefresh.RefreshEntities(excludeLocalPlayer);
+
+        // make player move 
+        foreach (var otherPlayer in _databaseRefresh.GameObjectsAndEntities)
+        {
+            var targetPosition = otherPlayer.Value.GetPosition();
+            otherPlayer.Key.SetTargetPosition(targetPosition);
+        }
     }
     public async UniTask<OtherCharacterScript> CreatePlayer(Player player)
     {
         var otherCharacter = await _prefabLoader.CreateInstanceOfAsync<OtherCharacterScript>(_otherCharactersContainer.transform.gameObject);
         await otherCharacter.Initialize(player);
-
         return otherCharacter;
     }
-
-
 }
