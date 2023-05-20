@@ -16,9 +16,13 @@ namespace Assets
         where TPrefab : PrefabScriptBase, IEntity
         where TEntity : IEntity// Avec du inheritance problablmement genre que UpdateEntities cest virtual au pire cest dans les tick jsp  
     {
-        public Dictionary<TPrefab, TEntity> GameObjectsAndEntities = new Dictionary<TPrefab, TEntity>();
-        private List<Guid> _gameObjectIds => GameObjectsAndEntities.Keys.Select(x => x.Id).ToList();
-        private List<TPrefab> _gameObjects => GameObjectsAndEntities.Keys.ToList();
+        //public Dictionary<TPrefab, TEntity> GameObjectsAndEntities = new Dictionary<TPrefab, TEntity>();
+
+        public List<Tuple<TPrefab, TEntity>> GameObjectsAndEntities = new List<Tuple<TPrefab, TEntity>>();
+
+        private List<Guid> _gameObjectIds => GameObjectsAndEntities.Select(x => x.Item1.Id).ToList();
+        private List<TPrefab> _gameObjects => GameObjectsAndEntities.Select(x => x.Item1).ToList();
+
 
         private Func<TEntity, UniTask<TPrefab>> _createGameObjectFromEntity;
         private Action<TPrefab> _destroyFunction;
@@ -38,7 +42,7 @@ namespace Assets
 
         }
 
-        public GameObjectDatabaseRefresher(Func<TEntity, UniTask<TPrefab>> createGameObjectFromEntity, Action<TPrefab> destroyFunction, bool deleteMissing = true)
+        public GameObjectDatabaseRefresher(Func<TEntity, UniTask<TPrefab>> createGameObjectFromEntity, Action<TPrefab> customDestroy, bool deleteMissing = true)
         {
             if (createGameObjectFromEntity is null)
             {
@@ -47,7 +51,7 @@ namespace Assets
             }
 
             _createGameObjectFromEntity = createGameObjectFromEntity;
-            _destroyFunction = destroyFunction;
+            _destroyFunction = customDestroy;
             _deleteMissing = deleteMissing;
         }
 
@@ -55,12 +59,14 @@ namespace Assets
         {
             try
             {
-                var existingEntitiesids = GameObjectsAndEntities.Keys.Select(x => x.Id);
+                var existingEntitiesids = GameObjectsAndEntities.Select(x => x.Item1.Id);
 
-                foreach (TEntity entity in await GetAppearedEntities(uptoDate))
+                var appeared = await GetAppearedEntities(uptoDate);
+                foreach (TEntity entity in appeared)
                 {
                     var newGameObject = await _createGameObjectFromEntity(entity);
-                    GameObjectsAndEntities.Add(newGameObject, entity);
+                    var t = new Tuple<TPrefab, TEntity>(newGameObject, entity);
+                    GameObjectsAndEntities.Add(t);
                 }
 
                 if (_deleteMissing) // cest que 
@@ -68,8 +74,19 @@ namespace Assets
                     foreach (TPrefab missingEntity in await GetDisappeardEntities(uptoDate))
                     {
                         _destroyFunction(missingEntity);
-                        GameObjectsAndEntities.Remove(missingEntity);
+                        Tuple<TPrefab, TEntity> found = GameObjectsAndEntities.First(x => x.Item1.Id == missingEntity.Id);
+                        GameObjectsAndEntities.Remove(found);
                     }
+                }
+
+                // update stuff
+
+                foreach (var old in GameObjectsAndEntities)
+                {
+                    var newCorrespondingToOld = uptoDate.First(x => old.Item1.Id == x.Id);
+                    var oldEntity = GameObjectsAndEntities.FirstOrDefault(x => x.Item2.Id == old.Item2.Id);
+                    var s = oldEntity.Item2;
+                    s = newCorrespondingToOld;
                 }
             }
             catch (Exception ex)

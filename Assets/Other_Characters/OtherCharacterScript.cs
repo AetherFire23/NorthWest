@@ -18,6 +18,7 @@ public class OtherCharacterScript : PrefabScriptBase, IEntity
 
     public async UniTask Initialize(Player player)
     {
+        this.transform.position = player.GetPosition();
         _player = player;
         _textOverHead.text = player.Name;
         _professionText.name = player.Profession.ToString();

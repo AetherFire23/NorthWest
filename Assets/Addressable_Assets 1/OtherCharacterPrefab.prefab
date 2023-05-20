@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetPosition: {x: 0, y: 0}
-  MovementSpeed: 0.000003
+  MovementSpeed: 1
 --- !u!114 &-2232297714396052377
 MonoBehaviour:
   m_ObjectHideFlags: 0
