@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
 using UnityEngine;
 
-public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
+public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefreshable
 {
     [SerializeField] private Calls _calls;
     [SerializeField] private DialogManager _dialogManager;
@@ -25,6 +25,13 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
 
 
     private GameState _gameState;
+
+
+    public async UniTask Initialize(GameState gameState)
+    {
+        _gameState = gameState;
+    }
+
     public async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
@@ -74,4 +81,6 @@ public class RoomChangerDialogHandler : MonoBehaviour, IRefreshable
         await _dialog.Destroy();
         _dialog = null;
     }
+
+
 }
