@@ -16,14 +16,8 @@ public class RoomChangeManager : MonoBehaviour, IStartupBehavior
     public async UniTask Initialize(GameState gameState) // attention
     {
         MapRoomNamesAndRoomGameObjects();
+        PlaceLocalPlayerInRoomAndSnapCamera(gameState.Room.Name);
     }
-
-    //private void Awake() // dangerous behaviour in Awake, should check if placing this in IInitializable Breaks anything
-    //{
-    //    // finds all roomInfoScripts in scene so that i can map name  + room 
-
-
-
 
     //    // TODO:
     //    // warning pour les pieces qui manquent dans le editor
