@@ -18,7 +18,7 @@ namespace Assets.HttpStuff
     public class Calls : MonoBehaviour
     {
         private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
-        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionByPlayerModel"; // // requiresbodys
+        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; // // requiresbodys
         private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; //require parameter
         private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations"; //require parameter
         private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom"; //require parameter
@@ -52,9 +52,12 @@ namespace Assets.HttpStuff
             return gameState;
         }
 
-        public async UniTask<ClientCallResult> UpdatePosition(Player model)
+        public async UniTask<ClientCallResult> UpdatePosition(Guid playerId, float x, float y)
         {
-            var infos = new UriBuilder(_updatePositionByPlayerModel, ParameterOptions.BodyOnly, model); // p-t parameoptiers a none ?
+            var infos = new UriBuilder(_updatePositionByPlayerModel, ParameterOptions.Required); // p-t parameoptiers a none ?
+            infos.AddParameter("playerId", playerId.ToString());
+            infos.AddParameter("x", x.ToString());
+            infos.AddParameter("y", y.ToString());
             var result = await _httpClient.PutRequest2(infos);
             return result;
         }

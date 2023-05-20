@@ -18,7 +18,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
     [SerializeField] private Calls _client;
     [SerializeField] private GameStateFetcher _gameStateFetcher;
     [SerializeField] private PrefabLoader _prefabLoader;
-
+    [SerializeField] private LocalPLayerManager _localPLayerManager;
 
     private List<IStartupBehavior> _managers = new List<IStartupBehavior>();
     private List<IRefreshable> _refreshables = new List<IRefreshable>();
@@ -63,6 +63,9 @@ public class GameLauncherAndRefresher : MonoBehaviour
         if (_currentTimeElapsed > _maximumTime)
         {
             if (!_allowRefresh) return;
+
+            // Here is right before refreshing managers, so I could update position I guess
+            await _client.UpdatePosition(PlayerInfo.UID, _localPLayerManager.PlayerPosition.x, _localPLayerManager.PlayerPosition.y);
 
             await RefreshManagersAsync();
             Debug.Log($"has ticked for {_tickAmount}");
