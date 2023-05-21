@@ -3,6 +3,7 @@ using Assets.AssetLoading;
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
+using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Assets.Raycasts;
 using Cysharp.Threading.Tasks;
@@ -18,6 +19,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
     [SerializeField] private Calls _calls;
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private RoomChangeManager _roomChangeManager;
+    [SerializeField] private LocalPLayerManager _localPLayerManager;
     // need to roomChange the player.
 
     private bool _isPrompting => _dialog is not null;
@@ -45,15 +47,23 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
 
         var door = IIDRaycast.MouseRaycastScriptOrDefault<DoorTargetRoomScript>();
         if (door is null) return;
-        if (door.TargetRoomName.Equals(_gameState.Room.Name))
+        //if (door.TargetRoomName.Equals(_gameState.Room.Name))
+        //{
+        //    Debug.Log("cant acces ssame room ");
+        //    return;
+        //}
+
+        string test = GetCorrectRoomName(door);
+
+        if (test == string.Empty)
         {
-            Debug.Log("cant acces ssame room ");
+            Debug.Log("Player must be in at least one of the 2 ddoors");
             return;
         }
 
         // end of guard clauses
         _dialog = await _dialogManager.CreateDialog<YesNoDialog>();
-        string message = $"You are about to change room to : {door.TargetRoomName}. " +
+        string message = $"You are about to change room to : {test}. " +
             $"{Environment.NewLine}Unncessary movement will appear suspicious. " +
             $"{Environment.NewLine}This action will be logged as full public.";
         await _dialog.Initialize(message);
@@ -67,7 +77,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
             return;
         }
 
-        var callResult = await _calls.ChangeRoom(PlayerInfo.UID, door.TargetRoomName);
+        var callResult = await _calls.ChangeRoom(PlayerInfo.UID, test);
 
         if (!callResult.IsSuccessful)
         {
@@ -75,12 +85,24 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
         }
         else
         {
-            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(door.TargetRoomName);
+            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(test);
         }
 
         await _dialog.Destroy();
         _dialog = null;
     }
 
+    //Connections are both-sided. If not the first connection, go to the second one.
+    private string GetCorrectRoomName(DoorTargetRoomScript connection)
+    {
+        var currentRoomName = _gameState.Room.Name;
 
+        bool noDoors = currentRoomName != connection.Connection1 && currentRoomName != connection.Connection2;
+        if (noDoors) return string.Empty; // empty means dont show prompt ! 
+
+        string correctDoor = currentRoomName.Equals(connection.Connection1)
+            ? connection.Connection2
+            : connection.Connection1;
+        return correctDoor;
+    }
 }
