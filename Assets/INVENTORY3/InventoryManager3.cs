@@ -160,6 +160,7 @@ namespace Assets.INVENTORY3
             return false;
         }
 
+        // les shits dans la coroutine ca fait peur honestly
         private async UniTask HandleItemTrackingUntilMouseReleaseCoroutine() // devrais quasiment faire 2 manager differents
         {
             // changing the tracked item parent to prevent the mask from hiding the gameObject.
