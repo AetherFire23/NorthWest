@@ -1,6 +1,7 @@
 ﻿using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
+using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
@@ -24,6 +25,8 @@ namespace Assets.Scratch
         [SerializeField] Transform _dropDownTransform;
         [SerializeField] TMPro.TMP_Dropdown _dropDownComponent;
         [SerializeField] private TaskBuilder _taskBuilder;
+
+        [SerializeField] private Calls _calls;
         //[SerializeField] Text 
 
 
@@ -43,7 +46,7 @@ namespace Assets.Scratch
             //var firstTask = init.First();
             //await _taskBuilder.ConstructTaskAction(gameState, firstTask);
 
-           
+
         }
 
         public async UniTask AskForStuffAsync()
