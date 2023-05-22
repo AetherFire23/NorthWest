@@ -99,6 +99,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
         var tasks = _refreshables.Select(x => x.Refresh(gameState));
         await UniTask.WhenAll(tasks);
     }
+
     private void FindManagers()
     {
         MonoBehaviour[] monoBehaviours = FindObjectsOfType<MonoBehaviour>();

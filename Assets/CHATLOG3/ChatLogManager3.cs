@@ -1,4 +1,3 @@
-
 using Assets;
 using Assets.AssetLoading;
 using Assets.CHATLOG3;
@@ -11,12 +10,8 @@ using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
