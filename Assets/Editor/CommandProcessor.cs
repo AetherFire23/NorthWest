@@ -42,7 +42,7 @@ namespace Assets.Automation
                     sb.AppendLine($"Name: {nullField.Name}.");
                     sb.AppendLine();
 
-                    if (!IsValidPrompt(sb, referencesFound.Count)) continue;
+                    if (!IsValidReferenceCountOrPrompt(sb, referencesFound.Count)) continue;
 
                     sb.AppendLine($"A MonoBehaviour was found in the scene that could fulfill this dependency.");
                     sb.AppendLine($"Do you want to set it in the editor ?");
@@ -50,7 +50,7 @@ namespace Assets.Automation
                     bool mustFillDependenciesPrompt = EditorUtility.DisplayDialog("Null reference", sb.ToString(), "Ok", "Cancel");
                     if (!mustFillDependenciesPrompt)
                     {
-                        Debug.Log($"Filling dependency was declined for {nullField.Name}");
+                        UnityEngine.Debug.Log($"Filling dependency was declined for {nullField.Name}");
                         continue;
                     }
 
@@ -65,12 +65,9 @@ namespace Assets.Automation
             }
         }
 
-        private static bool IsValidPrompt(StringBuilder sb, int referenceCount)
+        private static bool IsValidReferenceCountOrPrompt(StringBuilder sb, int referenceCount)
         {
-            if (referenceCount == 1)
-            {
-                return true;
-            }
+            if (referenceCount == 1) return true;
 
             string overOrUnderMessage = referenceCount > 1
                 ? $"However, a count of[{referenceCount}] were found, which is more than one.Therefore, we will not proceed into fulfilling this dependency"
@@ -85,21 +82,22 @@ namespace Assets.Automation
         private static List<FieldInfo> GetNullFields(MonoBehaviour mono)
         {
             var superAssembly = typeof(IRefreshable).Assembly;
+
             var nullFields = mono.GetType()
-                                     .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
-                                     .Where(x => x.GetCustomAttribute<SerializeField>() is not null)
-                                     .Where(x => x.GetValue(mono) is null)
-                                     .Where(x => x.FieldType.Assembly == superAssembly)
-                                     .ToList();
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Where(x => x.GetCustomAttribute<SerializeField>() is not null)
+                .Where(x => x.GetValue(mono) is null)
+                .Where(x => x.FieldType.Assembly == superAssembly)
+                .ToList();
+
             return nullFields;
         }
 
         private static List<MonoBehaviour> GetReferencesInSceneForNullField(FieldInfo nullFieldInfo)
         {
             var references = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>()
-                                                            .Where(x => x is not null)
-                                                            .Where(x => x.GetType() == nullFieldInfo.FieldType).ToList();
-
+                                               .Where(x => x is not null)
+                                               .Where(x => x.GetType() == nullFieldInfo.FieldType).ToList();
             return references;
         }
     }

@@ -13,6 +13,7 @@ namespace Assets.GameLaunch
 {
     public class Client : IDisposable
     {
+        // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
         private System.Net.Http.HttpClient _client = new System.Net.Http.HttpClient();
 
         public async UniTask<ClientCallResult> PutRequest2(UriBuilder infos)
