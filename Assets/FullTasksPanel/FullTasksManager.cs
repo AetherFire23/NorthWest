@@ -7,8 +7,6 @@ using Assets.GameLaunch;
 using Shared_Resources.Models;
 using Cysharp.Threading.Tasks;
 using Assets.AssetLoading;
-using Assets.FullTasksPanel;
-using Unity.VisualScripting;
 using Assets.HttpStuff;
 
 public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
@@ -41,10 +39,19 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
         await RefreshAvailableTasks();
     }
 
+    private bool _isRefreshing = false;
     public async UniTask Refresh(GameState gameState)
     {
+        if (_isRefreshing)
+        {
+            Debug.Log("Cancelled refreshing fulltasksManager");
+        }
+
+            _isRefreshing = true;
         _gameState = gameState;
         await RefreshAvailableTasks();
+        _isRefreshing = false;
+
     }
 
     private async UniTask RefreshAvailableTasks() // compare with gameTaskCodes
