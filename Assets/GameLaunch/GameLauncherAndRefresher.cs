@@ -60,7 +60,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
         _isRefreshing = true;
         _currentTimeElapsed += Time.deltaTime;
 
-        if (_currentTimeElapsed < _maximumTime) // watch out ehre
+        if (_currentTimeElapsed > _maximumTime) // watch out ehre
         {
             if (!_allowRefresh) return;
 

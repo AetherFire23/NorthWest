@@ -20,6 +20,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;
+    [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
     // need to roomChange the player.
 
     private bool _isPrompting => _dialog is not null;
@@ -78,17 +79,19 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
         }
 
         var callResult = await _calls.ChangeRoom(PlayerInfo.UID, test);
+        await _dialog.Destroy();
 
         if (!callResult.IsSuccessful)
         {
             Debug.LogError($"Something went wrong in the API when changing door Message: {callResult.Message}");
+
         }
         else
         {
+            await _gameLauncherAndRefresher.ForceRefreshManagers();
             _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(test);
         }
 
-        await _dialog.Destroy();
         _dialog = null;
     }
 
