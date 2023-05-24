@@ -20,6 +20,7 @@ public class TaskBuilder : MonoBehaviour
 {
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private Calls _calls;
+    [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
     // Should somewhat map the taskCodes and the gameTasks
     // NOTES : 
     // 1. Handle player target
@@ -63,6 +64,7 @@ public class TaskBuilder : MonoBehaviour
 
         if (callResult.IsSuccessful)
         {
+            await _gameLauncherAndRefresher.ForceRefreshManagers();
             Debug.Log("Task executed gracefully!");
         }
         else

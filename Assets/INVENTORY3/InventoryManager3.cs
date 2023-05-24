@@ -37,8 +37,8 @@ namespace Assets.INVENTORY3
             _isInitialized = true;
         }
 
-        // ya une idee que pour le refresh, faut pas que le code de transfert ditems se fasse en meme temps que le refresh et vice versa.
-        // Donc cest pour ca les coroutines qui sattendent lun et lautre.
+        // ya une idee que pour le refresh, faut pas que le code de manipulation ditems se fasse en meme temps que le refresh et vice versa.
+        // Donc cest pour ca les coroutines qui attendent refresh et input.
         // va falloir faire une classe pour manage ca par contre cos on comprend rien pourquoi jattends des shit dans le code
 
         // trying something to wait for next gameState
@@ -58,11 +58,12 @@ namespace Assets.INVENTORY3
                 return;
             }
 
-            //if (_mustWaitForNextGameState)
-            //{
-            //    _mustWaitForNextGameState = false;
-            //    return;
-            //}
+            // sincerement je sais pas si ca fait dequoi xd
+            if (_mustWaitForNextGameState)
+            {
+                _mustWaitForNextGameState = false;
+                return;
+            }
 
             _isRefreshing = true;
 
@@ -314,6 +315,8 @@ namespace Assets.INVENTORY3
         private bool _isSwitchingRoomInventory { get; set; } = false;
         public async UniTask SetRoomInventory(string roomName) // ca ici puisque ca refresh ca remove
         { // la prediction de si tas mis un item dans ton inventaire de player avant
+            if (_isSwitchingRoomInventory) return; // prevents double clicks
+
             await WaitUntilInputEndsCoroutine();
             await WaitUntilRefreshEndsCoroutine();
 
