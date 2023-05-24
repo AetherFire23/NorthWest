@@ -20,6 +20,7 @@ namespace Assets.INVENTORY3
         [SerializeField] private InventoryStaticGameObjects _inventoryObjects;
         [SerializeField] private Calls _calls;
         [SerializeField] private SlotAndItemsManager _slotManager;
+        [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
         private GameState _gameState { get; set; }
         private ItemInventory _trackedItem { get; set; }
@@ -311,6 +312,14 @@ namespace Assets.INVENTORY3
         { // la prediction de si tas mis un item dans ton inventaire de player avant
             await WaitUntilInputEndsCoroutine();
             await WaitUntilRefreshEndsCoroutine();
+
+            if (_isInitialized) // else infinite loop cos it calls all managers
+            {
+                await _gameLauncherAndRefresher.ForceRefreshManagers();
+
+            }
+            // si tu 1. switch item dinventaire 
+
 
             // possibilites de plein del oops infinis ici so wathc out
             _isSwitchingRoomInventory = true;

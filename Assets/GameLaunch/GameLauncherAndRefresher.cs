@@ -111,4 +111,19 @@ public class GameLauncherAndRefresher : MonoBehaviour
             .Where(x => typeof(IRefreshable).IsAssignableFrom(x.GetType()))
             .Select(x => x as IRefreshable).ToList();
     }
+
+    public async UniTask ForceRefreshManagers()
+    {
+        await WaitUntilRefreshEndsCoroutine();
+        await RefreshManagersAsync();
+        _currentTimeElapsed = 0;
+    }
+
+    private async UniTask WaitUntilRefreshEndsCoroutine()
+    {
+        while (_isRefreshing)
+        {
+            await UniTask.Yield();
+        }
+    }
 }
