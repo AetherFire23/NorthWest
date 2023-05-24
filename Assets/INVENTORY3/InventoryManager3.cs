@@ -9,6 +9,7 @@ using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using System;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.INVENTORY3
@@ -35,10 +36,37 @@ namespace Assets.INVENTORY3
             await this.SetRoomInventory(_gameState.Room.Name);
         }
 
+        // ya une idee que pour le refresh, faut pas que le code de transfert ditems se fasse en meme temps que le refresh et vice versa.
+        // Donc cest pour ca les coroutines qui sattendent lun et lautre.
+        // va falloir faire une classe pour manage ca par contre cos on comprend rien pourquoi jattends des shit dans le code
+
+        private bool _isProcessingInput { get; set; } = false;
+        private bool _isWaitingForGameStateRefreshBecauseOfInput { get; set; } = false;
+
+
+        // trying something to wait for next gameState
+        private bool _mustWaitForNextGameState = false; // desuet jpense
+        private bool _lastRefreshWasAwaited = false;
         public async UniTask Refresh(GameState gameState)
         {
+            if (_isRefreshing) return;
+            if (_isTracking)
+            {
+                Debug.LogError("Rfersh canceled because of input handling");
+                return;
+            }
+
+            if (_mustWaitForNextGameState)
+            {
+                _mustWaitForNextGameState = false;
+                return;
+            }
+
             _isRefreshing = true;
             _gameState = gameState;
+
+
+
             await RefreshItems(CurrentShownRoom.Name);
             _isRefreshing = false;
         }
@@ -53,6 +81,9 @@ namespace Assets.INVENTORY3
             if (_isTracking) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
+            _isProcessingInput = true;
+            
+
             ItemInventory itemClick = UIRaycast.ScriptOrDefault<ItemInventory>();
             if (itemClick is null) return;
 
@@ -61,7 +92,7 @@ namespace Assets.INVENTORY3
             await HandleItemTrackingUntilMouseReleaseCoroutine();// si la coroutine roule pendant que ca refresh ca fuck up peu 
             // Check if items were refreshed while handling ??
 
-
+            await this.WaitUntilRefreshEndsCoroutine();
             ReleaseType context = await GetItemReleasedContext();
             Debug.Log(context);
             if (context == ReleaseType.Invalid)
@@ -79,6 +110,8 @@ namespace Assets.INVENTORY3
 
         public async UniTask HandleItemSwap(ReleaseType releaseType)
         {
+            // the reason why is procesingInput is only going from room-player and vice-versa
+            // is because there is no http call from within-room inventories so no chance of delay.
             switch (releaseType)
             {
                 case ReleaseType.FromPlayerToPlayer:
@@ -89,6 +122,7 @@ namespace Assets.INVENTORY3
                     }
                 case ReleaseType.FromPlayerToRoom:// ownerShipChange
                     {
+                        _mustWaitForNextGameState = true;
                         var slot = await _slotManager.CreateInventorySlotAndInsertItem(_trackedItem);
                         // For prediction
                         _trackedItem.Item.OwnerId = _currentInventoryShownRoomId;
@@ -97,6 +131,7 @@ namespace Assets.INVENTORY3
                     }
                 case ReleaseType.FromRoomToPlayer: // ownerShipChange
                     {
+                        _mustWaitForNextGameState = true;
                         var oldInventorySlot = _trackedItem.Slot;
                         var playerSlot = UIRaycast.ScriptOrDefault<SlotInventory>();
                         await playerSlot.InsertItemInSlot(_trackedItem);
@@ -150,6 +185,12 @@ namespace Assets.INVENTORY3
             var slotBehind = UIRaycast.ScriptOrDefault<SlotInventory>();
             if (slotBehind == _trackedItem.Slot) return true;
 
+            // Check if the item is being dropped on a SLOT (that contains an item
+            // && operator is important because if I just check for .HasItem when dragging on inventory,
+            // you get a null ref exception
+            if (slotBehind != null && slotBehind.HasItem) return true; // 
+
+
 
             // check if release is either over room or player, if none, it is invalid (anywhere else on the screen)
             bool isOverRoomInventory = UIRaycast.TagExists("RoomInventory");
@@ -172,6 +213,29 @@ namespace Assets.INVENTORY3
             }
             _trackedItem.transform.SetParent(_trackedItem.Slot.gameObject.transform);
         }
+
+        private async UniTask WaitUntilRefreshEndsCoroutine()
+        {
+            if (!_isRefreshing) return;
+
+            while (_isRefreshing)
+            {
+                Debug.Log("Waiting for refresh before handling manipulation");
+                await UniTask.Yield();
+            }
+        }
+        private async UniTask WaitUntilInputEndsCoroutine()
+        {
+            _isWaitingForGameStateRefreshBecauseOfInput = true;
+            while (_isProcessingInput)
+            {
+                Debug.Log("Waiting Until Refresh Ends");
+                await UniTask.Yield();
+            }
+            _isWaitingForGameStateRefreshBecauseOfInput = false;
+        }
+
+        //private async UniTask 
 
         public async UniTask InitializePlayerSlots()
         {
@@ -225,6 +289,7 @@ namespace Assets.INVENTORY3
             }
             foreach (var item in refreshResult.Disappeared)
             {
+                // jfais tu actually dequoi pour enelver la slot du itemmanager?
                 item.Slot.DestroyItem();
             }
         }

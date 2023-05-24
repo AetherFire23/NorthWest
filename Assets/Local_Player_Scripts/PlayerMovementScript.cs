@@ -33,7 +33,7 @@ public class PlayerMovementScript : MonoBehaviour
         if (IsMoving && isPlayerAtTargetPosition)
         {
             IsMoving = false;
-            Debug.Log("Reached destination");
+           // Debug.Log("Reached destination");
         }
     }
 
