@@ -70,5 +70,10 @@ namespace Assets.INVENTORY3
             var slots = _slots.Where(x => !x.IsRoomSlot).ToList();
             return slots;
         }
+
+        public void RemoveSlot(SlotInventory slot)
+        {
+            _slots.Remove(slot);
+        }
     }
 }

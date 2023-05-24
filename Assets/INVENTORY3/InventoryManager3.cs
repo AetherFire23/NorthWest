@@ -29,27 +29,28 @@ namespace Assets.INVENTORY3
         public async UniTask Initialize(GameState gameState)
         {
             _gameState = gameState;
-            _isInitialized = true;
 
             await InitializePlayerSlots();
             await InitializeStaticButtons();
             await this.SetRoomInventory(_gameState.Room.Name);
+            _isInitialized = true;
         }
 
         // ya une idee que pour le refresh, faut pas que le code de transfert ditems se fasse en meme temps que le refresh et vice versa.
         // Donc cest pour ca les coroutines qui sattendent lun et lautre.
         // va falloir faire une classe pour manage ca par contre cos on comprend rien pourquoi jattends des shit dans le code
 
-        private bool _isProcessingInput { get; set; } = false;
-        private bool _isWaitingForGameStateRefreshBecauseOfInput { get; set; } = false;
-
-
         // trying something to wait for next gameState
-        private bool _mustWaitForNextGameState = false; // desuet jpense
-        private bool _lastRefreshWasAwaited = false;
+        private bool _mustWaitForNextGameState { get; set; } = false; 
         public async UniTask Refresh(GameState gameState)
         {
+            if (!_isInitialized) return;
             if (_isRefreshing) return;
+            if (_isSwitchingRoomInventory)
+            {
+                Debug.LogError("Refresh canceled because is switching inventory");
+                return;
+            }
             if (_isTracking)
             {
                 Debug.LogError("Rfersh canceled because of input handling");
@@ -63,8 +64,8 @@ namespace Assets.INVENTORY3
             }
 
             _isRefreshing = true;
-            _gameState = gameState;
 
+            _gameState = gameState;
 
 
             await RefreshItems(CurrentShownRoom.Name);
@@ -81,8 +82,7 @@ namespace Assets.INVENTORY3
             if (_isTracking) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
-            _isProcessingInput = true;
-            
+   
 
             ItemInventory itemClick = UIRaycast.ScriptOrDefault<ItemInventory>();
             if (itemClick is null) return;
@@ -226,13 +226,11 @@ namespace Assets.INVENTORY3
         }
         private async UniTask WaitUntilInputEndsCoroutine()
         {
-            _isWaitingForGameStateRefreshBecauseOfInput = true;
-            while (_isProcessingInput)
+            while (_isTracking)
             {
                 Debug.Log("Waiting Until Refresh Ends");
                 await UniTask.Yield();
             }
-            _isWaitingForGameStateRefreshBecauseOfInput = false;
         }
 
         //private async UniTask 
@@ -302,18 +300,32 @@ namespace Assets.INVENTORY3
             }
             foreach (var item in refreshResult.Disappeared)
             {
+                _slotManager.RemoveSlot(item.Slot);
                 item.Slot.DestroyItem();
                 await item.Slot.DestroySlot();
             }
         }
 
+        private bool _isSwitchingRoomInventory { get; set; } = false;
         public async UniTask SetRoomInventory(string roomName) // ca ici puisque ca refresh ca remove
         { // la prediction de si tas mis un item dans ton inventaire de player avant
+            await WaitUntilInputEndsCoroutine();
+            await WaitUntilRefreshEndsCoroutine();
+
+            // possibilites de plein del oops infinis ici so wathc out
+            _isSwitchingRoomInventory = true;
+
+
+
+
             RoomDTO room = _gameState.GetRoomByName(roomName);
             _currentInventoryShownRoomId = room.Id;
             this._inventoryObjects.RoomNameText.text = room.Name;
             await this.RefreshItems(room.Name);
             _inventoryObjects.RoomInventoryCanvas.enabled = true;
+
+            _isSwitchingRoomInventory = false;
+
         }
     }
 }
