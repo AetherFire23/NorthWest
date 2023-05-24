@@ -27,6 +27,9 @@ public class SlotInventory : PrefabScriptBase
         this.Item.transform.localPosition = Vector2.zero; // will probably not work.
     }
 
+    /// <summary>
+    /// Works in any slot
+    /// </summary>
     public async UniTask InsertItemInSlot(ItemInventory item) // item should already have some prediction going on here
     {
         if (HasItem)

@@ -58,11 +58,11 @@ namespace Assets.INVENTORY3
                 return;
             }
 
-            if (_mustWaitForNextGameState)
-            {
-                _mustWaitForNextGameState = false;
-                return;
-            }
+            //if (_mustWaitForNextGameState)
+            //{
+            //    _mustWaitForNextGameState = false;
+            //    return;
+            //}
 
             _isRefreshing = true;
 
@@ -107,11 +107,12 @@ namespace Assets.INVENTORY3
             await HandleItemSwap(context);
 
             _trackedItem = null; // in all cases, when the button is lifted up, should stop tracking everything.
+            await _gameLauncherAndRefresher.ForceRefreshManagers();
+
         }
 
         public async UniTask HandleItemSwap(ReleaseType releaseType)
         {
-            // the reason why is procesingInput is only going from room-player and vice-versa
             // is because there is no http call from within-room inventories so no chance of delay.
             switch (releaseType)
             {
@@ -121,13 +122,14 @@ namespace Assets.INVENTORY3
                         await targetSlot.InsertItemInSlot(_trackedItem);
                         break;
                     }
-                case ReleaseType.FromPlayerToRoom:// ownerShipChange
+                case ReleaseType.FromPlayerToRoom: //ownerShipChange
                     {
                         _mustWaitForNextGameState = true;
-                        var slot = await _slotManager.CreateInventorySlotAndInsertItem(_trackedItem);
+                        var slot = await _slotManager.CreateRoomInventorySlotAndInsertItem(_trackedItem);
                         // For prediction
                         _trackedItem.Item.OwnerId = _currentInventoryShownRoomId;
                         await _calls.TransferItemOwnerShip(_currentInventoryShownRoomId, _trackedItem.Id);
+
                         break;
                     }
                 case ReleaseType.FromRoomToPlayer: // ownerShipChange
@@ -139,6 +141,7 @@ namespace Assets.INVENTORY3
                         await oldInventorySlot.DestroySlot();
                         _trackedItem.Item.OwnerId = PlayerInfo.UID;
                         await _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id);
+
                         break;
                     }
                 case ReleaseType.FromRoomToRoom:
@@ -147,6 +150,8 @@ namespace Assets.INVENTORY3
                         break;
                     }
             }
+
+
         }
 
         // what a mess though. Should check for invalids first maybe
@@ -202,8 +207,7 @@ namespace Assets.INVENTORY3
             return false;
         }
 
-        // les shits dans la coroutine ca fait peur honestly
-        private async UniTask HandleItemTrackingUntilMouseReleaseCoroutine() // devrais quasiment faire 2 manager differents
+        private async UniTask HandleItemTrackingUntilMouseReleaseCoroutine()
         {
             // changing the tracked item parent to prevent the mask from hiding the gameObject.
             _trackedItem.transform.parent = _inventoryObjects.RoomInventoryCanvas.transform;
@@ -217,7 +221,7 @@ namespace Assets.INVENTORY3
 
         private async UniTask WaitUntilRefreshEndsCoroutine()
         {
-            if (!_isRefreshing) return;
+            //if (!_isRefreshing) return;
 
             while (_isRefreshing)
             {
@@ -295,15 +299,15 @@ namespace Assets.INVENTORY3
 
         public async UniTask RefreshRoomItems(RefreshResult<ItemInventory, Item> refreshResult)
         {
-            foreach (var item in refreshResult.Appeared)
-            {
-                await _slotManager.CreateNewRoomSlotAndCreateNewItem(item);
-            }
             foreach (var item in refreshResult.Disappeared)
             {
                 _slotManager.RemoveSlot(item.Slot);
                 item.Slot.DestroyItem();
                 await item.Slot.DestroySlot();
+            }
+            foreach (var item in refreshResult.Appeared)
+            {
+                await _slotManager.CreateNewRoomSlotAndCreateNewItem(item);
             }
         }
 
@@ -318,14 +322,7 @@ namespace Assets.INVENTORY3
                 await _gameLauncherAndRefresher.ForceRefreshManagers();
 
             }
-            // si tu 1. switch item dinventaire 
-
-
-            // possibilites de plein del oops infinis ici so wathc out
             _isSwitchingRoomInventory = true;
-
-
-
 
             RoomDTO room = _gameState.GetRoomByName(roomName);
             _currentInventoryShownRoomId = room.Id;

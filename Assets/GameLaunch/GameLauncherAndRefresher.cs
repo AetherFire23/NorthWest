@@ -13,6 +13,7 @@ using UnityEngine;
 public class GameLauncherAndRefresher : MonoBehaviour
 {
     [SerializeField] bool _allowRefresh;
+    [SerializeField] private bool _timeBasedRefresh;
 
     [SerializeField] private TemporaryOptionsScript _temporaryOptionsScript;
     [SerializeField] private Calls _client;
@@ -22,6 +23,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
     private List<IStartupBehavior> _managers = new List<IStartupBehavior>();
     private List<IRefreshable> _refreshables = new List<IRefreshable>();
+
 
 
     private bool _isInitializing = false;
@@ -42,7 +44,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
         //    : new Guid(TemporaryOptionsScript2.Instance.CurrentPlayerUID);
         //PlayerInfo.UID = id; // for persistent options script
 
-        FindManagers();
+        DiscoverManagers();
 
         await InitializeManagersAsync();
         _isInitializing = false;
@@ -59,6 +61,15 @@ public class GameLauncherAndRefresher : MonoBehaviour
         if (_isRefreshing || _isInitializing) return;
         _isRefreshing = true;
         _currentTimeElapsed += Time.deltaTime;
+
+        if (_timeBasedRefresh)
+        {
+
+        }
+        else
+        {
+
+        }
 
         if (_currentTimeElapsed > _maximumTime) // watch out ehre
         {
@@ -100,18 +111,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
         await UniTask.WhenAll(tasks);
     }
 
-    private void FindManagers()
-    {
-        MonoBehaviour[] monoBehaviours = FindObjectsOfType<MonoBehaviour>();
-        _managers = monoBehaviours
-            .Where(x => typeof(IStartupBehavior).IsAssignableFrom(x.GetType()))
-            .Select(x => x as IStartupBehavior).ToList();
-
-        _refreshables = monoBehaviours
-            .Where(x => typeof(IRefreshable).IsAssignableFrom(x.GetType()))
-            .Select(x => x as IRefreshable).ToList();
-    }
-
     public async UniTask ForceRefreshManagers()
     {
         await WaitUntilRefreshEndsCoroutine();
@@ -125,5 +124,17 @@ public class GameLauncherAndRefresher : MonoBehaviour
         {
             await UniTask.Yield();
         }
+    }
+
+    private void DiscoverManagers()
+    {
+        MonoBehaviour[] monoBehaviours = FindObjectsOfType<MonoBehaviour>();
+        _managers = monoBehaviours
+            .Where(x => typeof(IStartupBehavior).IsAssignableFrom(x.GetType()))
+            .Select(x => x as IStartupBehavior).ToList();
+
+        _refreshables = monoBehaviours
+            .Where(x => typeof(IRefreshable).IsAssignableFrom(x.GetType()))
+            .Select(x => x as IRefreshable).ToList();
     }
 }

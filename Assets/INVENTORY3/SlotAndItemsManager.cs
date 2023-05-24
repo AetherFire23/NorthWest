@@ -36,7 +36,7 @@ namespace Assets.INVENTORY3
             return slot;
         }
 
-        public async UniTask<SlotInventory> CreateInventorySlotAndInsertItem(ItemInventory item) // should never be empty though...
+        public async UniTask<SlotInventory> CreateRoomInventorySlotAndInsertItem(ItemInventory item) // should never be empty though...
         {
             var slot = await _prefabLoader.CreateInstanceOfAsync<SlotInventory>(_inventoryStaticGameObjects.RoomInventoryScrollView.gameObject);
             await slot.Initialize(true);
