@@ -17,6 +17,7 @@ namespace Assets.LogManager3
 
         private Guid _playerId = Guid.Empty;
         private Guid _roomId = Guid.Empty;
+
         public List<Log> GetUpToDateLogsWithCurrentFilter()
         {
             switch (_filteringCriteria)
@@ -46,6 +47,7 @@ namespace Assets.LogManager3
             _filteringCriteria = FilteringCriteria.RoomFilter;
             _roomId = roomId;
         }
+
         public void AddRange(List<Log> log)
         {
             _allLogs.AddRange(log);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEngine.InputSystem;
 using static TMPro.TMP_Dropdown;
 
 namespace Assets.Scratch
@@ -12,6 +13,8 @@ namespace Assets.Scratch
     {
         private Dictionary<OptionData, T> _options = new Dictionary<OptionData, T>();
         private TMP_Dropdown _dropdown;
+
+        public List<T> Options => _options.Values.ToList();
         public DropDownManager(List<T> options, TMP_Dropdown down)
         {
             _dropdown = down;

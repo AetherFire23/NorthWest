@@ -74,5 +74,11 @@ namespace Assets.GameState_Management
             var landmassRooms = gameState.Rooms.Where(x => x.IsLandmass).ToList();
             return landmassRooms;
         }
+
+        public static List<RoomDTO> GetRoomsInAlphabeticalOrder(this GameState gameState)
+        {
+             var rooms = gameState.Rooms.OrderBy(x=> x.Name).ToList();
+            return rooms;
+        }
     }
 }
