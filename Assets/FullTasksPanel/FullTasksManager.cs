@@ -60,9 +60,13 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             FullTaskButton button = await _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
 
             // CreateButtons?
-            Func<UniTask> taskAction = async () => await _taskBuilder.SendGameTaskAfterTargetSelections(_gameState, appearedTask);
+            Func<UniTask> createPromptsThenSendTask = async () =>
+            {
+                await _taskBuilder.SendGameTaskAfterTargetSelections(_gameState, appearedTask);
 
-            await button.Initialize(appearedTask, taskAction);
+            };
+
+            await button.Initialize(appearedTask, createPromptsThenSendTask);
             _fullTaskButtons.Add(button);
             await PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(button);
         }

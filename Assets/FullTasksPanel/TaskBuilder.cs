@@ -28,8 +28,12 @@ public class TaskBuilder : MonoBehaviour
     // 3. special dialogs
     // 4. common dialogs
 
+    private OptionsDialogScript2 _optionsDialog;
+
     public async UniTask SendGameTaskAfterTargetSelections(GameState gameState, GameTaskBase gameTask)
     {
+        if (_optionsDialog is not null) return;
+
         var targetPrompts = gameTask.GetValidTargetPrompts(gameState);
         Dictionary<string, string> parameters = new Dictionary<string, string>();
         // does not handle ExactAmountChecks
@@ -37,13 +41,13 @@ public class TaskBuilder : MonoBehaviour
         foreach (var prompt in targetPrompts.CheckLists)
         {
             var options = prompt.GetPromptsAsObjects();
-            OptionsDialogScript2 dialog = await _dialogManager.CreateAndInitializeOptionsDialog2(prompt.Description, options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
-            await dialog.WaitForResolveCoroutine();
+            _optionsDialog = await _dialogManager.CreateAndInitializeOptionsDialog2(prompt.Description, options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
+            await _optionsDialog.WaitForResolveCoroutine();
 
-            var parameterizedTargets = dialog.GetSelectionsAsDialogParameters();
+            var parameterizedTargets = _optionsDialog.GetSelectionsAsDialogParameters();
             parameterizedTargets.ForEach(x => parameters.Add(x.Key, x.Value));
 
-            await dialog.Destroy();
+            await _optionsDialog.Destroy();
         }
 
         // validate here
@@ -71,5 +75,7 @@ public class TaskBuilder : MonoBehaviour
         {
             Debug.Log("Task went wrong in webapi boi");
         }
+
+        _optionsDialog = null;
     }
 }
