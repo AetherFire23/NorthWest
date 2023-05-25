@@ -37,7 +37,7 @@ public class TaskBuilder : MonoBehaviour
         foreach (var prompt in targetPrompts.CheckLists)
         {
             var options = prompt.GetPromptsAsObjects();
-            OptionsDialogScript dialog = await _dialogManager.CreateAndInitializeOptionsDialog(options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
+            OptionsDialogScript2 dialog = await _dialogManager.CreateAndInitializeOptionsDialog2(prompt.Description, options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
             await dialog.WaitForResolveCoroutine();
 
             var parameterizedTargets = dialog.GetSelectionsAsDialogParameters();

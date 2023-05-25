@@ -4,6 +4,7 @@ using Shared_Resources.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -15,16 +16,20 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
     {
         [SerializeField]
         public OptionsDialogObjects OptionsDialogObjects;
-        public List<ToggleOption> ToggleOptions { get; set; } = new();
-        public List<ToggleOption> ToggledOptions => ToggleOptions.Where(x => x.Toggled).ToList();
+
+        [SerializeField] private TextMeshProUGUI _descriptionText;
+
+        public List<ToggleOption2> ToggleOptions { get; set; } = new();
+        public List<ToggleOption2> ToggledOptions => ToggleOptions.Where(x => x.Toggled).ToList();
         private bool _allowMultipleChecks { get; set; }
         private int _minimumChecks { get; set; }
         private int _maximumChecks { get; set; }
         private Button _resolveButton => this.OptionsDialogObjects.ResolveButton;
 
         // initialized through dialogManager
-        public async UniTask Initialize(bool allowMultipleChecks, int minimumChecks, int maximumChecks) // must add minimum validation
+        public async UniTask Initialize(string description, bool allowMultipleChecks, int minimumChecks, int maximumChecks) // must add minimum validation
         {
+            _descriptionText.text = description;
             _resolveButton.AddTaskFunc(async () => await this.ValidateThenResolveDialog());
             _allowMultipleChecks = allowMultipleChecks;
 
@@ -81,7 +86,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 
             await this.ResolveDialog(DialogResult.Ok);
         }
+
+
     }
-
 }
-

@@ -47,11 +47,10 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             Debug.Log("Cancelled refreshing fulltasksManager");
         }
 
-            _isRefreshing = true;
+        _isRefreshing = true;
         _gameState = gameState;
         await RefreshAvailableTasks();
         _isRefreshing = false;
-
     }
 
     private async UniTask RefreshAvailableTasks() // compare with gameTaskCodes
@@ -74,15 +73,12 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             _fullTaskButtons.Remove(buttonToDelete);
             buttonToDelete.gameObject.SelfDestroy();
 
-            // TODO : 
-            // faire disparaitre les empty enums 
             DeleteEmittorTextOrDoNothing(disappearedTask.Provider);
         }
     }
 
     private FullTaskButton FindButtonFromGameTask(GameTaskBase taskBase)
     {
-
         var taskButton = _fullTaskButtons.FirstOrDefault(x => x.GameTask.Code.Equals(taskBase.Code));
 
         if (taskButton is null) throw new Exception($"Tried to find a button with a gameTask that did not exist : {taskBase.Code}");

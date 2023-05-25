@@ -24,21 +24,21 @@ namespace Assets.Scratch
 {
     public class ScriptScratch : MonoBehaviour, IStartupBehavior
     {
+        [SerializeField] private Transform _dialogCanvast;
         [SerializeField] private TMPro.TMP_Dropdown _dropDown;
         [SerializeField] private PrefabLoader prefab;
+        [SerializeField] private DialogManager _dialogManager;
 
-        private DropDownManager<Player> _dropDownManager;
         private bool _isInitialized = false;
         public async UniTask Initialize(GameState gameState)
         {
             if (_isInitialized) return;
 
-            //_dropDownManager = new DropDownManager<Player>(gameState.Players, _dropDown);
+            var roosm = gameState.Rooms.Select(x => x as object).ToList();
 
-            //_dropDown.AddDropDownAction(async () =>
-            //{
-            //    await prefab.CreateInstanceOfAsync<ToggleOption>(this.gameObject);
-            //});
+          //  await _dialogManager.CreateAndInitializeOptionsDialog2("Lolziddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddda", roosm, false, 1,1);
+
+
 
             _isInitialized = true;
         }

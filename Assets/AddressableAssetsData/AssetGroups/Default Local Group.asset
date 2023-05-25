@@ -102,6 +102,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd1dbc4676ce0d84b94da352b9f6ab8d
+    m_Address: Assets/Addressable_Assets 1/Dialogs/Toggle 2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f45789f4f2738c43af05d0d868369ea
+    m_Address: OptionsDialog2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 790e86d84fd08df44942867f4551ce4c, type: 2}
   m_SchemaSet:
