@@ -292,8 +292,14 @@ public static class UnityExtensions
         return disappeared;
     }
 
-    public static void IamHere()
+    /// <summary>
+    /// Works with async () => await syntax too !
+    /// </summary>
+    public static void AddDropDownAction(this TMP_Dropdown self, Action action)
     {
-        Debug.Log("I am here !");
+        self.onValueChanged.AddListener(delegate
+        {
+            action();
+        });
     }
 }

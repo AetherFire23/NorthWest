@@ -40,9 +40,8 @@ namespace Assets.INVENTORY3
         // ya une idee que pour le refresh, faut pas que le code de manipulation ditems se fasse en meme temps que le refresh et vice versa.
         // Donc cest pour ca les coroutines qui attendent refresh et input.
         // va falloir faire une classe pour manage ca par contre cos on comprend rien pourquoi jattends des shit dans le code
-
         // trying something to wait for next gameState
-        private bool _mustWaitForNextGameState { get; set; } = false; 
+        private bool _mustWaitForNextGameState { get; set; } = false;
         public async UniTask Refresh(GameState gameState)
         {
             if (!_isInitialized) return;
@@ -57,18 +56,16 @@ namespace Assets.INVENTORY3
                 Debug.LogError("Rfersh canceled because of input handling");
                 return;
             }
-
-            // sincerement je sais pas si ca fait dequoi xd
             if (_mustWaitForNextGameState)
             {
                 _mustWaitForNextGameState = false;
+                Debug.Log("Refresh was Canceled because an operation needs the newest version of the GameState");
                 return;
             }
 
             _isRefreshing = true;
 
             _gameState = gameState;
-
 
             await RefreshItems(CurrentShownRoom.Name);
             _isRefreshing = false;
@@ -84,20 +81,15 @@ namespace Assets.INVENTORY3
             if (_isTracking) return;
             if (!Input.GetMouseButtonDown(0)) return;
 
-   
-
             ItemInventory itemClick = UIRaycast.ScriptOrDefault<ItemInventory>();
             if (itemClick is null) return;
 
             _trackedItem = itemClick;
 
-            await HandleItemTrackingUntilMouseReleaseCoroutine();// si la coroutine roule pendant que ca refresh ca fuck up peu 
-            // Check if items were refreshed while handling ??
-
-            await this.WaitUntilRefreshEndsCoroutine();
-            ReleaseType context = await GetItemReleasedContext();
-            Debug.Log(context);
-            if (context == ReleaseType.Invalid)
+            // All refresh operations are cancelled when _trackItem is not null so not to cause flickering.
+            await HandleItemTrackingUntilMouseReleaseCoroutine();
+            MouseReleaseAction mouseReleaseAction = await GetItemReleasedContext();
+            if (mouseReleaseAction.Equals(MouseReleaseAction.Invalid))
             {
                 await _trackedItem.PlaceItemBackAtSlot();
                 _trackedItem = null;
@@ -105,25 +97,25 @@ namespace Assets.INVENTORY3
                 return;
             }
 
-            await HandleItemSwap(context);
+            await HandleItemSwap(mouseReleaseAction);
 
             _trackedItem = null; // in all cases, when the button is lifted up, should stop tracking everything.
             await _gameLauncherAndRefresher.ForceRefreshManagers();
 
         }
 
-        public async UniTask HandleItemSwap(ReleaseType releaseType)
+        public async UniTask HandleItemSwap(MouseReleaseAction releaseType)
         {
             // is because there is no http call from within-room inventories so no chance of delay.
             switch (releaseType)
             {
-                case ReleaseType.FromPlayerToPlayer:
+                case MouseReleaseAction.FromPlayerToPlayer:
                     {
                         var targetSlot = UIRaycast.ScriptOrDefault<SlotInventory>();
                         await targetSlot.InsertItemInSlot(_trackedItem);
                         break;
                     }
-                case ReleaseType.FromPlayerToRoom: //ownerShipChange
+                case MouseReleaseAction.FromPlayerToRoom: //ownerShipChange
                     {
                         _mustWaitForNextGameState = true;
                         var slot = await _slotManager.CreateRoomInventorySlotAndInsertItem(_trackedItem);
@@ -133,7 +125,7 @@ namespace Assets.INVENTORY3
 
                         break;
                     }
-                case ReleaseType.FromRoomToPlayer: // ownerShipChange
+                case MouseReleaseAction.FromRoomToPlayer: // ownerShipChange
                     {
                         _mustWaitForNextGameState = true;
                         var oldInventorySlot = _trackedItem.Slot;
@@ -145,7 +137,7 @@ namespace Assets.INVENTORY3
 
                         break;
                     }
-                case ReleaseType.FromRoomToRoom:
+                case MouseReleaseAction.FromRoomToRoom:
                     {
                         await _trackedItem.PlaceItemBackAtSlot();
                         break;
@@ -156,22 +148,22 @@ namespace Assets.INVENTORY3
         }
 
         // what a mess though. Should check for invalids first maybe
-        private async UniTask<ReleaseType> GetItemReleasedContext()
+        private async UniTask<MouseReleaseAction> GetItemReleasedContext()
         {
-            if (await IsInvalidRelease()) return ReleaseType.Invalid;
+            if (await IsInvalidRelease()) return MouseReleaseAction.Invalid;
 
 
             bool isOverRoomInventory = UIRaycast.TagExists("RoomInventory");
             if (isOverRoomInventory)
             {
-                if (_trackedItem.IsPlayerOwned) return ReleaseType.FromPlayerToRoom;
-                else return ReleaseType.FromRoomToRoom;
+                if (_trackedItem.IsPlayerOwned) return MouseReleaseAction.FromPlayerToRoom;
+                else return MouseReleaseAction.FromRoomToRoom;
             }
 
             else // player was already checked so it must work
             {
-                if (_trackedItem.IsPlayerOwned) return ReleaseType.FromPlayerToPlayer;
-                else return ReleaseType.FromRoomToPlayer;
+                if (_trackedItem.IsPlayerOwned) return MouseReleaseAction.FromPlayerToPlayer;
+                else return MouseReleaseAction.FromRoomToPlayer;
             }
         }
 

@@ -47,6 +47,12 @@ public static class UIRaycast
         return first;
     }
 
+    public static bool Any()
+    {
+        bool result = RawUIRaycast().Any();
+        return result;
+    }
+
     public static bool Any(Func<RaycastResult, bool> filter)
     {
         foreach (var result in RawUIRaycast())

@@ -16,9 +16,9 @@ namespace Assets.CHATLOG3
     public class ChatTextObject : PrefabScriptBase, IEntity
     {
         [SerializeField] private TextMeshProUGUI TextComponent;
-        public Guid Id => MessageEntity.Id;
-        public Message MessageEntity;
-        public string FullTextLine => $"{MessageEntity.Name}-{Text}";
+        public Guid Id => Message.Id;
+        public Message Message { get; private set; }
+        public string FullTextLine => $"{Message.SenderName}-{Text}";
 
         public string Text
         {
@@ -34,12 +34,9 @@ namespace Assets.CHATLOG3
                 string mess = "dont forget to initialize";
                 throw new NotImplementedException(mess);
             }
-            this.MessageEntity = message;
+            this.Message = message;
 
-
-
-
-            this.Text = message.Text;
+            Text = $"{Message.SenderName} - {Message.Text}";
         }
 
         public async UniTask WarnNull()

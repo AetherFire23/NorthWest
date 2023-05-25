@@ -24,8 +24,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
     private List<IStartupBehavior> _managers = new List<IStartupBehavior>();
     private List<IRefreshable> _refreshables = new List<IRefreshable>();
 
-
-
     private bool _isInitializing = false;
     async UniTask Awake() // EFFECTIVE ENTRY POINT
     {
@@ -77,7 +75,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
             // Here is right before refreshing managers, so I could update position I guess
             await _client.UpdatePosition(PlayerInfo.UID, _localPLayerManager.PlayerPosition.x, _localPLayerManager.PlayerPosition.y);
-
             await RefreshManagersAsync();
             Debug.Log($"has ticked for {_tickAmount}");
             _tickAmount++;

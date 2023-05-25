@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets
 {
-    public enum ReleaseType
+    public enum MouseReleaseAction
     {
         FromPlayerToPlayer,
         FromPlayerToRoom,

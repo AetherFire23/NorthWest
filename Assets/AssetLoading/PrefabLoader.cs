@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -75,6 +74,20 @@ namespace Assets.AssetLoading
         {
             var assetToDelete = _references.GetValueOrDefault(typeof(T));
             assetToDelete.ReleaseInstance(instance.gameObject);
+        }
+
+        public T CreateInstanceOf<T>(GameObject parent) where T : PrefabScriptBase
+        {
+            AssetReference assetReference = _references[typeof(T)];
+            GameObject gameObject = assetReference.InstantiateAsync().Task.Result;
+            T component = gameObject.GetComponent<T>();
+            return component;
+        }
+
+        public async UniTask<T> CreateInstanceOfAsync<T>(MonoBehaviour behaviour) where T : PrefabScriptBase
+        {
+            var instance = await this.CreateInstanceOfAsync<T>(behaviour.gameObject);
+            return instance;
         }
     }
 }

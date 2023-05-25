@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class PlayerMovementScript : MonoBehaviour
 {
-    public bool IsMoving = false;
+    public bool IsMoving { get; set; } = false; // aclled pour animations
 
     [SerializeField]
     private Rigidbody2D rb;
@@ -23,17 +23,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            IsMoving = true;
-            _targetPosition = PointerInWorldPosition;
-        }
-
         bool isPlayerAtTargetPosition = rb.position.Equals(_targetPosition);
         if (IsMoving && isPlayerAtTargetPosition)
         {
             IsMoving = false;
-           // Debug.Log("Reached destination");
+            // Debug.Log("Reached destination");
+        }
+
+        
+        if (Input.GetMouseButtonDown(0) && !UIRaycast.Any())
+        {
+            IsMoving = true;
+            _targetPosition = PointerInWorldPosition;
+            return;
         }
     }
 
@@ -48,7 +50,6 @@ public class PlayerMovementScript : MonoBehaviour
         float maxMoveDistance = _moveSpeed * Time.deltaTime;
         Vector2 moveAmount = Vector3.MoveTowards(currentPosition, _targetPosition, maxMoveDistance);
         this.rb.MovePosition(moveAmount);
-
     }
 
     public async UniTask MoveCharacterCoroutine()
@@ -63,5 +64,11 @@ public class PlayerMovementScript : MonoBehaviour
 
         }
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        this.IsMoving = false;
+        _targetPosition = this.rb.position;
     }
 }

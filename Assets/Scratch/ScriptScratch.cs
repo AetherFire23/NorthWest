@@ -1,8 +1,10 @@
-﻿using Assets.Dialogs;
+﻿using Assets.AssetLoading;
+using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
 using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.Entities;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using System;
@@ -16,55 +18,29 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static TMPro.TMP_Dropdown;
 
 namespace Assets.Scratch
 {
     public class ScriptScratch : MonoBehaviour, IStartupBehavior
     {
-        [SerializeField] DialogManager _dialogManager;
-        [SerializeField] Transform _dropDownTransform;
-        [SerializeField] TMPro.TMP_Dropdown _dropDownComponent;
-        [SerializeField] private TaskBuilder _taskBuilder;
+        [SerializeField] private TMPro.TMP_Dropdown _dropDown;
+        [SerializeField] private PrefabLoader prefab;
 
-        [SerializeField] private Calls _calls;
-        //[SerializeField] Text 
-
-
+        private DropDownManager<Player> _dropDownManager;
+        private bool _isInitialized = false;
         public async UniTask Initialize(GameState gameState)
         {
-            //var li = Enumerable.Range(0, 10).ToList();
-            //var options = await _dialogManager.CreateOptionsDialog(li);
-            //await options.WaitForResolveCoroutine();
+            if (_isInitialized) return;
 
-            //var targets = options.GetSelections<int>();
-            //await options.Destroy();
+            //_dropDownManager = new DropDownManager<Player>(gameState.Players, _dropDown);
 
-            //List<GameTaskBase> init = typeof(GameTaskBase).Assembly.GetTypes()
-            //    .Where(x => x.IsClass && !x.IsAbstract && typeof(GameTaskBase).IsAssignableFrom(x))
-            //    .Select(x => Activator.CreateInstance(x) as GameTaskBase).ToList();
+            //_dropDown.AddDropDownAction(async () =>
+            //{
+            //    await prefab.CreateInstanceOfAsync<ToggleOption>(this.gameObject);
+            //});
 
-            //var firstTask = init.First();
-            //await _taskBuilder.ConstructTaskAction(gameState, firstTask);
-
-
-        }
-
-        public async UniTask AskForStuffAsync()
-        {
-            var pre = await _dialogManager.CreateDialog<MessageBox>();
-            await pre.Initialize("test");
-            await pre.WaitForResolveCoroutine();
-            //await _dialogManager.DeleteDialog(pre);
-            await pre.Destroy();
-        }
-
-        private void Update()
-        {
-            //if (!Input.GetMouseButtonDown(0)) return;
-
-            //var roomInventory = UIRaycast.TagExists("RoomInventory");
-
-            //Debug.Log(roomInventory);
+            _isInitialized = true;
         }
     }
 }
