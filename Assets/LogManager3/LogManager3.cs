@@ -63,9 +63,18 @@ namespace Assets.LogManager3
         public async UniTask InitializeButtons()
         {
             _gameLogObjects.OpenLogButton.AddMethod(() => _gameLogObjects.LogCanvas.enabled = !_gameLogObjects.LogCanvas.enabled);
+            Func<UniTask> viewAllAction = async () =>
+            {
+                _filteringManager.SetAllFilter();
+                await RefreshLogsWithCurrentFilter();
+            };
+            _gameLogObjects.ViewAllButton.AddTaskFunc(viewAllAction);
         }
 
-        public async UniTask RefreshLogs(List<Log> upToDateLogs) // might wanna filter par plus que des Guids ?
+        // I Foudn that I dont actually have to destroy any log.
+        // Since I can just disable the .enabled property of TextMeshProUGUI instead of deleting / creating.
+        // So I can just Spawn every log and just diasble the incorrect ones instead of gameobject.destroy
+        public async UniTask RefreshLogs(List<Log> upToDateLogs) 
         {
             var appearedEntities = UnityExtensions.GetAppearedEntities(_logChatObjects, upToDateLogs);
             foreach (var appearedEntity in appearedEntities)

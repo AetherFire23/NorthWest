@@ -22,6 +22,11 @@ namespace Assets.LogManager3
         {
             switch (_filteringCriteria)
             {
+                case FilteringCriteria.AllLogs:
+                    {
+                        var log = _allLogs;
+                        return log;
+                    }
                 case FilteringCriteria.RoomFilter:
                     {
                         var log = _allLogs.Where(x => x.RoomId.Equals(_roomId)).ToList();
@@ -46,6 +51,11 @@ namespace Assets.LogManager3
         {
             _filteringCriteria = FilteringCriteria.RoomFilter;
             _roomId = roomId;
+        }
+
+        public void SetAllFilter()
+        {
+            _filteringCriteria = FilteringCriteria.AllLogs;
         }
 
         public void AddRange(List<Log> log)

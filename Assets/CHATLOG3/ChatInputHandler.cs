@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 namespace Assets.CHATLOG3
 {
-    public class ChatInputHandler : MonoBehaviour, IStartupBehavior
+    public class ChatInputHandler : MonoBehaviour, IStartupBehavior // should prolly move this into chatmanager to prevent from refreshing
     {
         [SerializeField] private Calls _calls;
         [SerializeField] private ChatLogManager3 _chatLogManager;
@@ -27,18 +27,6 @@ namespace Assets.CHATLOG3
             _firstGameState = gameState;
         }
 
-        bool _isSendingMessage = false;
-        private async UniTask Update()
-        {
-            if (_isSendingMessage) return;
-            if (!Input.GetKeyDown(KeyCode.Return)) return;
-            _isSendingMessage = true;
 
-            var response = await _calls.PutNewMessageToServer(_firstGameState.PlayerUID,
-                _chatLogManager.GetCurrentShownRoom(),
-                _inputField.text);// TRIM PLEASE SOON
-            _inputField.text = string.Empty;
-            _isSendingMessage = false;
-        }
     }
 }

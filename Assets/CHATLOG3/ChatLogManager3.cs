@@ -10,9 +10,10 @@ using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using System;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
 {
@@ -20,6 +21,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     [SerializeField] PrefabLoader _prefabLoader;
     [SerializeField] Calls _calls;
     [SerializeField] DialogManager _dialogManager;
+    [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private List<Message> _allMessages = new();
     private GameObjectDatabaseRefresher<ChatTextObject, Message> _chatTexts; // text in chat
@@ -50,6 +52,23 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
         await RefreshPanelsForChatRoom(_currentShownRoomId);
     }
 
+    bool _isSendingMessage = false;
+    private async UniTask Update()
+    {
+        if (_isSendingMessage) return;
+        if (!Input.GetKeyDown(KeyCode.Return)) return;
+        _isSendingMessage = true;
+
+        var response = await _calls.PutNewMessageToServer(_gameState.PlayerUID,
+            this.GetCurrentShownRoom(),
+            _chatObjects.InputField.GetTextWithoutHiddenCharacters());// TRIM PLEASE SOON
+        _chatObjects.InputField.text= string.Empty;
+
+        await _gameLauncherAndRefresher.ForceRefreshManagers();
+
+        _isSendingMessage = false;
+    }
+
     public async UniTask RefreshPanelsForChatRoom(Guid chatRoomId)
     {
         await LoadMessagesInChatRoom(chatRoomId);
@@ -77,7 +96,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     }
 
     // --- Initialization Methods ---
-    public async UniTask InitializeGameObjectUpdaters() // runnable on threadpool ?
+    public async UniTask InitializeGameObjectUpdaters()
     {
         _chatTexts = new(CreateChatText);
         _playersInChatRoom = new(CreatePlayerInRoomButton);
@@ -153,6 +172,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
             if (response.IsSuccessful) return;
 
             var messageBox = await _dialogManager.CreateDialog<MessageBox>();
+
             // The code to check for duplicate invitation does not seem to work / exist. 
             await messageBox.Initialize(response.Message);
             await messageBox.WaitForResolveCoroutine();
