@@ -1,16 +1,10 @@
 ﻿using Assets.CHATLOG3;
 using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
-using Shared_Resources.Entities;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.HttpStuff
@@ -18,16 +12,16 @@ namespace Assets.HttpStuff
     public class Calls : MonoBehaviour
     {
         private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
-        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; // // requiresbodys
-        private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; //require parameter
-        private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations"; //require parameter
-        private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom"; //require parameter
-        private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair"; //require parameter
-        private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; //require parameter
-        private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; //require parameter
-        private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom"; //require parameter
-        private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask"; //require body & param
-        private const string _uriTest = "https://localhost:7060/TheCrew/dwdwdw"; //require body & param
+        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; 
+        private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; 
+        private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations"; 
+        private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom"; 
+        private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair";
+        private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; 
+        private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; 
+        private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom"; 
+        private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask";
+        private const string _uriTest = "https://localhost:7060/TheCrew/dwdwdw";
 
         //ChatController
         // private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter

@@ -1,12 +1,10 @@
 using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ToggleOption : PrefabScriptBase
 {
-    [SerializeField] private UnityEngine.UI.Toggle _toggle;
+    [SerializeField] private Toggle _toggle;
     [SerializeField] private Text _text;
     public bool Toggled
     {

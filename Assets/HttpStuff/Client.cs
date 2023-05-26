@@ -57,6 +57,7 @@ namespace Assets.GameLaunch
             var clientCallResult = JsonConvert.DeserializeObject<ClientCallResult>(responseContent);
             return clientCallResult;
         }
+
         public void Dispose()
         {
             _client?.Dispose();

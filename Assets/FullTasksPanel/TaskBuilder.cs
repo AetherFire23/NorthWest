@@ -1,19 +1,10 @@
-using Assets.AssetLoading;
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
-using Shared_Resources.Constants;
-using Shared_Resources.Entities;
-using Shared_Resources.Enums;
 using Shared_Resources.GameTasks;
-using Shared_Resources.GameTasks.Implementations_Unity;
-using Shared_Resources.Interfaces;
 using Shared_Resources.Models;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class TaskBuilder : MonoBehaviour

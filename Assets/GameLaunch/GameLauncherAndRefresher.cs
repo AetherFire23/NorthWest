@@ -4,10 +4,11 @@ using Assets.GameLaunch;
 using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 [DefaultExecutionOrder(-10)]
 public class GameLauncherAndRefresher : MonoBehaviour
@@ -44,30 +45,25 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
         DiscoverManagers();
 
+        Stopwatch stop = new Stopwatch();
+        stop.Start();
         await InitializeManagersAsync();
+        stop.Stop();
         _isInitializing = false;
-        Debug.Log("Finished loading.");
+        Debug.Log($"Finished loading. with loading time of : {stop.ElapsedMilliseconds} milliseconds");
     }
 
     private float _maximumTime = 3f;
     private float _currentTimeElapsed = 0;
     private int _tickAmount = 0;
     private bool _isRefreshing = false;
-    // Handles refresh ticks
+
+    // Handles refresh ticks, only if it has initialized
     async UniTask Update() // Ticks 
     {
         if (_isRefreshing || _isInitializing) return;
         _isRefreshing = true;
         _currentTimeElapsed += Time.deltaTime;
-
-        if (_timeBasedRefresh)
-        {
-
-        }
-        else
-        {
-
-        }
 
         if (_currentTimeElapsed > _maximumTime) // watch out ehre
         {
@@ -86,12 +82,21 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
     private async UniTask InitializeManagersAsync() // enforce order ?, LOADING SCREEN ! Rien mettre dinteraction ici
     {
+        var gameStateWatch = new Stopwatch();
+        gameStateWatch.Start();
         var firstGameState = await _gameStateFetcher.FetchFirstGameStateAsync(PlayerInfo.UID);
+        gameStateWatch.Stop();
+        Debug.Log($"Loaded the gameState in {gameStateWatch.ElapsedMilliseconds}");
 
+
+        var managersWatch = new Stopwatch();
+        managersWatch.Start();
         foreach (var manager in _managers)
         {
             await manager.Initialize(firstGameState);
         }
+        managersWatch.Stop();
+        Debug.Log($"Initialized maangers in {managersWatch.ElapsedMilliseconds}");
 
         //var tasks = _managers.Select(x => x.Initialize(firstGameState));
         //await UniTask.WhenAll(tasks);
@@ -99,8 +104,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
 
     // on peut pas await un dialog dans le Initialize pour dire que Cest loaded. 
     // ca voudrait dire que faut peser sur des boutons pendant le loading screen.
-    //private async UniTask PostInitializeAwaiters
-
     private async UniTask RefreshManagersAsync()
     {
         GameState gameState = await _gameStateFetcher.FetchNextGameStateAsync(PlayerInfo.UID);

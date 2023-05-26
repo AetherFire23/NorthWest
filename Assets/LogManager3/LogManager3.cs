@@ -10,9 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.LogManager3
 {
@@ -47,7 +45,6 @@ namespace Assets.LogManager3
         private bool _isRefreshing = false;
         public async UniTask Refresh(GameState gameState)
         {
-
             _gameState = gameState;
             _filteringManager.AddRange(_gameState.Logs);
             await RefreshLogsWithCurrentFilter();

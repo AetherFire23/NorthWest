@@ -1,8 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

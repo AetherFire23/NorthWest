@@ -1,17 +1,11 @@
 using Assets;
-using Assets.AssetLoading;
 using Assets.Dialogs;
-using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
-using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Assets.Raycasts;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
 using UnityEngine;
 
 public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefreshable
@@ -21,15 +15,10 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;
     [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
-    // need to roomChange the player.
 
     private bool _isPrompting => _dialog is not null;
     private YesNoDialog _dialog;
-
-
     private GameState _gameState;
-
-
     public async UniTask Initialize(GameState gameState)
     {
         _gameState = gameState;

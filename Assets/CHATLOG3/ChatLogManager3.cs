@@ -85,7 +85,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     {
         Debug.Log("Refre");
         _currentShownRoomId = roomId;
-        var players = await _gameState.GetPlayersInChatRoom(_currentShownRoomId);
+        var players =  _gameState.GetPlayersInChatRoom(_currentShownRoomId);
         await _playersInChatRoom.RefreshEntities(players);
     }
 

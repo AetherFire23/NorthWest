@@ -10,7 +10,7 @@ using UnityEngine.AddressableAssets;
 // [DefaultExecutionOrder(-2)]
 namespace Assets.AssetLoading
 {
-    public class PrefabLoader : MonoBehaviour // should consider converting this to static so I can do PrefabLoader.Destroy()
+    public class PrefabLoader : MonoBehaviour // should consider exposing at least some static methods so that PrefabLoader.Destroy() works
     {
         // 1. Crate prefab
         // 2. drag prefab in editor to prefabAssetReferences
@@ -41,14 +41,13 @@ namespace Assets.AssetLoading
             }
         }
 
-        // Do not forget that reflection for typeof and nameof is not very slow
-        // Might happen that I query some stuff and it is not spawened until finished loading
+        // Do not forget that reflection for typeof and nameof is quite fast for reflection
         public async UniTask<T> CreateInstanceOfAsync<T>(GameObject parent) where T : PrefabScriptBase
         {
             if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");
 
             AssetReference assetReference = _references[typeof(T)];
-            GameObject gameObject = await assetReference.InstantiateAsync(parent.transform).Task.AsUniTask(); // lets try to convert this to a unitask
+            GameObject gameObject = await assetReference.InstantiateAsync(parent.transform).Task.AsUniTask();
             T component = gameObject.GetComponent<T>();
             return component;
         }

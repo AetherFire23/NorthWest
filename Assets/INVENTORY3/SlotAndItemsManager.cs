@@ -27,7 +27,6 @@ namespace Assets.INVENTORY3
 
         public async UniTask<SlotInventory> CreateNewRoomSlotAndCreateNewItem(Item item)
         {
-            // repeating myself to avoid invoking a method that creates a slot without adding it to the list.
             var slot = await _prefabLoader.CreateInstanceOfAsync<SlotInventory>(_inventoryStaticGameObjects.RoomInventoryScrollView.gameObject);
             await slot.Initialize(true);
             var itemInventory = await _prefabLoader.CreateInstanceOfAsync<ItemInventory>(slot.gameObject);

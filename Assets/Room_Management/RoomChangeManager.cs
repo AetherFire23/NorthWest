@@ -1,11 +1,9 @@
 using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Android;
 
 public class RoomChangeManager : MonoBehaviour, IStartupBehavior
 {

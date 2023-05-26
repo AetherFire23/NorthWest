@@ -269,7 +269,7 @@ namespace Assets.INVENTORY3
             await RefreshPlayerItems(playerResult);
 
 
-            var upToDateRoomItems = await _gameState.GetItemsInRoom(roomName);
+            var upToDateRoomItems = _gameState.GetItemsInRoom(roomName);
             var roomResult = RefreshResult<ItemInventory, Item>.GetRefreshResult(_slotManager.GetRoomItems(), upToDateRoomItems);
             await RefreshRoomItems(roomResult);
         }
@@ -285,7 +285,6 @@ namespace Assets.INVENTORY3
             }
             foreach (var item in refreshResult.Disappeared)
             {
-                // jfais tu actually dequoi pour enelver la slot du itemmanager?
                 item.Slot.DestroyItem();
             }
         }
@@ -312,7 +311,7 @@ namespace Assets.INVENTORY3
             await WaitUntilInputEndsCoroutine();
             await WaitUntilRefreshEndsCoroutine();
 
-            if (_isInitialized) // else infinite loop cos it calls all managers
+            if (_isInitialized) // no condition means stack overflow cos it calls all managers what this manager calls SetRoomInventory
             {
                 await _gameLauncherAndRefresher.ForceRefreshManagers();
 
@@ -324,9 +323,7 @@ namespace Assets.INVENTORY3
             this._inventoryObjects.RoomNameText.text = room.Name;
             await this.RefreshItems(room.Name);
             _inventoryObjects.RoomInventoryCanvas.enabled = true;
-
             _isSwitchingRoomInventory = false;
-
         }
     }
 }
