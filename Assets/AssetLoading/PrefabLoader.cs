@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-
+using UnityEngine.ResourceManagement;
 // assets must always be loaded before launching the game so
 // -2 loading assets
 // -1 initializing game

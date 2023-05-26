@@ -67,45 +67,6 @@ public static class UnityExtensions
         return self.GetParent().GetComponent<T>();
     }
 
-    public static T GetComponentSafely<T>(this GameObject self)
-    {
-        var component = self.GetComponent<T>();
-
-        if (component == null)
-        {
-            throw new NotImplementedException($"You tried to load this component : {typeof(T).Name} on this gameobject : {self.name}. It was not found.  ");
-        }
-
-        return component;
-
-    }
-
-    public static T GetComponentSafely<T>(this Component self)
-    {
-        var component = self.GetComponent<T>();
-
-        if (component == null)
-        {
-            throw new NotImplementedException($"You tried to load this component : {typeof(T).Name} on this gameobject : {self.name}. It was not found.  ");
-        }
-
-        return component;
-
-    }
-
-    public static T GetComponentSafely<T>(this MonoBehaviour self)
-    {
-        var component = self.GetComponent<T>();
-
-        if (component == null)
-        {
-            throw new NotImplementedException($"You tried to load this component : {typeof(T).Name} on this gameobject : {self.name}. It was not found.  ");
-        }
-
-        return component;
-
-    }
-
     public static UnityEngine.Object LoadPrefabSafely(string resourceName)
     {
         var go = Resources.Load(resourceName);
