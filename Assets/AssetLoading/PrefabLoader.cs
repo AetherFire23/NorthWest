@@ -1,18 +1,8 @@
-﻿using Assets;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.InputSystem;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 // assets must always be loaded before launching the game so
 // -2 loading assets
@@ -27,7 +17,6 @@ namespace Assets.AssetLoading
         // 3. Create a monobehaviour inheriting from PrefabBase
         // 4. Instantiate with await CreateInstanteOfAsync<MyUniqueScript>();
         // 5. OPTIONAL : create a .Initialize() method to act as a constructor that returns itself : await CreateInstanceOf<SquareCircle>().Initialize(string text)
-
 
         [SerializeField]
         private List<AssetReferenceGameObject> _prefabAssetReferences = new List<AssetReferenceGameObject>();
@@ -52,16 +41,10 @@ namespace Assets.AssetLoading
             }
         }
 
-        // Do not forget that reflection is low
+        // Do not forget that reflection for typeof and nameof is not very slow
         // Might happen that I query some stuff and it is not spawened until finished loading
         public async UniTask<T> CreateInstanceOfAsync<T>(GameObject parent) where T : PrefabScriptBase
         {
-            if(typeof(T) == typeof(YesNoDialog))
-            {
-                int i = 0;
-            }
-
-
             if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");
 
             AssetReference assetReference = _references[typeof(T)];
