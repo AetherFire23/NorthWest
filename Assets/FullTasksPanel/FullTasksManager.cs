@@ -8,6 +8,7 @@ using Shared_Resources.Models;
 using Cysharp.Threading.Tasks;
 using Assets.AssetLoading;
 using Assets.HttpStuff;
+using UnityEngine.UI;
 
 public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 {
@@ -16,6 +17,8 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
     [SerializeField] private GameObject _taskScrollViewContent;
     [SerializeField] private TaskBuilder _taskBuilder;
 
+    [SerializeField] private Button _taskButton;
+    [SerializeField] private Canvas _taskScrollViewCanvas;
     // models
     private List<GameTaskBase> _gameTasks = new();
     private GameState _gameState;
@@ -27,6 +30,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     public async UniTask Initialize(GameState gameState)
     {
+        _taskButton.AddMethod(() => _taskScrollViewCanvas.enabled = !_taskScrollViewCanvas.enabled);
         // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
         _gameState = gameState;
         _gameTasks = typeof(GameTaskBase).Assembly.GetTypes()
