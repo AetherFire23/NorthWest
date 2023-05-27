@@ -33,7 +33,7 @@ namespace Assets.AssetLoading
             {
                 if (assetReference is null) continue;
 
-                var asset = await assetReference.LoadAssetAsync();
+                GameObject asset = await assetReference.LoadAssetAsync();
                 var componentType = asset.GetComponent<PrefabScriptBase>();
                 if (componentType is null) throw new ArgumentException($"The following prefab {assetReference.Asset.name}  does not have any script that inherits from PrefabScriptBase!");
 

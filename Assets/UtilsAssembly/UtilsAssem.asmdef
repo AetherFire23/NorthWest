@@ -5,8 +5,7 @@
         "UniTask",
         "Unity.Addressables",
         "Unity.ResourceManager",
-        "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework"
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
