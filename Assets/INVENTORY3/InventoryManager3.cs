@@ -101,7 +101,6 @@ namespace Assets.INVENTORY3
 
             _trackedItem = null; // in all cases, when the button is lifted up, should stop tracking everything.
             await _gameLauncherAndRefresher.ForceRefreshManagers();
-
         }
 
         public async UniTask HandleItemSwap(MouseReleaseAction releaseType)
@@ -122,7 +121,6 @@ namespace Assets.INVENTORY3
                         // For prediction
                         _trackedItem.Item.OwnerId = _currentInventoryShownRoomId;
                         await _calls.TransferItemOwnerShip(_currentInventoryShownRoomId, _trackedItem.Id);
-
                         break;
                     }
                 case MouseReleaseAction.FromRoomToPlayer: // ownerShipChange
@@ -134,7 +132,6 @@ namespace Assets.INVENTORY3
                         await oldInventorySlot.DestroySlot();
                         _trackedItem.Item.OwnerId = PlayerInfo.UID;
                         await _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id);
-
                         break;
                     }
                 case MouseReleaseAction.FromRoomToRoom:
@@ -143,8 +140,6 @@ namespace Assets.INVENTORY3
                         break;
                     }
             }
-
-
         }
 
         // what a mess though. Should check for invalids first maybe
@@ -188,8 +183,6 @@ namespace Assets.INVENTORY3
             // && operator is important because if I just check for .HasItem when dragging on inventory,
             // you get a null ref exception
             if (slotBehind != null && slotBehind.HasItem) return true; // 
-
-
 
             // check if release is either over room or player, if none, it is invalid (anywhere else on the screen)
             bool isOverRoomInventory = UIRaycast.TagExists("RoomInventory");
@@ -320,7 +313,7 @@ namespace Assets.INVENTORY3
 
             RoomDTO room = _gameState.GetRoomByName(roomName);
             _currentInventoryShownRoomId = room.Id;
-            this._inventoryObjects.RoomNameText.text = room.Name;
+            _inventoryObjects.RoomNameText.text = room.Name;
             await this.RefreshItems(room.Name);
             _inventoryObjects.RoomInventoryCanvas.enabled = true;
             _isSwitchingRoomInventory = false;
