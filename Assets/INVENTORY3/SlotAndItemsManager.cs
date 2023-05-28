@@ -29,6 +29,7 @@ namespace Assets.INVENTORY3
         {
             var slot = await _prefabLoader.CreateInstanceOfAsync<SlotInventory>(_inventoryStaticGameObjects.RoomInventoryScrollView.gameObject);
             await slot.Initialize(true);
+
             var itemInventory = await _prefabLoader.CreateInstanceOfAsync<ItemInventory>(slot.gameObject);
             await itemInventory.Initialize(slot, item); // is inserted in there
             _slots.Add(slot);

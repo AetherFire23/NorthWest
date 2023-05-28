@@ -65,18 +65,18 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
             return selections;
         }
 
-        public List<KeyValuePair<string, string>> GetSelectionsAsDialogParameters()
-        {
-            bool incorrectType = this.ToggledOptions.Any(x => x.Option is not ITaskParameter);
-            if (incorrectType)
-            {
-                Debug.LogError("YOu tried to convert toggled options to parameters when the options do not inherit from ITaskParameter.");
-                return new List<KeyValuePair<string, string>>();
-            }
+        //public List<KeyValuePair<string, string>> GetSelectionsAsDialogParameters()
+        //{
+        //    bool incorrectType = this.ToggledOptions.Any(x => x.Option is not ITaskParameter);
+        //    if (incorrectType)
+        //    {
+        //        Debug.LogError("YOu tried to convert toggled options to parameters when the options do not inherit from ITaskParameter.");
+        //        return new List<KeyValuePair<string, string>>();
+        //    }
 
-            var valuePairs = this.ToggledOptions.Select((x, i) => (x.Option as ITaskParameter).GetKeyValuePairParameter(i)).ToList();
-            return valuePairs;
-        }
+        //    var valuePairs = this.ToggledOptions.Select((x, i) => (x.Option as ITaskParameter).GetKeyValuePairParameter(i)).ToList();
+        //    return valuePairs;
+        //}
 
         // replace button action with this
         private async UniTask ValidateThenResolveDialog()

@@ -4,6 +4,7 @@ using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
+using Shared_Resources.Scratches;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,22 +22,22 @@ public class TaskBuilder : MonoBehaviour
 
     private OptionsDialogScript2 _optionsDialog;
 
-    public async UniTask SendGameTaskAfterTargetSelections(GameState gameState, GameTaskBase gameTask)
+    public async UniTask SelectTargetsThenExecuteGameTask(GameState gameState, GameTaskBase gameTask)
     {
         if (_optionsDialog is not null) return;
 
-        var targetPrompts = gameTask.GetValidTargetPrompts(gameState);
-        Dictionary<string, string> parameters = new Dictionary<string, string>();
-        // does not handle ExactAmountChecks
-        // let it break in task validation for now
-        foreach (var prompt in targetPrompts.CheckLists)
+        var allParameters = new TaskParameters();
+        var checkLists = gameTask.GetCheckLists(gameState);
+
+      
+        foreach (var prompt in checkLists)
         {
             var options = prompt.GetPromptsAsObjects();
             _optionsDialog = await _dialogManager.CreateAndInitializeOptionsDialog2(prompt.Description, options, prompt.IsMultipleChecks, prompt.MinimumChecks, prompt.MaximumChecks);
             await _optionsDialog.WaitForResolveCoroutine();
 
-            var parameterizedTargets = _optionsDialog.GetSelectionsAsDialogParameters();
-            parameterizedTargets.ForEach(x => parameters.Add(x.Key, x.Value));
+            var parameters = _optionsDialog.GetToggledAsParameters();
+            allParameters.AddRange(parameters);
 
             await _optionsDialog.Destroy();
         }
@@ -45,7 +46,7 @@ public class TaskBuilder : MonoBehaviour
         var gameTaskContext = new GameTaskContext()
         {
             GameState = gameState,
-            Parameters = parameters
+            Parameters = allParameters
         };
         var validationREsult = gameTask.Validate(gameTaskContext);
 
@@ -55,7 +56,7 @@ public class TaskBuilder : MonoBehaviour
             return;
         }
 
-        var callResult = await _calls.TryExecuteGameTask(gameState.PlayerDTO.Id, gameTask.Code, parameters);
+        var callResult = await _calls.TryExecuteGameTask(gameState.PlayerDTO.Id, gameTask.Code, allParameters);
 
         if (callResult.IsSuccessful)
         {

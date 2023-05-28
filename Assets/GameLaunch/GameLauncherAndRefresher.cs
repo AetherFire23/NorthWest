@@ -88,7 +88,6 @@ public class GameLauncherAndRefresher : MonoBehaviour
         gameStateWatch.Stop();
         Debug.Log($"Loaded the gameState in {gameStateWatch.ElapsedMilliseconds}");
 
-
         var managersWatch = new Stopwatch();
         managersWatch.Start();
         foreach (var manager in _managers)

@@ -38,7 +38,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             && typeof(GameTaskBase).IsAssignableFrom(x))
             .Select(x => (Activator.CreateInstance(x) as GameTaskBase)).ToList();
 
-        var taskProviders = UnityExtensions.GetEnumValues<GameTaskProvider>();
+        var taskProviders = UnityExtensions.GetEnumValues<GameTaskCategory>();
 
         await RefreshAvailableTasks();
     }
@@ -66,7 +66,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             // CreateButtons?
             Func<UniTask> createPromptsThenSendTask = async () =>
             {
-                await _taskBuilder.SendGameTaskAfterTargetSelections(_gameState, appearedTask);
+                await _taskBuilder.SelectTargetsThenExecuteGameTask(_gameState, appearedTask);
 
             };
 
@@ -81,7 +81,7 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
             _fullTaskButtons.Remove(buttonToDelete);
             buttonToDelete.gameObject.SelfDestroy();
 
-            DeleteEmittorTextOrDoNothing(disappearedTask.Provider);
+            DeleteEmittorTextOrDoNothing(disappearedTask.Category);
         }
     }
 
@@ -94,14 +94,14 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
         return taskButton;
     }
 
-    private void DeleteEmittorTextOrDoNothing(GameTaskProvider taskProvider)
+    private void DeleteEmittorTextOrDoNothing(GameTaskCategory taskCategory)
     {
-        bool hasEmittorRemainingTasks = _currentDisplayedGameTasks.Where(x => x.Provider == taskProvider)
+        bool hasEmittorRemainingTasks = _currentDisplayedGameTasks.Where(x => x.Category == taskCategory)
             .ToList().Count != 0;
 
         if (hasEmittorRemainingTasks) return;
 
-        var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Provider == taskProvider);
+        var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Category == taskCategory);
 
         // already deleted
         if (emittorToDelete is null) return;
@@ -112,15 +112,15 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private async UniTask<List<GameTaskBase>> GetAppearedTasks()
     {
-        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.Requires(_gameState)).ToList();
-        var appearedTasks = newCalculatedTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
+        var validTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
+        var newTasks = validTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
 
-        return appearedTasks;
+        return newTasks;
     }
 
     private async UniTask<List<GameTaskBase>> GetDisappearedTasks()
     {
-        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.Requires(_gameState)).ToList();
+        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
         var disappearedTasks = _currentDisplayedGameTasks.Where(x => !newCalculatedTasks.Contains(x)).ToList();
 
         return disappearedTasks;
@@ -128,11 +128,11 @@ public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
 
     private async UniTask PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(FullTaskButton fullTaskButton)
     {
-        var emittorText = _emittorTexts.FirstOrDefault(x => x.Provider == fullTaskButton.GameTask.Provider);
+        var emittorText = _emittorTexts.FirstOrDefault(x => x.Category == fullTaskButton.GameTask.Category);
         if (emittorText is null)
         {
             emittorText = await _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent.gameObject);
-            await emittorText.Initialize(fullTaskButton.GameTask.Provider);
+            await emittorText.Initialize(fullTaskButton.GameTask.Category);
             _emittorTexts.Add(emittorText);
         }
 

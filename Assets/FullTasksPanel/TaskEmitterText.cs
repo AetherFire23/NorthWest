@@ -6,10 +6,10 @@ using UnityEngine;
 public class TaskEmitterText : PrefabScriptBase
 {
     [SerializeField] private TextMeshProUGUI _text;
-    public GameTaskProvider Provider { get; private set; }
-    public async UniTask Initialize(GameTaskProvider provider)
+    public GameTaskCategory Category { get; private set; }
+    public async UniTask Initialize(GameTaskCategory provider)
     {
-        this.Provider = provider;
+        this.Category = provider;
         _text.text = provider.ToString();
     }
 }

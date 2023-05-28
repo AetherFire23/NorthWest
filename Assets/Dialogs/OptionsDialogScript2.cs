@@ -1,6 +1,7 @@
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Interfaces;
+using Shared_Resources.Scratches;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,17 +66,17 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
             return selections;
         }
 
-        public List<KeyValuePair<string, string>> GetSelectionsAsDialogParameters()
+        public TaskParameters GetToggledAsParameters()
         {
             bool incorrectType = this.ToggledOptions.Any(x => x.Option is not ITaskParameter);
             if (incorrectType)
             {
                 Debug.LogError("YOu tried to convert toggled options to parameters when the options do not inherit from ITaskParameter.");
-                return new List<KeyValuePair<string, string>>();
+                return new TaskParameters();
             }
 
-            var valuePairs = this.ToggledOptions.Select((x, i) => (x.Option as ITaskParameter).GetKeyValuePairParameter(i)).ToList();
-            return valuePairs;
+            var valuePairs = ToggledOptions.Select(x => x.TaskOption.TaskParam).ToList();
+            return new TaskParameters(valuePairs);
         }
 
         // replace button action with this

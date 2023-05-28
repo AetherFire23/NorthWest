@@ -3,6 +3,7 @@ using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
+using Shared_Resources.Scratches;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,7 +82,7 @@ namespace Assets.HttpStuff
         //    return TryExecuteGameTask(playerId, GameTaskType.Cook, parameters);
         //}
 
-        public async UniTask<ClientCallResult> TryExecuteGameTask(Guid playerId, GameTaskCodes taskCode, Dictionary<string, string> parameters)
+        public async UniTask<ClientCallResult> TryExecuteGameTask(Guid playerId, GameTaskCodes taskCode, TaskParameters parameters)
         {
             var infos = new UriBuilder(_uriTryExeGameTask, ParameterOptions.BodyAndParameter, parameters);
             infos.AddParameter("playerId", playerId.ToString());

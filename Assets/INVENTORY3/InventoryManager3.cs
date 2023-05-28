@@ -9,7 +9,6 @@ using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using System;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.INVENTORY3
@@ -215,6 +214,7 @@ namespace Assets.INVENTORY3
                 await UniTask.Yield();
             }
         }
+
         private async UniTask WaitUntilInputEndsCoroutine()
         {
             while (_isTracking)

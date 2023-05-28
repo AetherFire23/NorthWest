@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Shared_Resources.Interfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class ToggleOption2 : PrefabScriptBase
     }
 
     public object Option { get; private set; }
+
+    public ITaskParameter TaskOption => Option as ITaskParameter;
     public async UniTask Initialize(object option)
     {
         Option = option;
