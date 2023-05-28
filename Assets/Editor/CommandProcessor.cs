@@ -65,7 +65,7 @@ namespace Assets.Automation
             }
         }
 
-        private static bool IsValidReferenceCountOrPrompt(StringBuilder sb, int referenceCount)
+        private static bool IsValidReferenceCountOrPrompt(StringBuilder builder, int referenceCount)
         {
             if (referenceCount == 1) return true;
 
@@ -73,9 +73,9 @@ namespace Assets.Automation
                 ? $"However, a count of[{referenceCount}] were found, which is more than one.Therefore, we will not proceed into fulfilling this dependency"
                 : $"However, no MonoBehaviour was found in the scene that could fulfill this dependency.";
 
-            sb.AppendLine(overOrUnderMessage);
+            builder.AppendLine(overOrUnderMessage);
 
-            EditorUtility.DisplayDialog("Null reference", sb.ToString(), "Continue");
+            EditorUtility.DisplayDialog("Null reference", builder.ToString(), "Continue");
             return false;
         }
 
@@ -96,8 +96,8 @@ namespace Assets.Automation
         private static List<MonoBehaviour> GetReferencesInSceneForNullField(FieldInfo nullFieldInfo)
         {
             var references = UnityEngine.Object.FindObjectsOfType<MonoBehaviour>()
-                                               .Where(x => x is not null)
-                                               .Where(x => x.GetType() == nullFieldInfo.FieldType).ToList();
+                .Where(x => x is not null)
+                .Where(x => x.GetType() == nullFieldInfo.FieldType).ToList();
             return references;
         }
     }

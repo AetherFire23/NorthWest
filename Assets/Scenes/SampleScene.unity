@@ -2597,7 +2597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -5862647, y: -7931109.5}
+  m_AnchoredPosition: {x: -5919977, y: -8008059.5}
   m_SizeDelta: {x: 718, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &146369523
@@ -4191,8 +4191,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 393578935}
   m_HandleRect: {fileID: 393578934}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9396349
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7434,7 +7434,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00012207031, y: 335.0988}
+  m_AnchoredPosition: {x: -0.00012207031, y: 368.099}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &355891053
@@ -11668,7 +11668,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -906819.25, y: -554427.44}
+  m_AnchoredPosition: {x: -978028.4, y: -597964.94}
   m_SizeDelta: {x: 820, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &530996072
@@ -25491,6 +25491,8 @@ GameObject:
   - component: {fileID: 1031967411}
   - component: {fileID: 1031967410}
   - component: {fileID: 1031967412}
+  - component: {fileID: 1031967413}
+  - component: {fileID: 1031967414}
   m_Layer: 0
   m_Name: InventoryManagement2
   m_TagString: Untagged
@@ -25597,6 +25599,7 @@ MonoBehaviour:
   _calls: {fileID: 1859716673}
   _slotManager: {fileID: 1031967412}
   _gameLauncherAndRefresher: {fileID: 96140794}
+  _refreshGuard: {fileID: 1031967413}
 --- !u!114 &1031967412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25611,6 +25614,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabLoader: {fileID: 2064451877}
   _inventoryStaticGameObjects: {fileID: 1031967410}
+--- !u!114 &1031967413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031967405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a121b82dfbe23549897ee3db906d730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventoryInput: {fileID: 1031967414}
+--- !u!114 &1031967414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031967405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1f7131d905af1848b0a2ae64a2c4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventoryObjects: {fileID: 1031967410}
+  _slotAndItemsManager: {fileID: 1031967412}
+  _inventoryManager: {fileID: 1031967411}
+  _refreshGuard: {fileID: 1031967413}
+  _calls: {fileID: 1859716673}
+  _gameLauncherAndRefresher: {fileID: 96140794}
 --- !u!4 &1033556129 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1769570907207412066, guid: 3ab889f4705812a43941752d999e5d9c, type: 3}

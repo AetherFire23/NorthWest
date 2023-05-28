@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 
 public static class UIRaycast
 {
+    //je pourrais faire un dictionnaire de MousePosition, Result et le clear a chaque frame comme ça si jai des multiple calls a la meme palce je peux juste draw de ça au lieu
+    // de fullblown raycast
     public static UIRaycastResult MouseRaycastResult(Func<RaycastResult, bool> whereFilter)
     {
         var results = UIRaycast.RawUIRaycast().Where(whereFilter).ToList();
