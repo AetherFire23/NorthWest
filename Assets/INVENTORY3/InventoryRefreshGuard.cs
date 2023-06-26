@@ -17,7 +17,6 @@ namespace Assets.INVENTORY3
         public bool IsRefreshing { get; set; } = false;
         public bool IsSwitchingRoomInventory { get; set; } = false;
         public bool IsTracking => _inventoryInput.IsTracking;
-
         private bool _hasItemOnClick => UIRaycast.ScriptOrDefault<ItemInventory>() is not null;
         private bool _isMouseClicked => Input.GetMouseButtonDown(0);
         public bool MustPreventRefresh()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Properties;
 
 namespace Assets.UtilsAssembly
 {
@@ -19,5 +20,10 @@ namespace Assets.UtilsAssembly
             return !list.Any();
         }
 
+        //public static bool IsAssignableFrom<T>(this object obj)
+        //{
+        //    bool isInherited = obj.GetType().IsAssignableFrom(typeof(T));
+        //    return isInherited;
+        //}
     }
 }

@@ -10,25 +10,27 @@ namespace Assets.MainMenu
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private DialogManager _dialogManager;
-
+        [SerializeField] private bool _disable;
         private async UniTask Awake()
         {
-            await _prefabLoader.InitializeAsync();
-            var inputField = await _dialogManager.CreateDialog<AmountDialogScript>();
-            await inputField.Initialize("Enter the GUID");
-            await inputField.WaitForResolveCoroutine();
+            //if (_disable) return;
 
-            if (inputField.DialogResult != DialogResult.Ok)
-            {
-                await inputField.Destroy();
-                return;
-            }
+            //await _prefabLoader.InitializeAsync();
+            //var inputField = await _dialogManager.CreateDialog<AmountDialogScript>();
+            //await inputField.Initialize("Enter the GUID");
+            //await inputField.WaitForResolveCoroutine();
 
-            TemporaryOptionsScript2.Instance.CurrentPlayerUID = inputField.GetTrimmedMessage();
+            //if (inputField.DialogResult != DialogResult.Ok)
+            //{
+            //    await inputField.Destroy();
+            //    return;
+            //}
+
+            //TemporaryOptionsScript2.Instance.CurrentPlayerUID = inputField.GetTrimmedMessage();
 
 
 
-            SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+            //SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
         }
     }
 }

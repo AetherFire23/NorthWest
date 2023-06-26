@@ -4,6 +4,7 @@ namespace Assets.GameLaunch
 {
     public interface IStartupBehavior
     {
+
         public UniTask Initialize(GameState gameState);
     }
 }

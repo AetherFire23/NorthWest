@@ -7,6 +7,8 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 {
     public class MessageBox : DialogBase
     {
+        protected override string Name => nameof(MessageBox);
+
         [SerializeField] public TextMeshProUGUI Text;
         [SerializeField] public Button OkButton;
 

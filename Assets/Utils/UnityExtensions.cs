@@ -1,4 +1,5 @@
 ﻿using Assets.Enums;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
 using Shared_Resources.Interfaces;
@@ -183,8 +184,6 @@ public static class UnityExtensions
         });
     }
 
-
-
     public static bool IsWithinBounds(Vector2 startPosition, Vector2 maxPosition, Vector2 pointPosition)
     {
         bool isOverStartPoint = startPosition.x < pointPosition.x && startPosition.y < pointPosition.y;
@@ -262,5 +261,27 @@ public static class UnityExtensions
             action();
         });
     }
-}
 
+    public static T FindUniqueMonoBehaviour<T>() where T : MonoBehaviour
+    {
+        List<T> monoBehaviours = (GameObject.FindObjectsOfType<T>()).ToList();
+
+        if (!monoBehaviours.Any()) throw new Exception($"Not found:{typeof(T)}");
+
+        if( monoBehaviours.Count > 1 ) throw new Exception($"Too many of:{typeof(T)}");
+
+        return monoBehaviours.First();
+    }
+
+    public static List<T> FindAllSubclassesOf<T>() where T : class
+    {
+        MonoBehaviour[] monoBehaviours = GameObject.FindObjectsOfType<MonoBehaviour>();
+        var monos = monoBehaviours
+            .Where(x => typeof(T).IsAssignableFrom(x.GetType()))
+            .Select(x => x as T).ToList();
+
+        if (!monos.Any()) throw new Exception($"No monos of type {typeof(T)}");
+
+        return monos;
+    }
+}

@@ -28,7 +28,11 @@ public class ChatObjectsManager : MonoBehaviour
 
     private void InitializeButtons()
     {
-        this.OpenChatButton.AddMethod(() => this.ChatCanvas.enabled = !this.ChatCanvas.enabled);
+        this.OpenChatButton.AddMethod(() =>
+        {
+            this.ChatCanvas.enabled = !this.ChatCanvas.enabled;
+        });
+
         this.OpenInvitePanel.AddMethod(() => this.InvitePanel.SetActive(!this.InvitePanel.active));
     }
 }

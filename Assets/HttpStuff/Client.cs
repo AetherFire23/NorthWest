@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.GameLaunch
 {
-    public class Client : IDisposable
+    public class Client : IDisposable 
     {
         // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
         // should init client with a static method I think so that i can pass in the PooledConnectionLifetime 

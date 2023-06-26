@@ -15,11 +15,8 @@ namespace Assets
         //public Dictionary<TPrefab, TEntity> GameObjectsAndEntities = new Dictionary<TPrefab, TEntity>();
 
         public List<Tuple<TPrefab, TEntity>> GameObjectsAndEntities = new List<Tuple<TPrefab, TEntity>>();
-
         private List<Guid> _gameObjectIds => GameObjectsAndEntities.Select(x => x.Item1.Id).ToList();
         private List<TPrefab> _gameObjects => GameObjectsAndEntities.Select(x => x.Item1).ToList();
-
-
         private Func<TEntity, UniTask<TPrefab>> _createGameObjectFromEntity;
         private Action<TPrefab> _destroyFunction;
         private bool _deleteMissing;

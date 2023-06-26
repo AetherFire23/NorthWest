@@ -6,9 +6,12 @@ using UnityEngine.UI;
 
 public class YesNoDialog : DialogBase
 {
+    protected override string Name => nameof(YesNoDialog);
+
     [SerializeField] public TextMeshProUGUI Text;
     [SerializeField] public Button OkButton;
     [SerializeField] public Button CancelButton;
+
 
     public async UniTask Initialize(string message)
     {

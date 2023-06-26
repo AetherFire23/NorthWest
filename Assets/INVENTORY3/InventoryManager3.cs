@@ -101,14 +101,14 @@ namespace Assets.INVENTORY3
 
         public async UniTask RefreshPlayerItems(RefreshResult<ItemInventory, Item> refreshResult)
         {
-            foreach (var item in refreshResult.Appeared)
+            foreach (var item in refreshResult.AppearedEntities)
             {
                 bool outOfPlayerSlots = _slotManager.GetPlayerSlots().Count == 0;
                 if (outOfPlayerSlots) throw new Exception("Player does not have enough inventory slots");
 
                 await this.CreateItemInNextPlayerSlot(item);
             }
-            foreach (var item in refreshResult.Disappeared)
+            foreach (var item in refreshResult.DisappearedPrefabs)
             {
                 item.Slot.DestroyItem();
             }
@@ -116,13 +116,13 @@ namespace Assets.INVENTORY3
 
         public async UniTask RefreshRoomItems(RefreshResult<ItemInventory, Item> refreshResult)
         {
-            foreach (var item in refreshResult.Disappeared)
+            foreach (var item in refreshResult.DisappearedPrefabs)
             {
                 _slotManager.RemoveSlot(item.Slot);
                 item.Slot.DestroyItem();
                 await item.Slot.DestroySlot();
             }
-            foreach (var item in refreshResult.Appeared)
+            foreach (var item in refreshResult.AppearedEntities)
             {
                 await _slotManager.CreateNewRoomSlotAndCreateNewItem(item);
             }

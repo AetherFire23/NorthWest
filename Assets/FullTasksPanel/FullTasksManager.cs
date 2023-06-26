@@ -10,133 +10,136 @@ using Assets.AssetLoading;
 using Assets.HttpStuff;
 using UnityEngine.UI;
 
-public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
+namespace Assets.FullTasksPanel
 {
-    [SerializeField] private Calls Calls;
-    [SerializeField] private PrefabLoader _prefabLoader;
-    [SerializeField] private GameObject _taskScrollViewContent;
-    [SerializeField] private TaskBuilder _taskBuilder;
-
-    [SerializeField] private Button _taskButton;
-    [SerializeField] private Canvas _taskScrollViewCanvas;
-    // models
-    private List<GameTaskBase> _gameTasks = new();
-    private GameState _gameState;
-
-    //prefabs
-    private List<TaskEmitterText> _emittorTexts = new();
-    private List<FullTaskButton> _fullTaskButtons = new();
-    private List<GameTaskBase> _currentDisplayedGameTasks => _fullTaskButtons.Select(x => x.GameTask).ToList();
-
-    public async UniTask Initialize(GameState gameState)
+    public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
     {
-        _taskButton.AddMethod(() => _taskScrollViewCanvas.enabled = !_taskScrollViewCanvas.enabled);
-        // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
-        _gameState = gameState;
-        _gameTasks = typeof(GameTaskBase).Assembly.GetTypes()
-            .Where(x => x.IsClass && !x.IsAbstract
-            && typeof(GameTaskBase).IsAssignableFrom(x))
-            .Select(x => (Activator.CreateInstance(x) as GameTaskBase)).ToList();
+        [SerializeField] private Calls Calls;
+        [SerializeField] private PrefabLoader _prefabLoader;
+        [SerializeField] private GameObject _taskScrollViewContent;
+        [SerializeField] private TaskBuilder _taskBuilder;
 
-        var taskProviders = UnityExtensions.GetEnumValues<GameTaskCategory>();
+        [SerializeField] private Button _taskButton;
+        [SerializeField] private Canvas _taskScrollViewCanvas;
+        // models
+        private List<GameTaskBase> _gameTasks = new();
+        private GameState _gameState;
 
-        await RefreshAvailableTasks();
-    }
+        //prefabs
+        private List<TaskEmitterText> _emittorTexts = new();
+        private List<FullTaskButton> _fullTaskButtons = new();
+        private List<GameTaskBase> _currentDisplayedGameTasks => _fullTaskButtons.Select(x => x.GameTask).ToList();
 
-    private bool _isRefreshing = false;
-    public async UniTask Refresh(GameState gameState)
-    {
-        if (_isRefreshing)
+        public async UniTask Initialize(GameState gameState)
         {
-            Debug.Log("Cancelled refreshing fulltasksManager");
+            _taskButton.AddMethod(() => _taskScrollViewCanvas.enabled = !_taskScrollViewCanvas.enabled);
+            // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
+            _gameState = gameState;
+            _gameTasks = typeof(GameTaskBase).Assembly.GetTypes()
+                .Where(x => x.IsClass && !x.IsAbstract
+                && typeof(GameTaskBase).IsAssignableFrom(x))
+                .Select(x => (Activator.CreateInstance(x) as GameTaskBase)).ToList();
+
+            var taskProviders = UnityExtensions.GetEnumValues<GameTaskCategory>();
+
+            await RefreshAvailableTasks();
         }
 
-        _isRefreshing = true;
-        _gameState = gameState;
-        await RefreshAvailableTasks();
-        _isRefreshing = false;
-    }
-
-    private async UniTask RefreshAvailableTasks() // compare with gameTaskCodes
-    {
-        foreach (var appearedTask in await GetAppearedTasks())
+        private bool _isRefreshing = false;
+        public async UniTask Refresh(GameState gameState)
         {
-            FullTaskButton button = await _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
-
-            // CreateButtons?
-            Func<UniTask> createPromptsThenSendTask = async () =>
+            if (_isRefreshing)
             {
-                await _taskBuilder.SelectTargetsThenExecuteGameTask(_gameState, appearedTask);
+                Debug.Log("Cancelled refreshing fulltasksManager");
+            }
 
-            };
-
-            await button.Initialize(appearedTask, createPromptsThenSendTask);
-            _fullTaskButtons.Add(button);
-            await PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(button);
+            _isRefreshing = true;
+            _gameState = gameState;
+            await RefreshAvailableTasks();
+            _isRefreshing = false;
         }
 
-        foreach (var disappearedTask in await GetDisappearedTasks())
+        private async UniTask RefreshAvailableTasks() // compare with gameTaskCodes
         {
-            FullTaskButton buttonToDelete = FindButtonFromGameTask(disappearedTask);
-            _fullTaskButtons.Remove(buttonToDelete);
-            buttonToDelete.gameObject.SelfDestroy();
+            foreach (var appearedTask in await GetAppearedTasks())
+            {
+                FullTaskButton button = await _prefabLoader.CreateInstanceOfAsync<FullTaskButton>(_taskScrollViewContent);
 
-            DeleteEmittorTextOrDoNothing(disappearedTask.Category);
+                // CreateButtons?
+                Func<UniTask> createPromptsThenSendTask = async () =>
+                {
+                    await _taskBuilder.SelectTargetsThenExecuteGameTask(_gameState, appearedTask);
+
+                };
+
+                await button.Initialize(appearedTask, createPromptsThenSendTask);
+                _fullTaskButtons.Add(button);
+                await PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(button);
+            }
+
+            foreach (var disappearedTask in await GetDisappearedTasks())
+            {
+                FullTaskButton buttonToDelete = FindButtonFromGameTask(disappearedTask);
+                _fullTaskButtons.Remove(buttonToDelete);
+                buttonToDelete.gameObject.SelfDestroy();
+
+                DeleteEmittorTextOrDoNothing(disappearedTask.Category);
+            }
         }
-    }
 
-    private FullTaskButton FindButtonFromGameTask(GameTaskBase taskBase)
-    {
-        var taskButton = _fullTaskButtons.FirstOrDefault(x => x.GameTask.Code.Equals(taskBase.Code));
-
-        if (taskButton is null) throw new Exception($"Tried to find a button with a gameTask that did not exist : {taskBase.Code}");
-
-        return taskButton;
-    }
-
-    private void DeleteEmittorTextOrDoNothing(GameTaskCategory taskCategory)
-    {
-        bool hasEmittorRemainingTasks = _currentDisplayedGameTasks.Where(x => x.Category == taskCategory)
-            .ToList().Count != 0;
-
-        if (hasEmittorRemainingTasks) return;
-
-        var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Category == taskCategory);
-
-        // already deleted
-        if (emittorToDelete is null) return;
-
-        _emittorTexts.Remove(emittorToDelete);
-        GameObject.Destroy(emittorToDelete.gameObject);
-    }
-
-    private async UniTask<List<GameTaskBase>> GetAppearedTasks()
-    {
-        var validTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
-        var newTasks = validTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
-
-        return newTasks;
-    }
-
-    private async UniTask<List<GameTaskBase>> GetDisappearedTasks()
-    {
-        List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
-        var disappearedTasks = _currentDisplayedGameTasks.Where(x => !newCalculatedTasks.Contains(x)).ToList();
-
-        return disappearedTasks;
-    }
-
-    private async UniTask PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(FullTaskButton fullTaskButton)
-    {
-        var emittorText = _emittorTexts.FirstOrDefault(x => x.Category == fullTaskButton.GameTask.Category);
-        if (emittorText is null)
+        private FullTaskButton FindButtonFromGameTask(GameTaskBase taskBase)
         {
-            emittorText = await _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent.gameObject);
-            await emittorText.Initialize(fullTaskButton.GameTask.Category);
-            _emittorTexts.Add(emittorText);
+            var taskButton = _fullTaskButtons.FirstOrDefault(x => x.GameTask.Code.Equals(taskBase.Code));
+
+            if (taskButton is null) throw new Exception($"Tried to find a button with a gameTask that did not exist : {taskBase.Code}");
+
+            return taskButton;
         }
 
-        int emittorTextIndex = emittorText.transform.GetSiblingIndex();
-        fullTaskButton.transform.SetSiblingIndex(emittorTextIndex + 1);
+        private void DeleteEmittorTextOrDoNothing(GameTaskCategory taskCategory)
+        {
+            bool hasEmittorRemainingTasks = _currentDisplayedGameTasks.Where(x => x.Category == taskCategory)
+                .ToList().Count != 0;
+
+            if (hasEmittorRemainingTasks) return;
+
+            var emittorToDelete = _emittorTexts.FirstOrDefault(x => x.Category == taskCategory);
+
+            // already deleted
+            if (emittorToDelete is null) return;
+
+            _emittorTexts.Remove(emittorToDelete);
+            GameObject.Destroy(emittorToDelete.gameObject);
+        }
+
+        private async UniTask<List<GameTaskBase>> GetAppearedTasks()
+        {
+            var validTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
+            var newTasks = validTasks.Where(task => !_currentDisplayedGameTasks.Contains(task)).ToList();
+
+            return newTasks;
+        }
+
+        private async UniTask<List<GameTaskBase>> GetDisappearedTasks()
+        {
+            List<GameTaskBase> newCalculatedTasks = _gameTasks.Where(x => x.HasRequiredConditions(_gameState)).ToList();
+            var disappearedTasks = _currentDisplayedGameTasks.Where(x => !newCalculatedTasks.Contains(x)).ToList();
+
+            return disappearedTasks;
+        }
+
+        private async UniTask PlaceTaskAfterEmittorIndexAndCreateOneIfItDoesntExist(FullTaskButton fullTaskButton)
+        {
+            var emittorText = _emittorTexts.FirstOrDefault(x => x.Category == fullTaskButton.GameTask.Category);
+            if (emittorText is null)
+            {
+                emittorText = await _prefabLoader.CreateInstanceOfAsync<TaskEmitterText>(_taskScrollViewContent.gameObject);
+                await emittorText.Initialize(fullTaskButton.GameTask.Category);
+                _emittorTexts.Add(emittorText);
+            }
+
+            int emittorTextIndex = emittorText.transform.GetSiblingIndex();
+            fullTaskButton.transform.SetSiblingIndex(emittorTextIndex + 1);
+        }
     }
 }

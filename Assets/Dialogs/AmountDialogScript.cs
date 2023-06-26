@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class AmountDialogScript : DialogBase
 {
+    protected override string Name => nameof(AmountDialogScript);
+
     [SerializeField] public Button OkButton;
     [SerializeField] public Button CancelButton;
     [SerializeField] public TextMeshProUGUI InputFieldTextComponent;

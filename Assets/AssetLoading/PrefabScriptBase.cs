@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+
 public class PrefabScriptBase : MonoBehaviour
 {
     public Vector3 Position

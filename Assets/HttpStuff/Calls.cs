@@ -1,16 +1,14 @@
 ﻿using Assets.CHATLOG3;
-using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public class Calls : MonoBehaviour
+    public class Calls : HttpCallerBase
     {
         private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
         private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; 
@@ -28,10 +26,15 @@ namespace Assets.HttpStuff
         // private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter
 
         // private const string _uriAddPrivateChatInvitation = "https://localhost:7060/TheCrew/AddPrivateChatInvitation"; //require parameter
+        private DateTime? _timeStamp = null;
 
+        public async UniTask<MainMenuState> GetMainMenuState()
+        {
+            var state = new MainMenuState();
+            _timeStamp = state.TimeStamp;
+            return state;
+        }
 
-
-        private Client _httpClient = new Client();
         public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
         {
             GameState gameState = null;
@@ -40,7 +43,7 @@ namespace Assets.HttpStuff
             infos.AddParameter("playerId", playerId.ToString());
             string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
             infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
-            gameState = await _httpClient.GetRequest<GameState>(infos);
+            gameState = await base.HttpClient.GetRequest<GameState>(infos);
 
 
             if (gameState == null) { Debug.LogError("webapi not found"); }
@@ -53,7 +56,7 @@ namespace Assets.HttpStuff
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("x", x.ToString());
             infos.AddParameter("y", y.ToString());
-            var result = await _httpClient.PutRequest2(infos);
+            var result = await base.HttpClient.PutRequest2(infos);
             return result;
         }
 
@@ -63,7 +66,7 @@ namespace Assets.HttpStuff
             //infos.AddParameter("ownerId", ownerId.ToString());
             infos.AddParameter("targetId", targetId.ToString());
             infos.AddParameter("itemId", itemId.ToString());
-            var result = await _httpClient.PutRequest2(infos);
+            var result = await base.HttpClient.PutRequest2(infos);
             return result;
         }
 
@@ -72,7 +75,7 @@ namespace Assets.HttpStuff
             var infos = new UriBuilder(_uriChangeRoom, ParameterOptions.Required);
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("targetRoomName", targetRoomName);
-            var result = _httpClient.PutRequest2(infos);
+            var result = base.HttpClient.PutRequest2(infos);
             return result;
         }
 
@@ -87,7 +90,7 @@ namespace Assets.HttpStuff
             var infos = new UriBuilder(_uriTryExeGameTask, ParameterOptions.BodyAndParameter, parameters);
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("taskCode", Convert.ToInt32(taskCode).ToString());
-            var result = await _httpClient.PutRequest2(infos);
+            var result = await base.HttpClient.PutRequest2(infos);
             return result;
         }
 
@@ -98,7 +101,7 @@ namespace Assets.HttpStuff
             infos.AddParameter("guid", guid.ToString());
             infos.AddParameter("roomId", roomId.ToString());
             infos.AddParameter("receivedMessage", newMessage);
-            var responseContent = await _httpClient.PutRequest2(infos);
+            var responseContent = await base.HttpClient.PutRequest2(infos);
             return responseContent;
         }
 
@@ -110,7 +113,7 @@ namespace Assets.HttpStuff
                 .WithParameter("fromId", parameters.FromId.ToString())
                 .WithParameter("targetPlayer", parameters.TargetPlayer.ToString())
                 .WithParameter("targetRoomId", parameters.TargetRoomId.ToString());
-            var clientCallResult = await _httpClient.PutRequest2(infos);
+            var clientCallResult = await base.HttpClient.PutRequest2(infos);
             return clientCallResult;
         }
 
@@ -120,7 +123,7 @@ namespace Assets.HttpStuff
             var infos = new UriBuilder(_uriSendInviteResponse, ParameterOptions.Required);
             infos.AddParameter("triggerId", triggerId.ToString());
             infos.AddParameter("isAccepted", isAccepted.ToString());
-            var None = _httpClient.PutRequest2(infos).AsTask().Result;
+            var None = base.HttpClient.PutRequest2(infos).AsTask().Result;
             return None;
         }
 
@@ -130,7 +133,7 @@ namespace Assets.HttpStuff
             var infos = new UriBuilder(_uriCreateChatroom, ParameterOptions.Required)
                 .WithParameter("playerGuid", playerUID.ToString())
                 .WithParameter("newRoomGuid", newRoomGuid.ToString());
-            var yeah = await _httpClient.PutRequest2(infos);
+            var yeah = await base.HttpClient.PutRequest2(infos);
             return yeah;
         }
 
@@ -140,14 +143,13 @@ namespace Assets.HttpStuff
             var infos = new UriBuilder(_uriLeavePrivateChatRoom, ParameterOptions.Required);
             infos.AddParameter("playerId", playerUID.ToString());
             infos.AddParameter("roomToLeave", roomToLeave.ToString());
-            var yeah = await _httpClient.PutRequest2(infos);
+            var yeah = await base.HttpClient.PutRequest2(infos);
             return yeah;
         }
 
-
         private void OnApplicationQuit()
         {
-            _httpClient.Dispose();
+            base.HttpClient.Dispose();
         }
     }
 }

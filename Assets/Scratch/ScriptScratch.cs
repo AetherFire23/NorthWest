@@ -2,7 +2,12 @@
 using Assets.Dialogs;
 using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Shared_Resources.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -20,13 +25,19 @@ namespace Assets.Scratch
         {
             if (_isInitialized) return;
 
-            var roosm = gameState.Rooms.Select(x => x as object).ToList();
+            string jsoNData = JsonConvert.SerializeObject(gameState);
+            JObject jobj = JsonConvert.DeserializeObject<JObject>(jsoNData);
 
-          //  await _dialogManager.CreateAndInitializeOptionsDialog2("Lolziddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddda", roosm, false, 1,1);
+            string type = jobj.GetType().Name;
+            string typ2 = jobj.Type.ToString();
+            Debug.Log(type);
 
 
 
-            _isInitialized = true;
+            PersistenceAccess.SaveData(gameState);
+
+            var data = PersistenceAccess.LoadPersistentData<List<Type>>();
+            PersistenceAccess.LoadPersistentData<GameState>();
         }
     }
 }

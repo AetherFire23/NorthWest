@@ -41,7 +41,7 @@ namespace Assets.AssetLoading
             }
         }
 
-        // Do not forget that reflection for typeof and nameof is quite fast for reflection
+        // Do not forget that reflection for typeof and nameof is quite fast
         public async UniTask<T> CreateInstanceOfAsync<T>(GameObject parent) where T : PrefabScriptBase
         {
             if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");

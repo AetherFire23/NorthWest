@@ -3,13 +3,16 @@ using Shared_Resources.GameTasks;
 using TMPro;
 using UnityEngine;
 
-public class TaskEmitterText : PrefabScriptBase
+namespace Assets.FullTasksPanel
 {
-    [SerializeField] private TextMeshProUGUI _text;
-    public GameTaskCategory Category { get; private set; }
-    public async UniTask Initialize(GameTaskCategory provider)
+    public class TaskEmitterText : PrefabScriptBase
     {
-        this.Category = provider;
-        _text.text = provider.ToString();
+        [SerializeField] private TextMeshProUGUI _text;
+        public GameTaskCategory Category { get; private set; }
+        public async UniTask Initialize(GameTaskCategory provider)
+        {
+            this.Category = provider;
+            _text.text = provider.ToString();
+        }
     }
 }

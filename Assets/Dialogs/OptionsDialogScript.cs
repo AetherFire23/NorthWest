@@ -14,6 +14,9 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 {
     public class OptionsDialogScript : DialogBase
     {
+        protected override string Name => nameof(OptionsDialogScript);
+
+
         [SerializeField]
         public OptionsDialogObjects OptionsDialogObjects;
 
@@ -25,6 +28,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
         private int _minimumChecks { get; set; }
         private int _maximumChecks { get; set; }
         private Button _resolveButton => this.OptionsDialogObjects.ResolveButton;
+
 
         // initialized through dialogManager
         public async UniTask Initialize(string description, bool allowMultipleChecks, int minimumChecks, int maximumChecks) // must add minimum validation

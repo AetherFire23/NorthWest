@@ -12,4 +12,8 @@ public class LocalPLayerManager : MonoBehaviour
         get { return this.gameObject.transform.position; }
         set { this.gameObject.transform.position = value; }
     }
+
+    public float X => PlayerPosition.x;
+    public float Y => PlayerPosition.y;
+    public float Z => PlayerPosition.z;
 }

@@ -10,6 +10,22 @@ using System.Linq;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
+
+// Fydar 
+// RuntimeeInitializationOnLoadMethod
+
+
+// scriptable object builderIHost thingy
+// DisableEverything
+// BootScene,
+// 
+
+// Application.quitting += stuff
+
+// click button run
+// scenes to create instances of game (Fydar added)
+// 
+
 [DefaultExecutionOrder(-10)]
 public class GameLauncherAndRefresher : MonoBehaviour
 {
@@ -136,4 +152,5 @@ public class GameLauncherAndRefresher : MonoBehaviour
             .Where(x => typeof(IRefreshable).IsAssignableFrom(x.GetType()))
             .Select(x => x as IRefreshable).ToList();
     }
+
 }

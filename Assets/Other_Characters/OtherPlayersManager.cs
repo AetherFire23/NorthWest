@@ -44,7 +44,7 @@ public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
     {
         var result = RefreshResult<OtherCharacterScript, Player>.GetRefreshResult(old, newEntities);
 
-        foreach (var appeared in result.Appeared)
+        foreach (var appeared in result.AppearedEntities)
         {
             var go = await _prefabLoader.CreateInstanceOfAsync<OtherCharacterScript>(_otherCharactersContainer.gameObject);
             await go.Initialize(appeared);
@@ -52,7 +52,7 @@ public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
 
         }
 
-        foreach (var disappeared in result.Disappeared)
+        foreach (var disappeared in result.DisappearedPrefabs)
         {
             _otherPlayers.Remove(disappeared);
             GameObject.Destroy(disappeared.gameObject);
