@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public class Calls : HttpCallerBase
+    public class GameCalls : HttpCallerBase
     {
         private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
         private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; 
@@ -26,14 +26,8 @@ namespace Assets.HttpStuff
         // private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter
 
         // private const string _uriAddPrivateChatInvitation = "https://localhost:7060/TheCrew/AddPrivateChatInvitation"; //require parameter
-        private DateTime? _timeStamp = null;
 
-        public async UniTask<MainMenuState> GetMainMenuState()
-        {
-            var state = new MainMenuState();
-            _timeStamp = state.TimeStamp;
-            return state;
-        }
+  
 
         public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
         {
@@ -78,12 +72,6 @@ namespace Assets.HttpStuff
             var result = base.HttpClient.PutRequest2(infos);
             return result;
         }
-
-        // Because all tasks pass through the same API call, creating different methods would be redundant
-        //public ClientCallResult CookTask(Guid playerId, Dictionary<string, string> parameters)
-        //{
-        //    return TryExecuteGameTask(playerId, GameTaskType.Cook, parameters);
-        //}
 
         public async UniTask<ClientCallResult> TryExecuteGameTask(Guid playerId, GameTaskCodes taskCode, TaskParameters parameters)
         {
@@ -145,11 +133,6 @@ namespace Assets.HttpStuff
             infos.AddParameter("roomToLeave", roomToLeave.ToString());
             var yeah = await base.HttpClient.PutRequest2(infos);
             return yeah;
-        }
-
-        private void OnApplicationQuit()
-        {
-            base.HttpClient.Dispose();
         }
     }
 }

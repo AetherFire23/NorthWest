@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.MainMenu.Authentication
 {
-    public class RegisterDialog : DialogBase
+    public class RegisterDialog : DialogBase // not implement yet
     {
         protected override string Name => nameof(RegisterDialog);
 

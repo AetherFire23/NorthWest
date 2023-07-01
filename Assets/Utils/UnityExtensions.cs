@@ -217,11 +217,8 @@ public static class UnityExtensions
         throw new ArgumentNullException($"An element was null in list {sequence}");
     }
 
-    /// <summary>
-    /// Needs to be a delegate with syntax: async() => await task 
-    /// </summary>
-    /// <param name="self"></param>
-    /// <param name="task"></param>
+    /// <summary> Needs to be a delegate with syntax: async() => await task and have 0 idea why 
+    /// so to be clear, NOT AddTaskFunc(Task) but the other syntax </summary>
     public static void AddTaskFunc(this Button self, Func<UniTask> task)
     {
         self.onClick.AddListener(async () => await task.Invoke());
@@ -284,4 +281,46 @@ public static class UnityExtensions
 
         return monos;
     }
+
+    public static void SetTransparent(this TMPro.TextMeshProUGUI textMeshProUGUI)
+    {
+        textMeshProUGUI.color = new Color(textMeshProUGUI.color.r, textMeshProUGUI.color.g, textMeshProUGUI.color.b, 0f);
+    }
+
+    public static void RemoveTransparency(this TMPro.TextMeshProUGUI textMeshProUGUI)
+    {
+        textMeshProUGUI.color = new Color(textMeshProUGUI.color.r, textMeshProUGUI.color.g, textMeshProUGUI.color.b, 1f);
+    }
+
+    public static void IsVisibleAlphaLayer(this TMPro.TextMeshProUGUI textMeshProUGUI, bool isVisible)
+    {
+        if (isVisible)
+        {
+            textMeshProUGUI.RemoveTransparency();
+        }
+        else
+        {
+            textMeshProUGUI.SetTransparent();
+        }
+    }
+
+    public static TextMeshProUGUI GetTextMesh(this Button self)
+    {
+        var text = self.GetComponentInChildren<TextMeshProUGUI>();
+        return text;
+    }
+
+
+    // va falloir faire une liste de components ou dictionary de component, oldValue
+    // serait nice de aps faire de canvas pis de pouvoir toute crisser invisible
+    //public static List<Type> AlphaLayerTypes = new List<Type>()
+    //{
+    //    typeof(TextMeshProUGUI),
+    //    typeof()
+    //};
+    //public static void SetVisibleAlphaLayerAndChildren(this GameObject self, bool isVisible)
+    //{
+        
+
+    //}
 }

@@ -15,7 +15,7 @@ namespace Assets.INVENTORY3
         [SerializeField] private SlotAndItemsManager _slotAndItemsManager;
         [SerializeField] private InventoryManager3 _inventoryManager;
         [SerializeField] private InventoryRefreshGuard _refreshGuard;
-        [SerializeField] private Calls _calls;
+        [SerializeField] private GameCalls _calls;
         [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
 

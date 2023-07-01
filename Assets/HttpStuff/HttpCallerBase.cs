@@ -10,6 +10,7 @@ namespace Assets.HttpStuff
 {
     public abstract class HttpCallerBase : MonoBehaviour 
     {
+        protected DateTime? _timeStamp;
         protected Client HttpClient = new Client();
         private void OnApplicationQuit()
         {

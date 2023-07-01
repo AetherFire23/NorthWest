@@ -1,11 +1,7 @@
 ﻿using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Shared_Resources.Models.Requests;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,18 +17,41 @@ namespace Assets.MainMenu.Authentication
         [SerializeField] Button LoginButton;
         [SerializeField] Button RegisterButton;
 
-        [SerializeField] Calls _calls;
+        // non-standalone calls
+        [SerializeField] MainMenuCalls _calls;
+
+        public string UserName { get => UserNameInputField.GetTextWithoutHiddenCharacters(); set => UserNameInputField.text = value; }
+        public string Password { get => PasswordInputField.GetTextWithoutHiddenCharacters(); set => PasswordInputField.text = value; }
 
         public async UniTask Initialize()
         {
-            LoginButton.AddMethod(TryLogin);
+            LoginButton.AddTaskFunc(async () => await ValidateInputThenResolve());
         }
 
-        public async void TryLogin()
+        public async UniTask ValidateInputThenResolve()
         {
-            Debug.Log(UserNameInputField.GetTextWithoutHiddenCharacters());
-            Debug.Log(PasswordInputField.GetTextWithoutHiddenCharacters());
+            if (UserName.Equals(string.Empty) || Password.Equals(string.Empty))
+            {
+                Debug.Log("empty input not allowed");
+                return;
+            }
             await ResolveDialog(DialogResult.Ok); // Error maybe ^ 
+        }
+
+        public LoginRequest GetLoginCredentials()
+        {
+            var loginReq = new LoginRequest()
+            {
+                UserName = UserName,
+                PasswordAttempt = Password,
+            };
+            return loginReq;
+        }
+
+        public void ResetInputFieldTexts()
+        {
+            UserName = string.Empty;
+            Password = string.Empty;
         }
     }
 }

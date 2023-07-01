@@ -18,7 +18,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
 {
     [SerializeField] ChatObjectsManager _chatObjects;
     [SerializeField] PrefabLoader _prefabLoader;
-    [SerializeField] Calls _calls;
+    [SerializeField] GameCalls _calls;
     [SerializeField] DialogManager _dialogManager;
     [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
 

@@ -7,7 +7,7 @@ namespace Assets.HttpStuff
 {
     public class GameStateFetcher : MonoBehaviour
     {
-        [SerializeField] private Calls _client;
+        [SerializeField] private GameCalls _client;
 
         private DateTime? _lastTimeStamp = null;
 

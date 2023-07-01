@@ -13,10 +13,10 @@ namespace Assets.GameLaunch.BaseLauncherScratch
     public abstract class GameStateFetcherBase<T> : MonoBehaviour // maybe it should not be a MonoBehaviour honestly.  Just normal C Sharp class with constructor
         where T : class, new()
     {
-        protected Calls Client { get; set; }
+        protected MainMenuCalls Client { get; set; }
         public async UniTask Initialize()
         {
-            Client = UnityExtensions.FindUniqueMonoBehaviour<Calls>();
+            Client = UnityExtensions.FindUniqueMonoBehaviour<MainMenuCalls>();
         }
 
         protected DateTime? _lastTimeStamp { get; set; } = null;

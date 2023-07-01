@@ -14,8 +14,8 @@ namespace Assets.GameLaunch.BaseLauncherScratch
     public class StateFetcherBase<T> // maybe it should not be a MonoBehaviour honestly.  Just normal C Sharp class with constructor
         where T : class, new()
     {
-        protected Calls Client { get; set; }
-        public StateFetcherBase(Calls client)
+        protected MainMenuCalls Client { get; set; }
+        public StateFetcherBase(MainMenuCalls client)
         {
             Client = client;
             _lastTimeStamp = null;

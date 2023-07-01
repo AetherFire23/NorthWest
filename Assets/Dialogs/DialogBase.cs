@@ -11,7 +11,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 
         protected abstract string Name { get;}
 
-        private bool _resolved { get; set; } = false; // must start as false
+        public bool Resolved { get; set; } = false; // must start as false
         public DialogResult DialogResult { get; set; }
 
         public void SetPosition(float x, float y)
@@ -21,7 +21,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 
         protected async UniTask ResolveDialog(DialogResult result)
         {
-            _resolved = true;
+            Resolved = true;
             DialogResult = result;
         }
 
@@ -31,8 +31,8 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
             while (!resolved)
             {
                 await UniTask.DelayFrame(25);
-                resolved = _resolved;
-                Debug.Log($"iswaiting : {resolved}");
+                resolved = Resolved;
+                Debug.Log($"iswaiting : {resolved}, {Name}");
 
                 await UniTask.Yield();
             }

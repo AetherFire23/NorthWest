@@ -17,7 +17,7 @@ namespace Assets.INVENTORY3
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private InventoryStaticGameObjects _inventoryObjects;
-        [SerializeField] private Calls _calls;
+        [SerializeField] private MainMenuCalls _calls;
         [SerializeField] private SlotAndItemsManager _slotManager;
         [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
         [SerializeField]  private InventoryRefreshGuard _refreshGuard;

@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefreshable
 {
-    [SerializeField] private Calls _calls;
+    [SerializeField] private GameCalls _calls;
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;

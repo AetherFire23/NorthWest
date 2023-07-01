@@ -33,7 +33,7 @@ public class GameLauncherAndRefresher : MonoBehaviour
     [SerializeField] private bool _timeBasedRefresh;
 
     [SerializeField] private TemporaryOptionsScript _temporaryOptionsScript;
-    [SerializeField] private Calls _client;
+    [SerializeField] private GameCalls _client;
     [SerializeField] private GameStateFetcher _gameStateFetcher;
     [SerializeField] private PrefabLoader _prefabLoader;
     [SerializeField] private LocalPLayerManager _localPLayerManager;

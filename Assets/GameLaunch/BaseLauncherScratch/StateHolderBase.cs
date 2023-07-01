@@ -13,7 +13,7 @@ namespace Assets.GameLaunch.BaseLauncherScratch
         /// <summary>
         /// State is initialized before InitializeAsync ans RefreshAsync()
         /// </summary>
-        public T State { get; private set; }
+        public T State { get; set; }
 
         // make dictionary of values here 
         private static Dictionary<StateAction, Func<StateHolderBase<T>, UniTask>> StateActionsMap = new Dictionary<StateAction, Func<StateHolderBase<T>, UniTask>>()

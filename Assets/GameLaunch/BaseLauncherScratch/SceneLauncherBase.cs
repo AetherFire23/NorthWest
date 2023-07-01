@@ -1,13 +1,10 @@
 ﻿using Assets.AssetLoading;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.HttpStuff;
+using Assets.Scratch;
 using Cysharp.Threading.Tasks;
-using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.GameLaunch
@@ -26,8 +23,12 @@ namespace Assets.GameLaunch
             await ExecuteOnAllManagers(StateAction.Refresh);
         }
 
+        protected PersistenceModel Persistence => PersistenceModel.Instance;
         protected PrefabLoader PrefabLoader { get; set; }
         protected THTTPCaller ClientCalls { get; set; } // Could use different Calls for MainMenu
+
+        /// <summary> Before the first http call</summary>
+        protected virtual async UniTask BeforeInitializingManagers() { }
         protected virtual async UniTask AfterInitializingManagers() { }
         protected virtual async UniTask BeforeManagersRefresh() { }
         protected virtual async UniTask AfterManagersRefresh() { }
@@ -43,9 +44,8 @@ namespace Assets.GameLaunch
             FindAndInitializeUtilityMonoBehaviours();
             DiscoverAndRegisterManagersInScene();
 
+            await BeforeInitializingManagers();
             await ExecuteOnAllManagers(StateAction.Initialize);
-
-             
             await AfterInitializingManagers();
 
             _refreshStopGuards.IsInitializing = false;
@@ -65,10 +65,10 @@ namespace Assets.GameLaunch
 
         private async UniTask ExecuteOnAllManagers(StateAction actionType) // should probaly do a whole other pattern if I had t o
         {
-            TState state = await FetchState();
-
+            TState state = await FetchState() ?? throw new Exception("State can't be null");
             foreach (var stateHolder in _stateHolders)
             {
+                stateHolder.State = state;
                 await stateHolder.ExecuteActionAsync(actionType);
             }
         }

@@ -1,7 +1,9 @@
 ﻿using Assets.HttpStuff;
 using Assets.MainMenu.Launch;
+using Assets.Scratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.GameLaunch.BaseLauncherScratch
@@ -9,16 +11,15 @@ namespace Assets.GameLaunch.BaseLauncherScratch
     public class TestManager : StateHolderBase<MainMenuState>
     {
         [SerializeField] MainMenuLauncher _stateHolder;
-        [SerializeField] Calls _client;
+        [SerializeField] MainMenuCalls _client;
+
+        PersistenceModel _persistence => PersistenceModel.Instance;
         public override async UniTask InitializeAsync()
         {
-            Debug.Log("I just initialized bitch");
         }
 
         public override async UniTask RefreshAsync()
         {
-            Debug.Log($"I just Refreshed bitch{nameof(TestManager)} ");
-
             await UniTask.Delay(2);
         }
     }

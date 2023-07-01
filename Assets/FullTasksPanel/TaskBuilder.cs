@@ -1,17 +1,16 @@
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
-using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;
-using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class TaskBuilder : MonoBehaviour
 {
     [SerializeField] private DialogManager _dialogManager;
-    [SerializeField] private Calls _calls;
+    [SerializeField] private GameCalls _calls;
     [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
     // Should somewhat map the taskCodes and the gameTasks
     // NOTES : 
