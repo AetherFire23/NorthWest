@@ -1,9 +1,13 @@
+using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
 using Assets.MainMenu.Authentication;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.DTOs;
+using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
 using TMPro;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,16 +19,21 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
     // views
     [SerializeField] private AuthenticationDialog _authenticationDialog;
     [SerializeField] private RegisterDialog _registerDialog;
-    [SerializeField] private Button OpenRegisterButton;
-    [SerializeField] private TextMeshProUGUI _errorText;
+    [SerializeField] private Button RegisterButton;
+    [SerializeField] private TextMeshProUGUI _loginErrorText;
+    [SerializeField] private TextMeshProUGUI _registerErrorText;
+    [SerializeField] private TextMeshProUGUI _registerSucessText;
+
+    [SerializeField] private Button ConfirmRegisterButton;
 
     ObservableBool _isRegisteringObservable = new ObservableBool(false);
     ObservableBool _hasLoginErrorObservable = new ObservableBool(false);
     ObservableBool _isAuthenticatedObservable = new ObservableBool(false);
-
+    ObservableBool _hasRegisterError = new ObservableBool(false);
     public async UniTask WaitUntilAuthenticated()
     {
         await _authenticationDialog.Initialize();
+        await _registerDialog.Initialize();
         await ConfigureObservables();
         await ConfigureButtonHandlers();
         await AuthenticateLoop();
@@ -45,9 +54,39 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
             else
             {
                 PersistenceModel.Instance.Token = successToken.Token;
-                _isAuthenticatedObservable.Value = true;
+                _isAuthenticatedObservable.Value = true; // breaksout
             }
         }
+    }
+
+    private async UniTask OnOkRegisterResolve()
+    {
+        // try login
+        var clientCallResult = await _menuClient.Register(_registerDialog.GetRegisterRequest());
+
+        if (!clientCallResult.IsSuccessful)
+        {
+            Debug.LogError($"Error duing authentication on the server-side {clientCallResult.Message}");
+            _hasRegisterError.Value = true;
+            _registerErrorText.text = clientCallResult.Message;
+            _registerErrorText.SetVisibleAlphaLayer(true);
+            _registerSucessText.SetVisibleAlphaLayer(false);
+            _registerDialog.CleanupFields();
+        }
+
+        else
+        {
+            Debug.LogError("wil ssave to persistence");
+            _registerSucessText.SetVisibleAlphaLayer(true);
+            _registerErrorText.SetVisibleAlphaLayer(false);
+        }
+    }
+
+    private async UniTask OnCancelRegisterResolve()
+    {
+        _registerDialog.ToggleCanvas(false);
+        _registerDialog.CleanupFields();
+        _authenticationDialog.ToggleCanvas(true);
     }
 
     private async UniTask<(bool Success, string Token)> TryGetLoginToken(LoginRequest request)
@@ -59,7 +98,7 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
 
     private async UniTask HandleFailedTokenRequest()
     {
-        Debug.Log("wrong password i think");
+        Debug.Log("wrong creds i think");
         _hasLoginErrorObservable.Value = true;
         _authenticationDialog.Resolved = false;
     }
@@ -68,21 +107,34 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
     {
         _hasLoginErrorObservable.OnValueChanged += async (bool hasError) =>
         {
-            _errorText.IsVisibleAlphaLayer(hasError);
+            _loginErrorText.SetVisibleAlphaLayer(hasError);
         };
 
         // open register canvas
-        _isRegisteringObservable.OnValueChanged += async (bool isRegistering) =>
+        // might think of refactoring this to all use the same buttons i might have been stupid to try to make different buttons
+        // juste make the Email field visible i dont know whatever
+        _isRegisteringObservable.OnValueChanged += async (bool isRegistering) => // manages the open-closed states of windows and sets Cancel message to register dialog
         {
-            _registerDialog.ToggleCanvas(isRegistering); // show when registering
-            _authenticationDialog.ToggleCanvas(!isRegistering); // hide when registering
-            OpenRegisterButton.GetTextMesh().text = isRegistering ? "Back" : "Register";
+            RegisterButton.GetTextMesh().text = isRegistering ? "Back" : "Register";
+            if (!isRegistering) // when its closed dont resolve shit ? 
+            {
+                await _registerDialog.ResolveDialog(DialogResult.Cancel);
+            }
+            else
+            {
+                _registerDialog.Resolved = false;
+                _registerDialog.ToggleCanvas(true);
+                _authenticationDialog.ToggleCanvas(false);
+            }
         };
+
+        _registerDialog.OnOkDialogResolve += OnOkRegisterResolve;
+        _registerDialog.OnCancelDialogResolve += OnCancelRegisterResolve;
     }
 
     private async UniTask ConfigureButtonHandlers()
     {
-        OpenRegisterButton.AddMethod(() => // flicks the bool
+        RegisterButton.AddMethod(() => // flicks the bool
         {
             _isRegisteringObservable.Value = !_isRegisteringObservable.Value;
         });

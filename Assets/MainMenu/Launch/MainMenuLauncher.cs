@@ -3,7 +3,9 @@ using Assets.HttpStuff;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
+using Shared_Resources.Models.SSE;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.MainMenu.Launch
 {
@@ -14,13 +16,17 @@ namespace Assets.MainMenu.Launch
 
         protected override async UniTask BeforeInitializingManagers()
         {
-             await this.ClientCalls.SubscribeToServerSideEventsStream();
+            Debug.Log("Initialze stuff here please. Like the login screen and so and so ");
+
+            await _authenticationManager.WaitUntilAuthenticated();
+            ClientCalls.ConfigureAuthenticationHeaders(PersistenceModel.Instance.Token);
+            SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+            // LoadScene, or check available games ? 
+            // Yeah I mean I should make just a generic lobby I guess
 
 
+            //
 
-            //UniTask.Delay(50000);
-
-            //  await _authenticationManager.WaitUntilAuthenticated();
 
             Debug.Log("Initialze stuff here please. Like the login screen and so and so ");
         }

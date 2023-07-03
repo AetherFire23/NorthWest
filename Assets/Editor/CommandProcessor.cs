@@ -32,7 +32,7 @@ namespace Assets.Automation
             {
                 foreach (FieldInfo nullField in CommandProcessor.GetNullFields(monobehaviour))
                 {
-                    var referencesFound = GetReferencesInSceneForNullField(nullField);
+                    var nullReferencesInScene = GetReferencesInSceneForNullField(nullField);
 
                     var sb = new StringBuilder();
                     sb.AppendLine($"On Gameobject [{monobehaviour.transform.gameObject.name}] and the component monobehaviour {monobehaviour.GetType().Name}");
@@ -42,7 +42,7 @@ namespace Assets.Automation
                     sb.AppendLine($"Name: {nullField.Name}.");
                     sb.AppendLine();
 
-                    if (!IsValidReferenceCountOrPrompt(sb, referencesFound.Count)) continue;
+                    if (!IsValidReferenceCountOrPrompt(sb, nullReferencesInScene.Count)) continue;
 
                     sb.AppendLine($"A MonoBehaviour was found in the scene that could fulfill this dependency.");
                     sb.AppendLine($"Do you want to set it in the editor ?");
@@ -54,7 +54,7 @@ namespace Assets.Automation
                         continue;
                     }
 
-                    nullField.SetValue(monobehaviour, referencesFound.First());
+                    nullField.SetValue(monobehaviour, nullReferencesInScene.First());
                     hasChangedReferences = true;
                 }
             }

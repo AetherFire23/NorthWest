@@ -292,7 +292,7 @@ public static class UnityExtensions
         textMeshProUGUI.color = new Color(textMeshProUGUI.color.r, textMeshProUGUI.color.g, textMeshProUGUI.color.b, 1f);
     }
 
-    public static void IsVisibleAlphaLayer(this TMPro.TextMeshProUGUI textMeshProUGUI, bool isVisible)
+    public static void SetVisibleAlphaLayer(this TMPro.TextMeshProUGUI textMeshProUGUI, bool isVisible)
     {
         if (isVisible)
         {

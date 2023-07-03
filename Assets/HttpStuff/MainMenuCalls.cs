@@ -1,13 +1,9 @@
-using Assets.CHATLOG3;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
-using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
-using Shared_Resources.Scratches;
+using Shared_Resources.Models.SSE;
 using System;
-using UnityEditor.Compilation;
-using UnityEditor.PackageManager.Requests;
 
 namespace Assets.HttpStuff
 {
@@ -16,6 +12,13 @@ namespace Assets.HttpStuff
         private string GetFullEndpointMainMenu(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(MainMenuEndpoints), endpoint); // could be basefunc but whatevers
         private string GetFullEndpointUserController(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(UserEndpoints), endpoint); // could be basefunc but whatevers
         private string GetFullEndpointSSEStream(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(SSEEndpoints), endpoint); // could be basefunc but whatevers
+
+        public override async UniTask InitializeEventStreamListening(Func<SSEClientData, UniTask> sseCallback)
+        {
+            var builder = new UriBuilder(GetFullEndpointSSEStream(SSEEndpoints.EventStream));
+            base.ConfigureStream(builder, sseCallback);
+        }
+
         public async UniTask<MainMenuState> GetMainMenuState()
         {
             // will have to implement a way to put the bearer shit into the request motherfucker for authorization
@@ -39,24 +42,12 @@ namespace Assets.HttpStuff
             return result;
         }
 
-        public async UniTask<ClientCallResult> Register()
+        public async UniTask<ClientCallResult> Register(RegisterRequest request)
         {
-            return ClientCallResult.Failure;
-        }
-
-        public async UniTask SubscribeToServerSideEventsStream()
-        {
-            //  string fullEndpoint = GetFullEndpointSSEStream(SSEEndpoints.EventStream);
-            string path1 = APIEndpoints.APIBase + "/serversideevents/stream1";
-            var uriBuilder1 = new UriBuilder(path1, ParameterOptions.None);
-
-            string path2 = APIEndpoints.APIBase + "/serversideevents/stream2";
-            var uriBuilder2 = new UriBuilder(path2, ParameterOptions.None);
-
-
-             //HttpClient.StartStreamAsync1(uriBuilder1);
-             HttpClient.StartStreamAsync3(uriBuilder2);
-
+            string fullEndpoint = GetFullEndpointUserController(UserEndpoints.Register);
+            var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.BodyOnly, request);
+            var result = await HttpClient.PostRequest(uriBuilder);
+            return result;
         }
     }
 }

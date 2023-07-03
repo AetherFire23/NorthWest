@@ -1,14 +1,12 @@
 ﻿using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Shared_Resources.Models;
+using Shared_Resources.Models.SSE;
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Assets.GameLaunch
 {
@@ -18,18 +16,21 @@ namespace Assets.GameLaunch
         // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
         // should init client with a static method I think so that i can pass in the PooledConnectionLifetime 
 
-        private HttpClient _client = new HttpClient() 
-        { 
+        private HttpClient _client = new HttpClient()
+        {
             Timeout = System.Threading.Timeout.InfiniteTimeSpan,
 
         };
 
-        private bool _mustStopStream = false;
 
+        public void ConfigureAuthenticationHeaders(string token)
+        {
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        }
 
         public async UniTask<ClientCallResult> PutRequest2(UriBuilder infos)
         {
-            using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json");
+            using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json"); // stu pcq put et post require des body que je write le body cos y pourrait etre null mais whatever fuckoff
             using HttpResponseMessage response = await _client.PutAsync(infos.Path, stringContent).AsUniTask();
 
             if (!response.IsSuccessStatusCode)
@@ -70,110 +71,38 @@ namespace Assets.GameLaunch
             return clientCallResult;
         }
 
-
-        public async UniTask StartStreamAsync1(UriBuilder infos) // using a plain stream
+        private bool _mustStopStream = false;
+        public async UniTask StartStreamAsync3(string path, Func<SSEClientData, UniTask> callBack)
         {
-            using var stream = await _client.GetStreamAsync(infos.Path).AsUniTask();
-            using var reader = new StreamReader(stream);
+            using var request = new HttpRequestMessage(HttpMethod.Get, path);
+            request.Headers.Add("Accept", "text/event-stream");
 
-            while (!reader.EndOfStream && !_mustStopStream)
-            {
-                try
-                {
-                    Debug.Log("logging that shit");
-
-                    string line1 = string.Empty;
-                    await reader.ReadLineAsync().AsUniTask();
-
-                    string line = await reader.ReadLineAsync().AsUniTask();
-                    reader.Close();
-                    //if (string.IsNullOrEmpty(line))
-                    //{
-                    //    Debug.Log("had to quit!");
-                    //    continue;
-                    //}
-
-                    //if (line.StartsWith("data:"))
-                    //{
-                    //    var eventData = line.Substring(6); // data: + space ?
-                    //    Debug.Log($"Your  data : {eventData}");
-                    //}
-
-                    //else if (line.StartsWith("event:"))
-                    //{
-                    //    var eventName = line.Substring(7);
-                    //    Debug.Log("Received event name: " + eventName);
-                    //}
-                    await UniTask.Yield();
-                }
-                catch (Exception e)
-                {
-                    Debug.Log(e);
-                }
-
-
-            }
-        }
-
-        public async UniTask StartStreamAsync2(UriBuilder infos) // this dont work
-        {
-            _client.DefaultRequestHeaders.Add("Accept", "text/event-stream");
-            try
-            {
-                using HttpResponseMessage response = await _client.GetAsync(infos.Path, HttpCompletionOption.ResponseHeadersRead).AsUniTask();
-
-                response.EnsureSuccessStatusCode();
-
-                using Stream stream = await response.Content.ReadAsStreamAsync();
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    while (!_mustStopStream)
-                    {
-                        var line = await reader.ReadLineAsync().ConfigureAwait(false);
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            continue;
-                        }
-
-                        if (line.StartsWith("data:"))
-                        {
-                            var eventData = line.Substring(6); // data: + space ?
-                            Debug.Log($"Your sxy data : {eventData}");
-                        }
-
-                        else if (line.StartsWith("event:"))
-                        {
-                            var eventName = line.Substring(7);
-                            Debug.Log("Received event name: " + eventName);
-                        }
-                    }
-                }
-            }
-            catch (AggregateException ex)
-            {
-                Debug.LogException(ex);
-            }
-
-        }
-
-        public async UniTask StartStreamAsync3(UriBuilder infos)
-        {
-            using var request = new HttpRequestMessage(HttpMethod.Get, infos.Path);
             using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
-            using var stream = await response.Content.ReadAsStreamAsync();
+            using var stream = await response.Content.ReadAsStreamAsync().AsUniTask();
             using var reader = new StreamReader(stream);
 
             while (!_mustStopStream)
             {
                 try
                 {
-                    var line = await reader.ReadLineAsync(); // READLINEASYNC YA PAS DE LINE OSTI
+                    var line = await reader.ReadLineAsync().AsUniTask(); // READLINEASYNC YA PAS DE LINE OSTI
 
-                    if (line == null)
-                        break;
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        Debug.Log("No mesasge received");
+                        continue;
+                    }
+                    else
+                    {
+                        var data = SSEClientData.ParseData(line);
+
+                        await callBack.Invoke(data); // juste check
+
+                        // something like ProcessData(SSEClientData)
+                    }
 
                     Debug.Log(line);
                 }
@@ -181,9 +110,10 @@ namespace Assets.GameLaunch
                 {
                     Debug.LogException(ex);
                 }
-
             }
         }
+
+        //public virtual async UniTask ProcessSSEData(SSEClientData data) { }
 
         public void Dispose()
         {
