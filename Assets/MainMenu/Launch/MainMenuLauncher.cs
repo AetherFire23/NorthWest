@@ -14,6 +14,11 @@ namespace Assets.MainMenu.Launch
     {
         [SerializeField] private AuthenticationManager _authenticationManager;
 
+        public override UniTask OnSSEDataReceived(SSEClientData data)
+        {
+            throw new System.NotImplementedException();
+        }
+
         protected override async UniTask BeforeInitializingManagers()
         {
             Debug.Log("Initialze stuff here please. Like the login screen and so and so ");

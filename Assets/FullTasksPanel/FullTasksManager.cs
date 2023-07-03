@@ -14,7 +14,6 @@ namespace Assets.FullTasksPanel
 {
     public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
     {
-        [SerializeField] private MainMenuCalls Calls;
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private GameObject _taskScrollViewContent;
         [SerializeField] private TaskBuilder _taskBuilder;

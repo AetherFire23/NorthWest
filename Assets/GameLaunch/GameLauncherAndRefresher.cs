@@ -44,6 +44,11 @@ public class GameLauncherAndRefresher : MonoBehaviour
     private bool _isInitializing = false;
     async UniTask Awake() // EFFECTIVE ENTRY POINT
     {
+
+    }
+
+    async UniTask Start()
+    {
         if (_isInitializing) return;
         _isInitializing = true;
 

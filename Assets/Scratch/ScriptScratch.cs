@@ -25,19 +25,8 @@ namespace Assets.Scratch
         {
             if (_isInitialized) return;
 
-            string jsoNData = JsonConvert.SerializeObject(gameState);
-            JObject jobj = JsonConvert.DeserializeObject<JObject>(jsoNData);
-
-            string type = jobj.GetType().Name;
-            string typ2 = jobj.Type.ToString();
-            Debug.Log(type);
 
 
-
-            PersistenceAccess.SaveData(gameState);
-
-            var data = PersistenceAccess.LoadPersistentData<List<Type>>();
-            PersistenceAccess.LoadPersistentData<GameState>();
         }
     }
 }

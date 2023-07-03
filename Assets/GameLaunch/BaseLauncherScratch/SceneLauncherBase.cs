@@ -3,6 +3,7 @@ using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.HttpStuff;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
+using Shared_Resources.Models.SSE;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,8 +31,8 @@ namespace Assets.GameLaunch
         /// <summary> Before the first http call</summary>
         protected virtual async UniTask BeforeInitializingManagers() { }
         protected virtual async UniTask AfterInitializingManagers() { }
-        protected virtual async UniTask BeforeManagersRefresh() { }
-        protected virtual async UniTask AfterManagersRefresh() { }
+        //protected virtual async UniTask BeforeManagersRefresh() { }
+        //protected virtual async UniTask AfterManagersRefresh() { }
         protected abstract UniTask<TState> FetchState();
         private List<StateHolderBase<TState>> _stateHolders { get; set; } = new();
         private BaseManagerRefreshStopGuards _refreshStopGuards { get; set; } = new();
@@ -51,17 +52,19 @@ namespace Assets.GameLaunch
             _refreshStopGuards.IsInitializing = false;
         }
 
-        private async UniTask Update()
-        {
-            if (_refreshStopGuards.MustPreventRefreshing(Time.deltaTime)) return; // after this, is refrshing
+        public virtual async UniTask OnSSEDataReceived(SSEClientData data) { }
 
-            _refreshStopGuards.IsRefreshing = true;
-            await BeforeManagersRefresh();
-            await ExecuteOnAllManagers(StateAction.Refresh);
-            await AfterManagersRefresh();
+        //private async UniTask Update()
+        //{
+        //    if (_refreshStopGuards.MustPreventRefreshing(Time.deltaTime)) return; // after this, is refrshing
 
-            _refreshStopGuards.IsRefreshing = false;
-        }
+        //    _refreshStopGuards.IsRefreshing = true;
+        //    await BeforeManagersRefresh();
+        //    await ExecuteOnAllManagers(StateAction.Refresh);
+        //    await AfterManagersRefresh();
+
+        //    _refreshStopGuards.IsRefreshing = false;
+        //}
 
         private async UniTask ExecuteOnAllManagers(StateAction actionType) // should probaly do a whole other pattern if I had t o
         {
