@@ -1,4 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.HttpStuff;
+using Assets.SSE;
+using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
@@ -113,11 +115,34 @@ namespace Assets.GameLaunch
             }
         }
 
+        public async UniTask<SSEStream> GetSSEStream(string path)
+        {
+            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, path);
+            request.Headers.Add("Accept", "text/event-stream");
+
+            using HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            Stream stream = await response.Content.ReadAsStreamAsync().AsUniTask();
+            var reader = new StreamReader(stream);
+
+            SSEStreamDisposables disposables = new SSEStreamDisposables()
+            {
+                Request = request,
+                Response = response,
+                Stream = stream,
+                StreamReader = reader,
+            };
+            SSEStream serverStream = new SSEStream(disposables);
+
+            return serverStream;
+        }
+
         //public virtual async UniTask ProcessSSEData(SSEClientData data) { }
 
         public void Dispose()
         {
-            _mustStopStream = true;
             _client?.Dispose();
             Debug.Log("just cleaned up client");
         }

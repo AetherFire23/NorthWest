@@ -30,5 +30,6 @@ namespace Assets.GameLaunch.BaseLauncherScratch
         
         public virtual async UniTask InitializeAsync() { }
         public virtual async UniTask RefreshAsync() { }
+        public virtual async UniTask RefreshAsync(T state) { }
     }
 }
