@@ -33,13 +33,11 @@ namespace Assets.HttpStuff
 
         public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
         {
-            GameState gameState = null;
-
             var infos = new UriBuilder(_uriGetGameState, ParameterOptions.Required);
             infos.AddParameter("playerId", playerId.ToString());
             string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
             infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
-            gameState = await GetRequest<GameState>(infos);
+            GameState gameState = await GetRequest<GameState>(infos);
 
 
             if (gameState == null) { Debug.LogError("webapi not found"); }

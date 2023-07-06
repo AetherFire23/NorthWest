@@ -1,6 +1,7 @@
 ﻿using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Enums;
+using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,13 @@ namespace Assets.HttpStuff
 {
     public class GameSSERefresher : SSERefresherBase<GameSSERefresher> // should make generic
     {
+        [SerializeField] private GameManagersContainer _managers;
+        [SerializeField] private GameDataStore _gameDataStore;
+
         [EventMethodMapping(SSEEventType.DummyEvent)]
         public async UniTask Dummy1(SSEClientData data)
         {
-            Debug.Log($"{nameof(SSEEventType.DummyEvent)}");
+            await _managers.RefreshAllManagers();
         }
 
         [EventMethodMapping(SSEEventType.RefreshPlayers)]

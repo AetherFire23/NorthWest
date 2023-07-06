@@ -44,7 +44,14 @@ namespace Assets.SSE
 
         private void OnApplicationQuit()
         {
-            _sseStream.Dispose();
+            try
+            {
+                _sseStream.Dispose();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
             Debug.Log("Stopped Responding!");
         }
     }

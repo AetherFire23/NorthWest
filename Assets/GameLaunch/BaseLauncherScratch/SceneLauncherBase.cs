@@ -25,16 +25,16 @@ namespace Assets.GameLaunch
             if (_refreshStopGuards.MustPreventInitialization()) return;
             _refreshStopGuards.IsInitializing = true;
             //UniTaskScheduler.DispatchUnityMainThread = true;
-            FindAndInitializeUtilityMonoBehaviours();
+            await FindAndInitializeUtilityMonoBehaviours();
 
             await BeforeInitializingManagers();
-            await Managers.ExecuteInitialData(DataStore.State);
+            await Managers.ExecuteInitialData();
             await AfterInitializingManagers();
 
             _refreshStopGuards.IsInitializing = false;
         }
 
-        private async void FindAndInitializeUtilityMonoBehaviours()
+        private async UniTask FindAndInitializeUtilityMonoBehaviours()
         {
             PrefabLoader = UnityExtensions.FindUniqueMonoBehaviour<PrefabLoader>(); // cant be serialized so...
             ClientCalls = UnityExtensions.FindUniqueMonoBehaviour<THTTPCaller>();
@@ -42,7 +42,8 @@ namespace Assets.GameLaunch
             DataStore = UnityExtensions.FindUniqueMonoBehaviour<DatastoreBase<TState>>();
 
             await PrefabLoader.InitializeAsync();
-            await DataStore.InitializeAsync(await FetchInitialState());
+            var state = await FetchInitialState();
+            await DataStore.InitializeAsync(state);
             await Managers.InitializeAsync();
         }
 

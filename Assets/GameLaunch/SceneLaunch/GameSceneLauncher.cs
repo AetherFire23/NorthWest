@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Assets.GameLaunch.SceneLaunch
 {
+    [DefaultExecutionOrder(-99)]
     public class GameSceneLauncher : SceneLauncherBase<GameState, GameCalls>
     {
         [SerializeField] private GameSSERefresher _refresher;
@@ -15,14 +16,17 @@ namespace Assets.GameLaunch.SceneLaunch
         protected override async UniTask BeforeInitializingManagers()
         {
             MockToken();
-            _sseStream = await ClientCalls.GetSSEStream();
-
-            await _refresher.InitializeAsync(_sseStream);
         }
 
-        protected override UniTask<GameState> FetchInitialState()
+        protected override async UniTask AfterInitializingManagers()
         {
-            var state = this.ClientCalls.GetGameState(new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"), DateTime.UtcNow);
+            var stream = await base.ClientCalls.GetSSEStream();
+            await _refresher.InitializeAsync(stream);
+        }
+
+        protected override async UniTask<GameState> FetchInitialState()
+        {
+            var state = await this.ClientCalls.GetGameState(new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F"), DateTime.UtcNow);
             return state;
         }
 

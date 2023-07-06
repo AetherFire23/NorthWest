@@ -6,7 +6,7 @@ namespace Assets.SSE
 {
     public class DummyStateManager : StateHolderBase<GameState>
     {
-        public override async UniTask InitializeAsync(GameState state)
+        public override async UniTask Initialize(GameState state)
         {
             
         }

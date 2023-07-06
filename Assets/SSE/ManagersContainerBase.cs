@@ -12,25 +12,27 @@ namespace Assets.HttpStuff
 {
     public abstract class ManagersContainerBase<TState> : MonoBehaviour where TState : class, new()
     {
+        private DatastoreBase<TState> _datastore { get; set; }
         private List<StateHolderBase<TState>> _stateHolders = new List<StateHolderBase<TState>>();
         public async UniTask InitializeAsync()
         {
+            _datastore = UnityExtensions.FindUniqueMonoBehaviour<DatastoreBase<TState>>();
             DiscoverAndRegisterManagersInScene();
         }
 
-        public async UniTask ExecuteInitialData(TState state)
+        public async UniTask ExecuteInitialData()
         {
             foreach (var item in _stateHolders)
             {
-                await item.InitializeAsync(state);
+                await item.Initialize(_datastore.State);
             }
         }
 
-        public async UniTask RefreshAllManagers(TState state)
+        public async UniTask RefreshAllManagers()
         {
             foreach (var manager in _stateHolders)
             {
-                await manager.RefreshAsync(state);
+                await manager.Refresh(_datastore.State);
             }
         }
 

@@ -9,10 +9,11 @@ using Cysharp.Threading.Tasks;
 using Assets.AssetLoading;
 using Assets.HttpStuff;
 using UnityEngine.UI;
+using Assets.GameLaunch.BaseLauncherScratch;
 
 namespace Assets.FullTasksPanel
 {
-    public class FullTasksManager : MonoBehaviour, IRefreshable, IStartupBehavior
+    public class FullTasksManager : StateHolderBase<GameState>
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private GameObject _taskScrollViewContent;
@@ -29,7 +30,7 @@ namespace Assets.FullTasksPanel
         private List<FullTaskButton> _fullTaskButtons = new();
         private List<GameTaskBase> _currentDisplayedGameTasks => _fullTaskButtons.Select(x => x.GameTask).ToList();
 
-        public async UniTask Initialize(GameState gameState)
+        public override async UniTask Initialize(GameState gameState)
         {
             _taskButton.AddMethod(() => _taskScrollViewCanvas.enabled = !_taskScrollViewCanvas.enabled);
             // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
@@ -45,8 +46,9 @@ namespace Assets.FullTasksPanel
         }
 
         private bool _isRefreshing = false;
-        public async UniTask Refresh(GameState gameState)
+        public override async UniTask Refresh(GameState gameState)
         {
+            Debug.Log("Refreshing!");
             if (_isRefreshing)
             {
                 Debug.Log("Cancelled refreshing fulltasksManager");

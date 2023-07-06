@@ -15,7 +15,7 @@ namespace Assets.GameLaunch.BaseLauncherScratch
         /// </summary>\
         /// 
         
-        public virtual async UniTask InitializeAsync(T state) { }
-        public virtual async UniTask RefreshAsync(T state) { }
+        public virtual async UniTask Initialize(T state) { }
+        public virtual async UniTask Refresh(T state) { }
     }
 }

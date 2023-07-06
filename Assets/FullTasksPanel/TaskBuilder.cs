@@ -6,12 +6,13 @@ using Shared_Resources.Models;
 using Shared_Resources.Scratches;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Assets.SSE;
 
 public class TaskBuilder : MonoBehaviour
 {
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private GameCalls _calls;
-    [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
+    [SerializeField] private GameManagersContainer _gameManagers; 
     // Should somewhat map the taskCodes and the gameTasks
     // NOTES : 
     // 1. Handle player target
@@ -59,7 +60,8 @@ public class TaskBuilder : MonoBehaviour
 
         if (callResult.IsSuccessful)
         {
-            await _gameLauncherAndRefresher.ForceRefreshManagers();
+            // await _gameLauncherAndRefresher.ForceRefreshManagers();
+            await _gameManagers.RefreshAllManagers();
             Debug.Log("Task executed gracefully!");
         }
         else
