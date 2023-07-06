@@ -10,21 +10,8 @@ using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public class GameSSERefresher : MonoBehaviour // should make generic
+    public class GameSSERefresher : SSERefresherBase<GameSSERefresher> // should make generic
     {
-        public Dictionary<SSEEventType, Func<SSEClientData, UniTask>> EnumDelegates { get; set; } = new();
-        private SSEStream _sseStream;
-
-        public async UniTask InitializeAsync(SSEStream sseStream)
-        {
-            _sseStream = sseStream;
-            PopulateEnumDelegates();
-            Debug.Log("Started receiving messages");
-            _sseStream.StartReceivingMessagesCoroutine(OnDataReceived);
-        }
-
-        public async UniTask OnDataReceived(SSEClientData data) => await EnumDelegates[data.EventType].Invoke(data);
-
         [EventMethodMapping(SSEEventType.DummyEvent)]
         public async UniTask Dummy1(SSEClientData data)
         {
@@ -43,26 +30,6 @@ namespace Assets.HttpStuff
         {
             Debug.Log($"{nameof(SSEEventType.RefreshItems)}");
 
-        }
-
-        public void PopulateEnumDelegates()
-        {
-            var methods = typeof(GameSSERefresher).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(method => method.GetCustomAttributes(typeof(EventMethodMappingAttribute), true).Any())
-                    .ToList();
-
-            foreach (MethodInfo method in methods)
-            {
-                var customAttribute = method.GetCustomAttribute<EventMethodMappingAttribute>().EventType;
-                var del = (Func<SSEClientData, UniTask>)method.CreateDelegate(typeof(Func<SSEClientData, UniTask>), this);
-                this.EnumDelegates.Add(customAttribute, del);
-            }
-        }
-
-        private void OnApplicationQuit()
-        {
-            _sseStream.Dispose();
-            Debug.Log("Stopped Responding!");
         }
     }
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.SSE
 {
-    public class SSERefresherBase<TREfresher> : MonoBehaviour where TREfresher : SSERefresherBase<TREfresher>
+    public abstract class SSERefresherBase<TREfresher> : MonoBehaviour where TREfresher : SSERefresherBase<TREfresher>
     {
         public Dictionary<SSEEventType, Func<SSEClientData, UniTask>> EnumDelegates { get; set; } = new();
         private SSEStream _sseStream;
@@ -20,35 +20,19 @@ namespace Assets.SSE
             _sseStream = sseStream;
             PopulateEnumDelegates();
             Debug.Log("Started receiving messages");
-            _sseStream.StartReceivingMessagesCoroutine(OnDataReceived);
+            _sseStream.StartReceivingMessages(OnDataReceived);
         }
 
         public async UniTask OnDataReceived(SSEClientData data) => await EnumDelegates[data.EventType].Invoke(data);
 
-        [EventMethodMapping(SSEEventType.DummyEvent)]
-        public async UniTask Dummy1(SSEClientData data)
-        {
-            Debug.Log($"{nameof(SSEEventType.DummyEvent)}");
-        }
-
-        [EventMethodMapping(SSEEventType.RefreshPlayers)]
-        public async UniTask Dummy2(SSEClientData data)
-        {
-            Debug.Log($"{nameof(SSEEventType.RefreshPlayers)}");
-        }
-
-        [EventMethodMapping(SSEEventType.RefreshItems)]
-        public async UniTask Dummy3(SSEClientData data)
-        {
-            Debug.Log($"{nameof(SSEEventType.RefreshItems)}");
-        }
-
         public void PopulateEnumDelegates()
         {
-            var refresher 
-            var methods = typeof(GameSSERefresher).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(method => method.GetCustomAttributes(typeof(EventMethodMappingAttribute), true).Any())
-                    .ToList();
+            var refresherSubclass = typeof(SSERefresherBase<TREfresher>).Assembly.GetTypes()
+                .First(x => x.IsSubclassOf(typeof(SSERefresherBase<TREfresher>)));
+
+            var methods = refresherSubclass.GetMethods()
+                .Where(x => x.GetCustomAttributes(typeof(EventMethodMappingAttribute), false).Any());
+
 
             foreach (MethodInfo method in methods)
             {

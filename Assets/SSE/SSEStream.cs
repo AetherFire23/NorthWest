@@ -14,7 +14,7 @@ namespace Assets.HttpStuff
             _disposables = disposables;
         }
 
-        public async UniTask StartReceivingMessagesCoroutine(Func<SSEClientData, UniTask> callback)
+        public async UniTask StartReceivingMessages(Func<SSEClientData, UniTask> callback)
         {
             try
             {

@@ -75,7 +75,7 @@ namespace Assets.HttpStuff
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, path);
             request.Headers.Add("Accept", "text/event-stream");
-            HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).AsUniTask();
 
             response.EnsureSuccessStatusCode();
 
