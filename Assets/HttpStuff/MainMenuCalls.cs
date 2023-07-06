@@ -16,7 +16,7 @@ namespace Assets.HttpStuff
         public override async UniTask InitializeEventStreamListening(Func<SSEClientData, UniTask> sseCallback)
         {
             var builder = new UriBuilder(GetFullEndpointSSEStream(SSEEndpoints.EventStream));
-            base.ConfigureStream(builder, sseCallback);
+            //base.ConfigureStream(builder, sseCallback);
         }
 
         public async UniTask<MainMenuState> GetMainMenuState()

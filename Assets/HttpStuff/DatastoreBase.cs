@@ -1,16 +1,13 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
+using Shared_Resources.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public class Datastore<TState> : MonoBehaviour where TState : class, new()
+    public abstract class DatastoreBase<TState> : MonoBehaviour where TState : class, new()
     {
-        public TState State { get; set; }
+        public TState State { get; protected set; }
         public async UniTask InitializeAsync(TState state)
         {
             State = state;

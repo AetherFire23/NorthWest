@@ -20,27 +20,5 @@ namespace Assets.GameLaunch.BaseLauncherScratch
             bool mustPrevent = IsInitializing;
             return mustPrevent;
         }
-        public bool MustPreventRefreshing(float delta)
-        {
-            bool mustPrevent = IsInitializing || IsRefreshing || !TimeTicked(delta);
-            return mustPrevent;
-        }
-
-
-
-        /// <summary>
-        /// Appelle Time.deltaTime faque faut le caller dans Update() ppour que ca procc
-        /// </summary>
-        private bool TimeTicked(float delta)
-        {
-            _elapsed += delta;
-            if (_elapsed > _timeBetweenRefreshes)
-            {
-                _elapsed = 0;
-                _timesTicked++;
-                return true;
-            }
-            return false;
-        }
     }
 }

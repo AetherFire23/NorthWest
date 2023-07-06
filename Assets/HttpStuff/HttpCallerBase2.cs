@@ -1,19 +1,18 @@
-﻿using Assets.HttpStuff;
-using Assets.SSE;
+﻿using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
+using Shared_Resources.Models;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.GameLaunch
+namespace Assets.HttpStuff
 {
-    /// <summary> manages low-level stuff about http calls </summary>
-    public class Client : IDisposable
+    public abstract class HttpCallerBase2 : MonoBehaviour
     {
         // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
         // should init client with a static method I think so that i can pass in the PooledConnectionLifetime 
@@ -21,6 +20,7 @@ namespace Assets.GameLaunch
         private HttpClient _client = new HttpClient()
         {
             Timeout = System.Threading.Timeout.InfiniteTimeSpan,
+
         };
 
         public void ConfigureAuthenticationHeaders(string token)
@@ -28,7 +28,7 @@ namespace Assets.GameLaunch
             _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
-        public async UniTask<ClientCallResult> PutRequest2(UriBuilder infos)
+        protected async UniTask<ClientCallResult> PutRequest2(UriBuilder infos)
         {
             using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json"); // stu pcq put et post require des body que je write le body cos y pourrait etre null mais whatever fuckoff
             using HttpResponseMessage response = await _client.PutAsync(infos.Path, stringContent).AsUniTask();
@@ -43,7 +43,7 @@ namespace Assets.GameLaunch
             return clientCallResult;
         }
 
-        public async UniTask<T> GetRequest<T>(UriBuilder infos)
+        protected async UniTask<T> GetRequest<T>(UriBuilder infos)
         {
             using HttpResponseMessage response = await _client.GetAsync(infos.Path).AsUniTask();
             if (!response.IsSuccessStatusCode)
@@ -56,7 +56,7 @@ namespace Assets.GameLaunch
             return result;
         }
 
-        public async UniTask<ClientCallResult> PostRequest(UriBuilder infos)
+        protected async UniTask<ClientCallResult> PostRequest(UriBuilder infos)
         {
             using var stringContent = new StringContent(infos.SerializedBody, Encoding.UTF8, "application/json");
             using HttpResponseMessage response = await _client.PostAsync(infos.Path, stringContent).AsUniTask();
@@ -71,12 +71,11 @@ namespace Assets.GameLaunch
             return clientCallResult;
         }
 
-        public async UniTask<SSEStream> GetSSEStream(string path)
+        protected async UniTask<SSEStream> GetSSEStream(string path)
         {
-            using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, path);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, path);
             request.Headers.Add("Accept", "text/event-stream");
-
-            using HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
@@ -91,7 +90,6 @@ namespace Assets.GameLaunch
                 StreamReader = reader,
             };
             SSEStream serverStream = new SSEStream(disposables);
-
             return serverStream;
         }
 
@@ -99,6 +97,11 @@ namespace Assets.GameLaunch
         {
             _client?.Dispose();
             Debug.Log("just cleaned up client");
+        }
+
+        private void OnApplicationQuit()
+        {
+            _client.Dispose();
         }
     }
 }

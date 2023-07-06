@@ -5,7 +5,7 @@ using System;
 using UnityEngine;
 namespace Assets.HttpStuff
 {
-    public class SSEStream : IDisposable // IHTTPClient one day to swap between 
+    public class SSEStream : IDisposable 
     {
         private readonly SSEStreamDisposables _disposables;
         bool _mustStopReceivingMessages = false;
@@ -14,21 +14,38 @@ namespace Assets.HttpStuff
             _disposables = disposables;
         }
 
-        public async UniTask StartReceivingMessages(Func<SSEClientData, UniTask> callback) // do something like add to a list outside
+        public async UniTask StartReceivingMessagesCoroutine(Func<SSEClientData, UniTask> callback)
         {
-            while (!_mustStopReceivingMessages)
+            try
             {
-                string line = await _disposables.StreamReader.ReadLineAsync().AsUniTask();
-
-                if (string.IsNullOrEmpty(line))
+                while (!_mustStopReceivingMessages)
                 {
-                    Debug.Log("No messages received");
+                    string line = await _disposables.StreamReader.ReadLineAsync().AsUniTask();
+
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        Debug.Log("No messages received");
+                    }
+
+                    Debug.Log($"Message Received {line}");
+
+                    SSEClientData data = new SSEClientData(line);
+                    await callback(data);
+                    await UniTask.Delay(200);
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
 
-                Debug.Log($"Message Received {line}");
-
-                SSEClientData data = new SSEClientData(line);
-                await callback(data);
+        public async UniTask DummyNotAwaited()
+        {
+            while (!_mustStopReceivingMessages) 
+            {
+                Debug.Log("going and going");
+                await UniTask.Delay(200);
             }
         }
 

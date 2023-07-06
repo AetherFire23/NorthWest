@@ -12,24 +12,10 @@ namespace Assets.GameLaunch.BaseLauncherScratch
     {
         /// <summary>
         /// State is initialized before InitializeAsync ans RefreshAsync()
-        /// </summary>
-        public T State { get; set; }
-
-        // make dictionary of values here 
-        private static Dictionary<StateAction, Func<StateHolderBase<T>, UniTask>> StateActionsMap = new Dictionary<StateAction, Func<StateHolderBase<T>, UniTask>>()
-        {
-            { StateAction.Initialize, async holder =>  await holder.InitializeAsync()},
-            { StateAction.Refresh, async holder =>  await holder.RefreshAsync()}
-        };
-
-        public async UniTask ExecuteActionAsync(StateAction actionType)
-        {
-            Func<StateHolderBase<T>, UniTask> action = StateActionsMap[actionType];
-            await action(this);
-        }
+        /// </summary>\
+        /// 
         
-        public virtual async UniTask InitializeAsync() { }
-        public virtual async UniTask RefreshAsync() { }
+        public virtual async UniTask InitializeAsync(T state) { }
         public virtual async UniTask RefreshAsync(T state) { }
     }
 }

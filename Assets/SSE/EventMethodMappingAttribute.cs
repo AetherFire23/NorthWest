@@ -4,10 +4,10 @@ using System;
 namespace Assets.SSE
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class EventMapAttribute : Attribute
+    public class EventMethodMappingAttribute : Attribute
     {
         public readonly SSEEventType EventType;
-        public EventMapAttribute(SSEEventType eventType)
+        public EventMethodMappingAttribute(SSEEventType eventType)
         {
             EventType = eventType;
         }
