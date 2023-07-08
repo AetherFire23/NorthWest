@@ -1,5 +1,6 @@
 ﻿using Assets.AssetLoading;
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
@@ -14,7 +15,7 @@ using UnityEngine;
 
 namespace Assets.LogManager3
 {
-    public class LogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
+    public class LogManager3 : StateHolderBase<GameState>
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private GameLogObjects _gameLogObjects;
@@ -32,7 +33,7 @@ namespace Assets.LogManager3
         private LogFilteringManager _filteringManager = new(); // set filter with filtering managers 
 
         private GameState _gameState;
-        public async UniTask Initialize(GameState gameState)
+        public override async UniTask Initialize(GameState gameState)
         {
             _gameState = gameState;
             _filteringManager.AddRange(_gameState.Logs);
@@ -43,7 +44,7 @@ namespace Assets.LogManager3
         }
 
         private bool _isRefreshing = false;
-        public async UniTask Refresh(GameState gameState)
+        public override async UniTask Refresh(GameState gameState)
         {
             _gameState = gameState;
             _filteringManager.AddRange(_gameState.Logs);

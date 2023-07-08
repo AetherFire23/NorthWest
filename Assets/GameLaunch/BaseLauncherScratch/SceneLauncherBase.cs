@@ -24,7 +24,6 @@ namespace Assets.GameLaunch
         {
             if (_refreshStopGuards.MustPreventInitialization()) return;
             _refreshStopGuards.IsInitializing = true;
-            //UniTaskScheduler.DispatchUnityMainThread = true;
             await FindAndInitializeUtilityMonoBehaviours();
 
             await BeforeInitializingManagers();

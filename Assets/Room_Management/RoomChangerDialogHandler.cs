@@ -14,7 +14,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;
-    [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
+   // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private bool _isPrompting => _dialog is not null;
     private YesNoDialog _dialog;
@@ -77,7 +77,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
         }
         else
         {
-            await _gameLauncherAndRefresher.ForceRefreshManagers();
+           // await _gameLauncherAndRefresher.ForceRefreshManagers();
             _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(test);
         }
 

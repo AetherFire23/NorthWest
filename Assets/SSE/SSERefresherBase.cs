@@ -12,7 +12,7 @@ namespace Assets.SSE
 {
     public abstract class SSERefresherBase<TREfresher> : MonoBehaviour where TREfresher : SSERefresherBase<TREfresher>
     {
-        public Dictionary<SSEEventType, Func<SSEClientData, UniTask>> EnumDelegates { get; set; } = new();
+        private Dictionary<SSEEventType, Func<SSEClientData, UniTask>> _enumDelegates { get; set; } = new();
         private SSEStream _sseStream;
 
         public async UniTask InitializeAsync(SSEStream sseStream)
@@ -23,7 +23,7 @@ namespace Assets.SSE
             _sseStream.StartReceivingMessages(OnDataReceived);
         }
 
-        public async UniTask OnDataReceived(SSEClientData data) => await EnumDelegates[data.EventType].Invoke(data);
+        public async UniTask OnDataReceived(SSEClientData data) => await _enumDelegates[data.EventType].Invoke(data);
 
         public void PopulateEnumDelegates()
         {
@@ -38,7 +38,7 @@ namespace Assets.SSE
             {
                 var customAttribute = method.GetCustomAttribute<EventMethodMappingAttribute>().EventType;
                 var del = (Func<SSEClientData, UniTask>)method.CreateDelegate(typeof(Func<SSEClientData, UniTask>), this);
-                this.EnumDelegates.Add(customAttribute, del);
+                this._enumDelegates.Add(customAttribute, del);
             }
         }
 

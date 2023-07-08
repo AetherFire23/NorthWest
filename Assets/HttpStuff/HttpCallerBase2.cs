@@ -71,9 +71,9 @@ namespace Assets.HttpStuff
             return clientCallResult;
         }
 
-        protected async UniTask<SSEStream> GetSSEStream(string path)
+        protected async UniTask<SSEStream> GetSSEStream(UriBuilder builder)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, path);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, builder.Path);
             request.Headers.Add("Accept", "text/event-stream");
             HttpResponseMessage response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).AsUniTask();
 

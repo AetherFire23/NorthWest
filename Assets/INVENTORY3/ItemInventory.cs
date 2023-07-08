@@ -16,7 +16,7 @@ namespace Assets.INVENTORY3
         public Guid Id => Item.Id;
         public Item Item { get; set; }
         public SlotInventory Slot { get; set; }
-        public bool IsPlayerOwned => Item.OwnerId == PlayerInfo.UID;
+        public bool IsPlayerOwned => Item.OwnerId == PlayerInfo.UID; // holy shit ! 
 
         public async UniTask Initialize(SlotInventory slotInventory, Item item)
         {

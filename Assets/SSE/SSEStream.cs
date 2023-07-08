@@ -20,18 +20,18 @@ namespace Assets.HttpStuff
             {
                 while (!_mustStopReceivingMessages)
                 {
-                    string line = await _disposables.StreamReader.ReadLineAsync().AsUniTask();
+                    string parseableLine = await _disposables.StreamReader.ReadLineAsync().AsUniTask();
 
-                    if (string.IsNullOrEmpty(line))
+                    if (string.IsNullOrEmpty(parseableLine))
                     {
                         Debug.Log("No messages received");
                     }
 
-                    Debug.Log($"Message Received {line}");
+                    Debug.Log($"Message Received {parseableLine}");
 
-                    SSEClientData data = new SSEClientData(line);
-                    await callback(data);
-                    await UniTask.Delay(200);
+                    SSEClientData data = new SSEClientData(parseableLine);
+                    await callback.Invoke(data);
+                    await UniTask.Delay(250);
                 }
             }
             catch (Exception ex)

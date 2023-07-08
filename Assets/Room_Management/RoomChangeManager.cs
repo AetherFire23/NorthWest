@@ -1,17 +1,18 @@
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RoomChangeManager : MonoBehaviour, IStartupBehavior
+public class RoomChangeManager : StateHolderBase<GameState>
 {
     // the map is important to link the gameState object (roomName) to the Unity gameObject.
     [SerializeField] LocalPLayerManager _localPlayer;
     private Dictionary<string, RoomInfoScript> _roomNameObjectMap = new();
 
-    public async UniTask Initialize(GameState gameState) // attention
+    public override async UniTask Initialize(GameState gameState) // attention
     {
         MapRoomNamesAndRoomGameObjects();
         PlaceLocalPlayerInRoomAndSnapCamera(gameState.Room.Name);

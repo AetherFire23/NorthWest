@@ -15,12 +15,14 @@ namespace Assets.GameLaunch.SceneLaunch
         private SSEStream _sseStream;
         protected override async UniTask BeforeInitializingManagers()
         {
+            PlayerInfo.UID = new Guid("7E7B80A5-D7E2-4129-A4CD-59CF3C493F7F");
+            PlayerInfo.GameId = new Guid("DE74B055-BA84-41A2-BAEA-4E380293E227");
             MockToken();
         }
 
         protected override async UniTask AfterInitializingManagers()
         {
-            var stream = await base.ClientCalls.GetSSEStream();
+            var stream = await base.ClientCalls.GetSSEStream(PlayerInfo.UID, PlayerInfo.GameId);
             await _refresher.InitializeAsync(stream);
         }
 

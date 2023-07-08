@@ -16,7 +16,7 @@ namespace Assets.INVENTORY3
         [SerializeField] private InventoryManager3 _inventoryManager;
         [SerializeField] private InventoryRefreshGuard _refreshGuard;
         [SerializeField] private GameCalls _calls;
-        [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
+       // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
 
         private ItemInventory _trackedItem = null;
@@ -42,7 +42,7 @@ namespace Assets.INVENTORY3
             await HandleItemSwap(mouseReleaseAction);
 
             _trackedItem = null; // in all cases, when the button is lifted up, should stop tracking everything.
-            await _gameLauncherAndRefresher.ForceRefreshManagers(); // Tracked item set to false is necessary for refresh 
+           // await _gameLauncherAndRefresher.ForceRefreshManagers(); // Tracked item set to false is necessary for refresh 
         }
 
         public async UniTask HandleItemSwap(MouseReleaseAction releaseType)
@@ -61,7 +61,7 @@ namespace Assets.INVENTORY3
                         var slot = await _slotAndItemsManager.CreateRoomInventorySlotAndInsertItem(_trackedItem);
                         // For prediction
                         _trackedItem.Item.OwnerId = _inventoryManager.CurrentInventoryShownRoomId;
-                        await _calls.TransferItemOwnerShip(_inventoryManager.CurrentInventoryShownRoomId, _trackedItem.Id);
+                        await _calls.TransferItemOwnerShip(_inventoryManager.CurrentInventoryShownRoomId, _trackedItem.Id, PlayerInfo.GameId);
                         break;
                     }
                 case MouseReleaseAction.FromRoomToPlayer: // ownerShipChange
@@ -72,7 +72,7 @@ namespace Assets.INVENTORY3
                         await playerSlot.InsertItemInSlot(_trackedItem);
                         await oldInventorySlot.DestroySlot();
                         _trackedItem.Item.OwnerId = PlayerInfo.UID;
-                        await _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id);
+                        await _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id, PlayerInfo.GameId);
                         break;
                     }
                 case MouseReleaseAction.FromRoomToRoom:

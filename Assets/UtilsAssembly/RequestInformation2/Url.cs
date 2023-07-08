@@ -38,7 +38,7 @@ public class Url
 
         // If there ARE parameters but parameter options is set to false, throw exception
         if (!HasRequiredParameter)
-            throw new NotImplementedException($" when {nameof(HasRequiredParameter)} is set to false.");
+            throw new NotImplementedException($"problem:{_path} when {nameof(HasRequiredParameter)} is set to false.");
 
         string parameterLine = "?";
 

@@ -71,6 +71,17 @@ namespace Assets.INVENTORY3
             return slots;
         }
 
+        public int GetFreePlayerSlotCount()
+        {
+             int slotCount = _slots.Where(x => !x.IsRoomSlot && !x.HasItem).Count();
+            return slotCount;
+        }
+        public List<SlotInventory> GetFreePlayerSlots()
+        {
+            List<SlotInventory> freeSlots = _slots.Where(x => !x.IsRoomSlot && !x.HasItem).ToList();
+            return freeSlots;
+        }
+
         public void RemoveSlot(SlotInventory slot)
         {
             _slots.Remove(slot);

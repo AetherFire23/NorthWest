@@ -1,5 +1,6 @@
 using Assets.AssetLoading;
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.Utils;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
+public class OtherPlayersManager : StateHolderBase<GameState>
 {
     [SerializeField]
     private PrefabLoader _prefabLoader;
@@ -18,7 +19,7 @@ public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
 
     private List<OtherCharacterScript> _otherPlayers = new List<OtherCharacterScript>();
 
-    public async UniTask Initialize(GameState gameState)
+    public override async UniTask Initialize(GameState gameState)
     {
         var excludeLocalPlayer = gameState.Players.Where(x => x.Id != gameState.PlayerUID).ToList();
         await RefreshCharacters(_otherPlayers, excludeLocalPlayer);
@@ -26,7 +27,7 @@ public class OtherPlayersManager : MonoBehaviour, IStartupBehavior, IRefreshable
 
     }
 
-    public async UniTask Refresh(GameState gameState)
+    public override async UniTask Refresh(GameState gameState)
     {
         var excludeLocalPlayer = gameState.Players.Where(x => x.Id != gameState.PlayerUID).ToList();
         await RefreshCharacters(_otherPlayers, excludeLocalPlayer);

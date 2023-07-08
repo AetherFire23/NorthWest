@@ -1,7 +1,7 @@
 ﻿using Assets.AssetLoading;
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
-using Assets.HttpStuff;
 using Assets.Utils;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.DTOs;
@@ -13,28 +13,20 @@ using UnityEngine;
 
 namespace Assets.INVENTORY3
 {
-    public class InventoryManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
+    public class InventoryManager3 : StateHolderBase<GameState> // ok mes bugs viennent de lintegration avec le nouveau manager.
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private InventoryStaticGameObjects _inventoryObjects;
         [SerializeField] private SlotAndItemsManager _slotManager;
-        [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
-        [SerializeField]  private InventoryRefreshGuard _refreshGuard;
+        // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
+        [SerializeField] private InventoryRefreshGuard _refreshGuard;
 
         public RoomDTO CurrentShownRoom => _gameState.GetRoomById(CurrentInventoryShownRoomId);
         private GameState _gameState { get; set; }
         public ItemInventory TrackedItem { get; set; }
         public Guid CurrentInventoryShownRoomId { get; set; }
 
-        // guard
-        //private bool _mustWaitForNextGameState { get; set; } = false;
-        //private bool _isInitialized = false;
-        //private bool _isRefreshing = false;
-        //private bool _isSwitchingRoomInventory { get; set; } = false;
-
-        //private bool _isTracking => TrackedItem != null;
-
-        public async UniTask Initialize(GameState gameState)
+        public override async UniTask Initialize(GameState gameState)
         {
             _gameState = gameState;
             await InitializePlayerSlots();
@@ -43,11 +35,19 @@ namespace Assets.INVENTORY3
             _refreshGuard.IsInitialized = true;
         }
 
-        // ya une idee que pour le refresh, faut pas que le code de manipulation ditems se fasse en meme temps que le refresh et vice versa.
-        // Donc cest pour ca les coroutines qui attendent refresh et input.
-        // 
-        public async UniTask Refresh(GameState gameState)
+        public override async UniTask Refresh(GameState gameState)
         {
+            // refactor pour faire du pick-up only
+            // donc plus de drag n drop, cest tu click ca change de owner
+
+            // Comme ca, juste player-to room, room-to-player
+            // Click sur un objet qui exist pas dans le server au moins jpeux faire du error handling asp.net
+            // pis juste jamais donner limpression que le player pouvait le modifier in the first place
+            // pis la pas besoin de refresh quand le player click pcq yaura pas de mismatch sur cet
+            // item-la specifiquement
+            // 
+          
+
             if (_refreshGuard.MustPreventRefresh()) return;
 
             _refreshGuard.IsRefreshing = true;
@@ -68,16 +68,10 @@ namespace Assets.INVENTORY3
 
         public async UniTask CreateItemInNextPlayerSlot(Item item) //
         {
-            foreach (var slot in _slotManager.GetPlayerSlots())
-            {
-                if (slot.HasItem) continue;
+            var freeSlots = _slotManager.GetFreePlayerSlots().First();
 
-                var newItemInventory = await _prefabLoader.CreateInstanceOfAsync<ItemInventory>(slot.gameObject);
-                await newItemInventory.Initialize(slot, item);
-                return;
-            }
-            await this.RefreshItems(CurrentShownRoom.Name);
-            Debug.LogError("You cannot hold more that x items");
+            var newItemInventory = await _prefabLoader.CreateInstanceOfAsync<ItemInventory>(freeSlots.gameObject);
+            await newItemInventory.Initialize(freeSlots, item);
         }
 
         public async UniTask InitializeStaticButtons()
@@ -89,12 +83,13 @@ namespace Assets.INVENTORY3
         public async UniTask RefreshItems(string roomName) // player Items & rooms items
         {
             var upToDatePlayerItems = _gameState.PlayerDTO.Items.Select(x => x).ToList();
-            var playerResult = RefreshResult<ItemInventory, Item>.GetRefreshResult(_slotManager.GetPlayerItems(), upToDatePlayerItems);
+            var currentPlayerItems = _slotManager.GetPlayerItems();
+            var playerResult = RefreshResult<ItemInventory, Item>.GetRefreshResult(currentPlayerItems, upToDatePlayerItems);
             await RefreshPlayerItems(playerResult);
 
-
             var upToDateRoomItems = _gameState.GetItemsInRoom(roomName);
-            var roomResult = RefreshResult<ItemInventory, Item>.GetRefreshResult(_slotManager.GetRoomItems(), upToDateRoomItems);
+            var currentRoomItems = _slotManager.GetRoomItems();
+            var roomResult = RefreshResult<ItemInventory, Item>.GetRefreshResult(currentRoomItems, upToDateRoomItems);
             await RefreshRoomItems(roomResult);
         }
 
@@ -102,7 +97,8 @@ namespace Assets.INVENTORY3
         {
             foreach (var item in refreshResult.AppearedEntities)
             {
-                bool outOfPlayerSlots = _slotManager.GetPlayerSlots().Count == 0;
+                int playerSlotsCount = _slotManager.GetFreePlayerSlotCount();
+                bool outOfPlayerSlots = playerSlotsCount == 0;
                 if (outOfPlayerSlots) throw new Exception("Player does not have enough inventory slots");
 
                 await this.CreateItemInNextPlayerSlot(item);
@@ -117,6 +113,7 @@ namespace Assets.INVENTORY3
         {
             foreach (var item in refreshResult.DisappearedPrefabs)
             {
+                // remove room slot cos rooms cant have empty slots
                 _slotManager.RemoveSlot(item.Slot);
                 item.Slot.DestroyItem();
                 await item.Slot.DestroySlot();
@@ -135,7 +132,7 @@ namespace Assets.INVENTORY3
 
             if (_refreshGuard.IsInitialized) // no condition means stack overflow cos it calls all managers what this manager calls SetRoomInventory
             {
-                await _gameLauncherAndRefresher.ForceRefreshManagers();
+                //   await _gameLauncherAndRefresher.ForceRefreshManagers();  // 
 
             }
             _refreshGuard.IsSwitchingRoomInventory = true;

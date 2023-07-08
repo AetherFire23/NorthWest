@@ -4,6 +4,7 @@ using Assets.CHATLOG3;
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
@@ -14,13 +15,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
+public class ChatLogManager3 : StateHolderBase<GameState>
 {
     [SerializeField] ChatObjectsManager _chatObjects;
     [SerializeField] PrefabLoader _prefabLoader;
     [SerializeField] GameCalls _calls;
     [SerializeField] DialogManager _dialogManager;
-    [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
+   // [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private List<Message> _allMessages = new();
     private GameObjectDatabaseRefresher<ChatTextObject, Message> _chatTexts; // text in chat
@@ -32,7 +33,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
     private Guid _currentShownRoomId;
     private Guid _playerUID => _gameState.PlayerUID;
 
-    public async UniTask Initialize(GameState firstGameState)
+    public override async UniTask Initialize(GameState firstGameState)
     {
         _gameState = firstGameState;
         _currentShownRoomId = _gameState.GameId;
@@ -44,7 +45,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
         await RefreshPanelsForChatRoom(_currentShownRoomId);
     }
 
-    public async UniTask Refresh(GameState gameState)
+    public override  async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
         _allMessages.AddRange(_gameState.NewMessages);
@@ -63,7 +64,7 @@ public class ChatLogManager3 : MonoBehaviour, IStartupBehavior, IRefreshable
             _chatObjects.InputField.GetTextWithoutHiddenCharacters());// TRIM PLEASE SOON
         _chatObjects.InputField.text= string.Empty;
 
-        await _gameLauncherAndRefresher.ForceRefreshManagers();
+        //await _gameLauncherAndRefresher.ForceRefreshManagers();
 
         _isSendingMessage = false;
     }

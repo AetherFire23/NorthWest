@@ -1,6 +1,7 @@
 ﻿using Assets.CHATLOG3;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
+using Shared_Resources.Entities;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;
@@ -54,12 +55,13 @@ namespace Assets.HttpStuff
             return result;
         }
 
-        public async UniTask<ClientCallResult> TransferItemOwnerShip(Guid targetId, Guid itemId)
+        public async UniTask<ClientCallResult> TransferItemOwnerShip(Guid targetId, Guid itemId, Guid gameId)
         {
             var infos = new UriBuilder(_uriTransferItem, ParameterOptions.Required);
             //infos.AddParameter("ownerId", ownerId.ToString());
             infos.AddParameter("targetId", targetId.ToString());
             infos.AddParameter("itemId", itemId.ToString());
+            infos.AddParameter("gameId", gameId.ToString());
             var result = await base.PutRequest2(infos);
             return result;
         }
@@ -135,10 +137,13 @@ namespace Assets.HttpStuff
             return yeah;
         }
 
-        public async UniTask<SSEStream> GetSSEStream()
+        public async UniTask<SSEStream> GetSSEStream(Guid playerId, Guid gameId)
         {
             string path = this.GetSSEEndpoint(SSEEndpoints.EventStream);
-            SSEStream stream = await base.GetSSEStream(path);
+            var builder = new UriBuilder(path, ParameterOptions.Required);
+            builder.AddParameter("playerId", playerId.ToString());
+            builder.AddParameter("gameId", gameId.ToString());
+            SSEStream stream = await base.GetSSEStream(builder);
             return stream;
         }
     }

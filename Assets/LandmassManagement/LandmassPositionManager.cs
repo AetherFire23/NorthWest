@@ -1,4 +1,5 @@
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
@@ -7,14 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class LandmassPositionManager : MonoBehaviour, IStartupBehavior
+public class LandmassPositionManager : StateHolderBase<GameState>
 {
     private Dictionary<string, RoomInfoScript> _landmassRoomObjectNames = new();
 
     // TODO:
     // faire les procedural doors 
 
-    public async UniTask Initialize(GameState gameState)
+    public override async UniTask Initialize(GameState gameState)
     {
         var landmassRoomNames = gameState.GetLandmassRooms().Select(x => x.Name).ToList();
 
