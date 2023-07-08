@@ -12,7 +12,7 @@ namespace Assets.INVENTORY3
     {
         [SerializeField] private InventoryInput _inventoryInput;
 
-        public bool MustWaitForNextGameState { get; set; } = false;
+       // public bool MustWaitForNextGameState { get; set; } = false;
         public bool IsInitialized { get; set; } = false;
         public bool IsRefreshing { get; set; } = false;
         public bool IsSwitchingRoomInventory { get; set; } = false;
@@ -21,17 +21,12 @@ namespace Assets.INVENTORY3
         private bool _isMouseClicked => Input.GetMouseButtonDown(0);
         public bool MustPreventRefresh()
         {
-            if (!IsInitialized || IsRefreshing || IsSwitchingRoomInventory || IsTracking || MustWaitForNextGameState)
+            if (!IsInitialized || IsRefreshing || IsSwitchingRoomInventory || IsTracking)
             {
                 if (IsSwitchingRoomInventory)
                     Debug.LogError("Refresh canceled because it is switching inventory");
                 else if (IsTracking)
                     Debug.LogError("Refresh canceled due to input handling");
-                else if (MustWaitForNextGameState)
-                {
-                    MustWaitForNextGameState = false; // Allow refresh next refresh
-                    Debug.Log("Refresh was canceled because an operation needs the newest version of the GameState");
-                }
                 return true;
             }
             return false;

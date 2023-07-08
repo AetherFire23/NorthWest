@@ -21,7 +21,10 @@ namespace Assets.HttpStuff
             {
                 room.Items.Clear();
                 
-                var roomItems = playerAndRoomItems.RoomItems.Where(x => x.Id == room.Id).ToList();
+                var roomItems = playerAndRoomItems.RoomItems.Where(x => x.OwnerId == room.Id).ToList();
+
+                if(!roomItems.Any()) continue;
+
                 room.Items.AddRange(roomItems);
             }
         } 

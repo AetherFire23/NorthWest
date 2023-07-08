@@ -57,22 +57,20 @@ namespace Assets.INVENTORY3
                     }
                 case MouseReleaseAction.FromPlayerToRoom: //ownerShipChange
                     {
-                        _refreshGuard.MustWaitForNextGameState = true; // gamestate might be out of date right when it comes in thus creating item flickering
                         var slot = await _slotAndItemsManager.CreateRoomInventorySlotAndInsertItem(_trackedItem);
                         // For prediction
                         _trackedItem.Item.OwnerId = _inventoryManager.CurrentInventoryShownRoomId;
-                        await _calls.TransferItemOwnerShip(_inventoryManager.CurrentInventoryShownRoomId, _trackedItem.Id, PlayerInfo.GameId);
+                         _calls.TransferItemOwnerShip(_inventoryManager.CurrentInventoryShownRoomId, _trackedItem.Id, PlayerInfo.GameId);
                         break;
                     }
                 case MouseReleaseAction.FromRoomToPlayer: // ownerShipChange
                     {
-                        _refreshGuard.MustWaitForNextGameState = true;
                         var oldInventorySlot = _trackedItem.Slot;
                         var playerSlot = UIRaycast.ScriptOrDefault<SlotInventory>();
                         await playerSlot.InsertItemInSlot(_trackedItem);
                         await oldInventorySlot.DestroySlot();
                         _trackedItem.Item.OwnerId = PlayerInfo.UID;
-                        await _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id, PlayerInfo.GameId);
+                         _calls.TransferItemOwnerShip(PlayerInfo.UID, _trackedItem.Id, PlayerInfo.GameId);
                         break;
                     }
                 case MouseReleaseAction.FromRoomToRoom:
