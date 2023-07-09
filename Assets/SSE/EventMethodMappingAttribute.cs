@@ -6,8 +6,8 @@ namespace Assets.SSE
     [AttributeUsage(AttributeTargets.Method)]
     public class EventMethodMappingAttribute : Attribute
     {
-        public readonly SSEEventType EventType;
-        public EventMethodMappingAttribute(SSEEventType eventType)
+        public readonly SSEType EventType;
+        public EventMethodMappingAttribute(SSEType eventType)
         {
             EventType = eventType;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks.Triggers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -47,6 +48,18 @@ public static class UIRaycast
 
         var first = results.First().gameObject.GetComponent<T>();
         return first;
+    }
+
+    public static bool TryGetScript<T>(out T script) where T : MonoBehaviour
+    {
+        var raycastResults = RawUIRaycast();
+        var results = raycastResults.Where(x => x.gameObject.GetComponent<T>() is not null);
+
+        script = results.FirstOrDefault().gameObject.GetComponent<T>();
+
+        if (!results.Any()) return false;
+
+        return true;
     }
 
     public static bool Any()

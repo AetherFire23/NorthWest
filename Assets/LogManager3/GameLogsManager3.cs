@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Assets.LogManager3
 {
-    public class LogManager3 : StateHolderBase<GameState>
+    public class GameLogsManager3 : StateHolderBase<GameState>
     {
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private GameLogObjects _gameLogObjects;

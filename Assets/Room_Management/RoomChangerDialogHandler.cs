@@ -1,6 +1,8 @@
 using Assets;
 using Assets.Dialogs;
 using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
+using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Assets.Raycasts;
 using Cysharp.Threading.Tasks;
@@ -8,23 +10,25 @@ using Shared_Resources.Models;
 using System;
 using UnityEngine;
 
-public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefreshable
+public class RoomChangerDialogHandler : StateHolderBase<GameState>
 {
     [SerializeField] private GameCalls _calls;
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;
-   // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
+    [SerializeField] private GameDataStore _gameDataStore;
+    // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private bool _isPrompting => _dialog is not null;
     private YesNoDialog _dialog;
     private GameState _gameState;
-    public async UniTask Initialize(GameState gameState)
+    public override async UniTask Initialize(GameState gameState)
     {
         _gameState = gameState;
+        base.InitializationValues.IsInitialized = true;
     }
 
-    public async UniTask Refresh(GameState gameState)
+    public override async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
     }
@@ -32,6 +36,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
     public async UniTask Update()
     {
         // could probably add exclusion types for example if the raycast has UI elements or SlotInventory, etc.
+        if (!InitializationValues.IsInitialized) return;
         if (_isPrompting) return;
         if (!Input.GetMouseButtonDown(0)) return;
 
@@ -43,9 +48,9 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
         //    return;
         //}
 
-        string test = GetCorrectRoomName(door);
+        string roomName = GetCorrectRoomName(door);
 
-        if (test == string.Empty)
+        if (roomName == string.Empty)
         {
             Debug.Log("Player must be in at least one of the 2 ddoors");
             return;
@@ -53,7 +58,7 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
 
         // end of guard clauses
         _dialog = await _dialogManager.CreateDialog<YesNoDialog>();
-        string message = $"You are about to change room to : {test}. " +
+        string message = $"You are about to change room to : {roomName}. " +
             $"{Environment.NewLine}Unncessary movement will appear suspicious. " +
             $"{Environment.NewLine}This action will be logged as full public.";
         await _dialog.Initialize(message);
@@ -67,7 +72,9 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
             return;
         }
 
-        var callResult = await _calls.ChangeRoom(PlayerInfo.UID, test);
+        var callResult = await _calls.ChangeRoom(PlayerInfo.UID, roomName);
+        // techniquement ca devrait tt le temps etre des events mesemble.
+        // Genre ca resoudrait tous les conflits de prediction et tout 
         await _dialog.Destroy();
 
         if (!callResult.IsSuccessful)
@@ -77,8 +84,10 @@ public class RoomChangerDialogHandler : MonoBehaviour, IStartupBehavior, IRefres
         }
         else
         {
-           // await _gameLauncherAndRefresher.ForceRefreshManagers();
-            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(test);
+            // await _gameLauncherAndRefresher.ForceRefreshManagers();
+            //_gameDataStore.State.PlayerDTO.CurrentGameRoomId = 
+            var roomId = _gameDataStore.State.GetRoomByName(roomName).Id;
+            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(roomName);
         }
 
         _dialog = null;

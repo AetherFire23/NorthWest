@@ -12,7 +12,7 @@ namespace Assets.SSE
 {
     public abstract class SSERefresherBase<TREfresher> : MonoBehaviour where TREfresher : SSERefresherBase<TREfresher>
     {
-        private Dictionary<SSEEventType, Func<SSEClientData, UniTask>> _enumDelegates { get; set; } = new();
+        private Dictionary<SSEType, Func<SSEClientData, UniTask>> _enumDelegates { get; set; } = new();
         private SSEStream _sseStream;
 
         public async UniTask InitializeAsync(SSEStream sseStream)

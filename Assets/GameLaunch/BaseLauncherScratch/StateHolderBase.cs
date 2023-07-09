@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using Assets.Utils;
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace Assets.GameLaunch.BaseLauncherScratch
         /// State is initialized before InitializeAsync ans RefreshAsync()
         /// </summary>\
         /// 
-        
+        protected InitializationValues InitializationValues { get; set; } = new InitializationValues();
+
         public virtual async UniTask Initialize(T state) { }
         public virtual async UniTask Refresh(T state) { }
     }

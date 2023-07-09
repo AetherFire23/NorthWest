@@ -10,23 +10,20 @@ namespace Assets.INVENTORY3
 {
     public class InventoryRefreshGuard : MonoBehaviour
     {
-        [SerializeField] private InventoryInput _inventoryInput;
+        [SerializeField] private InventoryInputClick _inventoryInput;
 
        // public bool MustWaitForNextGameState { get; set; } = false;
         public bool IsInitialized { get; set; } = false;
         public bool IsRefreshing { get; set; } = false;
         public bool IsSwitchingRoomInventory { get; set; } = false;
-        public bool IsTracking => _inventoryInput.IsTracking;
         private bool _hasItemOnClick => UIRaycast.ScriptOrDefault<ItemInventory>() is not null;
         private bool _isMouseClicked => Input.GetMouseButtonDown(0);
         public bool MustPreventRefresh()
         {
-            if (!IsInitialized || IsRefreshing || IsSwitchingRoomInventory || IsTracking)
+            if (!IsInitialized || IsRefreshing || IsSwitchingRoomInventory)
             {
                 if (IsSwitchingRoomInventory)
                     Debug.LogError("Refresh canceled because it is switching inventory");
-                else if (IsTracking)
-                    Debug.LogError("Refresh canceled due to input handling");
                 return true;
             }
             return false;
@@ -44,7 +41,7 @@ namespace Assets.INVENTORY3
 
         public bool MustPreventFromUpdatingInput()
         {
-            if (!IsInitialized || IsRefreshing || IsTracking || !_isMouseClicked || !_hasItemOnClick)
+            if (!IsInitialized || IsRefreshing || !_isMouseClicked || !_hasItemOnClick)
             {
                 return true;
             }
@@ -61,13 +58,13 @@ namespace Assets.INVENTORY3
             }
         }
 
-        public async UniTask WaitUntilInputEndsCoroutine()
-        {
-            while (this.IsTracking)
-            {
-                Debug.Log("Waiting Until Refresh Ends");
-                await UniTask.Yield();
-            }
-        }
+        //public async UniTask WaitUntilInputEndsCoroutine()
+        //{
+        //    while (this.IsTracking)
+        //    {
+        //        Debug.Log("Waiting Until Refresh Ends");
+        //        await UniTask.Yield();
+        //    }
+        //}
     }
 }

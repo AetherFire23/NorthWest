@@ -127,7 +127,7 @@ namespace Assets.INVENTORY3
         public async UniTask SetRoomInventory(string otherRoomName) // ca ici puisque ca refresh ca remove
         { // la prediction de si tas mis un item dans ton inventaire de player avant
             if (_refreshGuard.MustPreventChangingRoom()) return;
-            await _refreshGuard.WaitUntilInputEndsCoroutine();
+            //await _refreshGuard.WaitUntilInputEndsCoroutine();
             await _refreshGuard.WaitUntilRefreshEndsCoroutine();
 
             if (_refreshGuard.IsInitialized) // no condition means stack overflow cos it calls all managers what this manager calls SetRoomInventory

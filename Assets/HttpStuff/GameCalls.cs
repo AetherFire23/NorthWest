@@ -13,14 +13,14 @@ namespace Assets.HttpStuff
     public class GameCalls : HttpCallerBase2
     {
         private const string _GetPlayers = "https://localhost:7060/TheCrew/GetPlayers";
-        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById"; 
-        private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom"; 
-        private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations"; 
-        private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom"; 
+        private const string _updatePositionByPlayerModel = "https://localhost:7060/TheCrew/UpdatePositionById";
+        private const string _uriInviteToChatRoom = "https://localhost:7060/TheCrew/InviteToChatRoom";
+        private const string _uriGetPendingInvitations = "https://localhost:7060/TheCrew/GetPendingInvitations";
+        private const string _uriGetPlayersCurrentGameChatRoom = "https://localhost:7060/TheCrew/GetPlayersCurrentGameChatRoom";
         private const string _uriAddPlayerRoomPair = "https://localhost:7060/TheCrew/AddPlayerRoomPair";
-        private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState"; 
-        private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem"; 
-        private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom"; 
+        private const string _uriGetGameState = "https://localhost:7060/TheCrew/GetGameState";
+        private const string _uriTransferItem = "https://localhost:7060/TheCrew/TransferItem";
+        private const string _uriChangeRoom = "https://localhost:7060/TheCrew/ChangeRoom";
         private const string _uriTryExeGameTask = "https://localhost:7060/TheCrew/TryExecuteGameTask";
         private const string _uriTest = "https://localhost:7060/TheCrew/dwdwdw";
 
@@ -31,6 +31,8 @@ namespace Assets.HttpStuff
 
 
         public string GetSSEEndpoint(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(SSEEndpoints), endpoint);
+        //public string GetChatEndpoint(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(Chat), endpoint);
+        //public string GameEndpoints(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(GameEN), endpoint);
 
         public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
         {
@@ -55,11 +57,12 @@ namespace Assets.HttpStuff
             return result;
         }
 
-        public async UniTask<ClientCallResult> TransferItemOwnerShip(Guid targetId, Guid itemId, Guid gameId)
+        public async UniTask<ClientCallResult> TransferItemOwnerShip(Guid targetId, Guid ownerId, Guid itemId, Guid gameId)
         {
             var infos = new UriBuilder(_uriTransferItem, ParameterOptions.Required);
             //infos.AddParameter("ownerId", ownerId.ToString());
             infos.AddParameter("targetId", targetId.ToString());
+            infos.AddParameter("ownerId", ownerId.ToString());
             infos.AddParameter("itemId", itemId.ToString());
             infos.AddParameter("gameId", gameId.ToString());
             var result = await base.PutRequest2(infos);

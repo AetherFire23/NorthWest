@@ -56,6 +56,8 @@ namespace Assets.GameState_Management
             return room;
         }
 
+       
+
         public static RoomDTO GetRoomByName(this GameState gameState, string roomName)
         {
             var room = gameState.Rooms.FirstOrDefault(x => x.Name.Equals(roomName));

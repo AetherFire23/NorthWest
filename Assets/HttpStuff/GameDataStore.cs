@@ -1,6 +1,7 @@
 ﻿using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace Assets.HttpStuff
         {
             State.PlayerDTO.Items = playerAndRoomItems.PlayerItems;
 
-            foreach (var room in State.Rooms)
+            foreach (var room in State.Rooms) // gotta look for every room lol
             {
                 room.Items.Clear();
                 
@@ -29,9 +30,9 @@ namespace Assets.HttpStuff
             }
         } 
 
-        public void DeleteItems()
+        public void UpdateLocalPlayerRoomId(Guid id)
         {
-
+            
         }
     }
 }
