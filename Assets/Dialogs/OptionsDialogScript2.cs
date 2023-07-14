@@ -1,12 +1,9 @@
-using Assets.Dialogs.DIALOGSREFACTOR;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Interfaces;
 using Shared_Resources.Scratches;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;

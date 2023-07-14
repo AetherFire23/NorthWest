@@ -21,7 +21,7 @@ namespace Assets.HttpStuff
 
         public async UniTask<GameState> FetchNextGameStateAsync(Guid playerId)
         {
-            GameState newGameState =  await _client.GetGameState(playerId, _lastTimeStamp);
+            GameState newGameState = await _client.GetGameState(playerId, _lastTimeStamp);
             _lastTimeStamp = newGameState.TimeStamp;
             return newGameState;
         }

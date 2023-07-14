@@ -1,8 +1,8 @@
 ﻿
+using Cysharp.Threading.Tasks;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 namespace Assets.GameLaunch
 {
     public static class LaunchLogger

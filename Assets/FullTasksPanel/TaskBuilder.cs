@@ -1,18 +1,18 @@
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
+using Assets.SSE;
+using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;
 using UnityEngine;
-using Cysharp.Threading.Tasks;
-using Assets.SSE;
 
 public class TaskBuilder : MonoBehaviour
 {
     [SerializeField] private DialogManager _dialogManager;
     [SerializeField] private GameCalls _calls;
-    [SerializeField] private GameManagersContainer _gameManagers; 
+    [SerializeField] private GameManagersContainer _gameManagers;
     // Should somewhat map the taskCodes and the gameTasks
     // NOTES : 
     // 1. Handle player target
@@ -29,7 +29,7 @@ public class TaskBuilder : MonoBehaviour
         var allParameters = new TaskParameters();
         var checkLists = gameTask.GetCheckLists(gameState);
 
-      
+
         foreach (var prompt in checkLists)
         {
             var options = prompt.GetPromptsAsObjects();

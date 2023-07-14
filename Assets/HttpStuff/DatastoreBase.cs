@@ -1,6 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using Shared_Resources.Entities;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.HttpStuff

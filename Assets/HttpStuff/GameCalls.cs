@@ -1,7 +1,6 @@
 ﻿using Assets.CHATLOG3;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
-using Shared_Resources.Entities;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;

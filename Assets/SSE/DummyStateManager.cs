@@ -8,7 +8,7 @@ namespace Assets.SSE
     {
         public override async UniTask Initialize(GameState state)
         {
-            
+
         }
     }
 }

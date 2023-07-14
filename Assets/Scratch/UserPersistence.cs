@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scratch
+﻿namespace Assets.Scratch
 {
     public class PersistenceModel // makes it possible to use it in all http shit throughout scenes. 
     {

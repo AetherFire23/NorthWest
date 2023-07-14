@@ -1,5 +1,4 @@
 ﻿using Assets.Enums;
-using Assets.GameLaunch.BaseLauncherScratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
 using Shared_Resources.Interfaces;
@@ -12,7 +11,6 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
 
 public static class UnityExtensions
 {
@@ -265,7 +263,7 @@ public static class UnityExtensions
 
         if (!monoBehaviours.Any()) throw new Exception($"Not found:{typeof(T)}");
 
-        if( monoBehaviours.Count > 1 ) throw new Exception($"Too many of:{typeof(T)}");
+        if (monoBehaviours.Count > 1) throw new Exception($"Too many of:{typeof(T)}");
 
         return monoBehaviours.First();
     }
@@ -320,7 +318,7 @@ public static class UnityExtensions
     //};
     //public static void SetVisibleAlphaLayerAndChildren(this GameObject self, bool isVisible)
     //{
-        
+
 
     //}
 }

@@ -1,12 +1,6 @@
 ﻿using Assets.Dialogs;
-using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.Raycasts;
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.INVENTORY3

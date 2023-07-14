@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scratch
@@ -33,7 +28,7 @@ namespace Assets.Scratch
 
             if (!File.Exists(savePath)) throw new Exception("could not load persistent data");
 
-            T data =  GetSerializedDataOrDefault<T>() ?? throw new Exception($"Could not load data for: {typeof(T)} ");
+            T data = GetSerializedDataOrDefault<T>() ?? throw new Exception($"Could not load data for: {typeof(T)} ");
 
 
             return null;

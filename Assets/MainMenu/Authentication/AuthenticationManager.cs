@@ -1,11 +1,8 @@
 using Assets;
-using System;
-using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
 using Assets.MainMenu.Authentication;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
-using Shared_Resources.DTOs;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
 using TMPro;
@@ -19,7 +16,7 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
     [SerializeField] private AuthenticationDialog _authenticationDialog;
     [SerializeField] private RegisterDialog _registerDialog;
 
-    
+
 
     [SerializeField] private MainMenuCalls _menuClient;
     [SerializeField] private Button RegisterButton;
@@ -63,7 +60,7 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
         }
 
         // cleanup the WindowZ
-         _authenticationCanvas.enabled = false;
+        _authenticationCanvas.enabled = false;
     }
 
     private async UniTask OnOkRegisterResolve()

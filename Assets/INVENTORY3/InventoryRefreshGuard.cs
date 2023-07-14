@@ -1,9 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.INVENTORY3
@@ -12,7 +7,7 @@ namespace Assets.INVENTORY3
     {
         [SerializeField] private InventoryInputClick _inventoryInput;
 
-       // public bool MustWaitForNextGameState { get; set; } = false;
+        // public bool MustWaitForNextGameState { get; set; } = false;
         public bool IsInitialized { get; set; } = false;
         public bool IsRefreshing { get; set; } = false;
         public bool IsSwitchingRoomInventory { get; set; } = false;

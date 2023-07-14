@@ -5,7 +5,7 @@ using System;
 using UnityEngine;
 namespace Assets.HttpStuff
 {
-    public class SSEStream : IDisposable 
+    public class SSEStream : IDisposable
     {
         private readonly SSEStreamDisposables _disposables;
         bool _mustStopReceivingMessages = false;
@@ -37,13 +37,13 @@ namespace Assets.HttpStuff
             catch (Exception ex)
             {
                 Debug.Log($"<color=green> Expected Exception </color> SSE Disconnection : {ex.Message}");
-              //  Debug.LogException(ex);
+                //  Debug.LogException(ex);
             }
         }
 
         public async UniTask DummyNotAwaited()
         {
-            while (!_mustStopReceivingMessages) 
+            while (!_mustStopReceivingMessages)
             {
                 Debug.Log("going and going");
                 await UniTask.Delay(200);

@@ -1,9 +1,5 @@
 using Assets.INVENTORY3;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
-using Shared_Resources.Entities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SlotInventory : PrefabScriptBase

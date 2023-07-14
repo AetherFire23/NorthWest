@@ -1,9 +1,6 @@
 ﻿using Shared_Resources.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Utils
 {
@@ -20,7 +17,7 @@ namespace Assets.Utils
             var result = new EntityRefreshResult<T>();
 
             result.Modified = fresh.Where(x => storedGuids.Contains(x.Id)).ToList();
-            result.Added = fresh.Where(x=> !storedGuids.Contains(x.Id)).ToList();
+            result.Added = fresh.Where(x => !storedGuids.Contains(x.Id)).ToList();
             return result;
         }
     }

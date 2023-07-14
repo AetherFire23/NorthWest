@@ -3,7 +3,6 @@ using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Shared_Resources.Models;
-using Shared_Resources.Models.SSE;
 using System;
 using System.IO;
 using System.Net.Http;

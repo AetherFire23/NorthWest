@@ -25,7 +25,7 @@ namespace Assets.SSE
 
         public async UniTask OnDataReceived(SSEClientData data)
         {
-            var deleg = _enumDelegates.GetValueOrDefault(data.EventType) 
+            var deleg = _enumDelegates.GetValueOrDefault(data.EventType)
                 ?? throw new ArgumentNullException($"Event data not foudn for {data.EventType}");
 
             await deleg.Invoke(data);

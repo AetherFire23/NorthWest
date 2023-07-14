@@ -1,14 +1,7 @@
 ﻿using Assets.Dialogs.DIALOGSREFACTOR;
-using Assets.HttpStuff;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 

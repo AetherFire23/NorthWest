@@ -1,6 +1,4 @@
 using Assets.INVENTORY3;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LockMask : MonoBehaviour

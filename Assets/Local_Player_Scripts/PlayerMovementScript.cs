@@ -1,7 +1,5 @@
 
 using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovementScript : MonoBehaviour
@@ -30,7 +28,7 @@ public class PlayerMovementScript : MonoBehaviour
             // Debug.Log("Reached destination");
         }
 
-        
+
         if (Input.GetMouseButtonDown(0) && !UIRaycast.Any())
         {
             IsMoving = true;

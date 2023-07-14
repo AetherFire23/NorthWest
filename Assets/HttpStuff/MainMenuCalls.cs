@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
-using Shared_Resources.Models.SSE;
 using System;
 
 namespace Assets.HttpStuff

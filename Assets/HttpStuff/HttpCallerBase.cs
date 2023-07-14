@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public abstract class HttpCallerBase : MonoBehaviour 
+    public abstract class HttpCallerBase : MonoBehaviour
     {
         protected DateTime? _timeStamp;
         protected Client HttpClient = new Client();
@@ -19,7 +19,7 @@ namespace Assets.HttpStuff
 
 
         public void ConfigureAuthenticationHeaders(string token) => HttpClient.ConfigureAuthenticationHeaders(token);
-        
+
 
         private void OnApplicationQuit()
         {

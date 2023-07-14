@@ -24,6 +24,6 @@ public class RoomTab : PrefabScriptBase, IEntity
         Button.AddTaskFunc(roomTabAction);
         Text = chatRoom.ChatRoomName;
         ChatRoom = chatRoom;
-        
+
     }
 }

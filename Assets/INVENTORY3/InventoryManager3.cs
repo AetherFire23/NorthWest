@@ -1,5 +1,4 @@
 ﻿using Assets.AssetLoading;
-using Assets.GameLaunch;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.Utils;
@@ -46,7 +45,7 @@ namespace Assets.INVENTORY3
             // pis la pas besoin de refresh quand le player click pcq yaura pas de mismatch sur cet
             // item-la specifiquement
             // 
-          
+
 
             if (_refreshGuard.MustPreventRefresh()) return;
 

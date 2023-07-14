@@ -32,7 +32,7 @@ namespace Assets.Raycasts
 
             var scriptHits = hits.FirstOrDefault(x => x.transform.gameObject.GetComponent<T>() is not null);
 
-            foreach (var item in hits) 
+            foreach (var item in hits)
             {
                 var script = item.transform.gameObject.GetComponent<T>();
                 if (script is not null) return script;
@@ -47,9 +47,9 @@ namespace Assets.Raycasts
 
             var hits = Physics2D.RaycastAll(mouseScreenPosInWorldPosition, Vector2.zero);
 
-            var validHits = hits.Where(x=> x.transform.gameObject.GetComponent<T>() is not null).ToList();
+            var validHits = hits.Where(x => x.transform.gameObject.GetComponent<T>() is not null).ToList();
 
-            bool hasValue = validHits.Any();    
+            bool hasValue = validHits.Any();
             script = hasValue
                 ? validHits.First().transform.gameObject.GetComponent<T>()
                 : null;

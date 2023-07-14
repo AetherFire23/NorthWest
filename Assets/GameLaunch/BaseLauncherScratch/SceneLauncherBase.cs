@@ -49,7 +49,7 @@ namespace Assets.GameLaunch
             DataStore = UnityExtensions.FindUniqueMonoBehaviour<DatastoreBase<TState>>();
 
             await PrefabLoader.InitializeAsync();
-        
+
             await Managers.InitializeAsync();
         }
 

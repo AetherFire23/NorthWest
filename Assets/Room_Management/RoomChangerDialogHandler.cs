@@ -1,9 +1,7 @@
 using Assets;
 using Assets.Dialogs;
 using Assets.FullTasksPanel;
-using Assets.GameLaunch;
 using Assets.GameLaunch.BaseLauncherScratch;
-using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Assets.Raycasts;
 using Assets.SSE;
@@ -85,8 +83,8 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
         else
         {
             _gameDataStore.UpdateLocalPlayerRoomId(roomName); // for prediction 
-            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(roomName); 
-            await _gameManagers.RefreshSpecificManager<FullTasksManager>(); 
+            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(roomName);
+            await _gameManagers.RefreshSpecificManager<FullTasksManager>();
         }
 
         _dialog = null;

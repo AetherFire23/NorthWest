@@ -1,5 +1,4 @@
 ﻿using Assets.AssetLoading;
-using Assets.GameLaunch;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.Scratch;
@@ -72,7 +71,7 @@ namespace Assets.LogManager3
         // I Foudn that I dont actually have to destroy any log.
         // Since I can just disable the .enabled property of TextMeshProUGUI instead of deleting / creating.
         // So I can just Spawn every log and just diasble the incorrect ones instead of gameobject.destroy
-        public async UniTask RefreshLogs(List<Log> upToDateLogs) 
+        public async UniTask RefreshLogs(List<Log> upToDateLogs)
         {
             var appearedEntities = UnityExtensions.GetAppearedEntities(_logChatObjects, upToDateLogs);
             foreach (var appearedEntity in appearedEntities)

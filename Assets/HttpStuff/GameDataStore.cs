@@ -2,7 +2,6 @@
 using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,14 +21,14 @@ namespace Assets.HttpStuff
             foreach (var room in State.Rooms) // gotta look for every room lol
             {
                 room.Items.Clear();
-                
+
                 var roomItems = playerAndRoomItems.RoomItems.Where(x => x.OwnerId == room.Id).ToList();
 
-                if(!roomItems.Any()) continue;
+                if (!roomItems.Any()) continue;
 
                 room.Items.AddRange(roomItems);
             }
-        } 
+        }
 
         public void UpdateLocalPlayerRoomId(string roomName)
         {

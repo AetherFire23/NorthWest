@@ -1,7 +1,5 @@
-﻿using Assets.MainMenu.Authentication;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 

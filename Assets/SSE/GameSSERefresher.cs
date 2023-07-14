@@ -58,7 +58,7 @@ namespace Assets.HttpStuff
         [EventMethodMapping(SSEType.RefreshShipState)] // Mettons player action -> 
         public async UniTask Dummy6(SSEClientData data)
         {
-            
+
         }
 
         [EventMethodMapping(SSEType.AddChatMessage)] // Mettons player action -> 

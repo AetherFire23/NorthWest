@@ -10,7 +10,7 @@ public class OtherCharacterAS : MonoBehaviour
 
     void Update()
     {
-        this.TextOverHead.transform.position = PlayerScreenPosition.WithOffset(0,45,0);
+        this.TextOverHead.transform.position = PlayerScreenPosition.WithOffset(0, 45, 0);
         this.ProfessionText.transform.position = PlayerScreenPosition.WithOffset(0, professionHeight, 0);
     }
 }

@@ -3,7 +3,6 @@ using Assets.AssetLoading;
 using Assets.CHATLOG3;
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
-using Assets.GameLaunch;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.HttpStuff;
@@ -11,7 +10,7 @@ using Cysharp.Threading.Tasks;
 using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -21,7 +20,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
     [SerializeField] PrefabLoader _prefabLoader;
     [SerializeField] GameCalls _calls;
     [SerializeField] DialogManager _dialogManager;
-   // [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
+    // [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private List<Message> _allMessages = new();
     private GameObjectDatabaseRefresher<ChatTextObject, Message> _chatTexts; // text in chat
@@ -45,7 +44,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
         await RefreshPanelsForChatRoom(_currentShownRoomId);
     }
 
-    public override  async UniTask Refresh(GameState gameState)
+    public override async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
         _allMessages.AddRange(_gameState.NewMessages);
@@ -62,7 +61,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
         var response = await _calls.PutNewMessageToServer(_gameState.PlayerUID,
             this.GetCurrentShownRoom(),
             _chatObjects.InputField.GetTextWithoutHiddenCharacters());// TRIM PLEASE SOON
-        _chatObjects.InputField.text= string.Empty;
+        _chatObjects.InputField.text = string.Empty;
 
         //await _gameLauncherAndRefresher.ForceRefreshManagers();
 
@@ -85,7 +84,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
     public async UniTask RefreshChatRoomParticipantsInChatRoom(Guid roomId)
     {
         _currentShownRoomId = roomId;
-        var players =  _gameState.GetPlayersInChatRoom(_currentShownRoomId);
+        var players = _gameState.GetPlayersInChatRoom(_currentShownRoomId);
         await _playersInChatRoom.RefreshEntities(players);
     }
 
