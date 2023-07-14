@@ -19,11 +19,17 @@ namespace Assets.SSE
         {
             _sseStream = sseStream;
             PopulateEnumDelegates();
-            Debug.Log("Started receiving messages");
+            Debug.Log("SSE : Started receiving messages");
             _sseStream.StartReceivingMessages(OnDataReceived);
         }
 
-        public async UniTask OnDataReceived(SSEClientData data) => await _enumDelegates[data.EventType].Invoke(data);
+        public async UniTask OnDataReceived(SSEClientData data)
+        {
+            var deleg = _enumDelegates.GetValueOrDefault(data.EventType) 
+                ?? throw new ArgumentNullException($"Event data not foudn for {data.EventType}");
+
+            await deleg.Invoke(data);
+        }
 
         public void PopulateEnumDelegates()
         {
@@ -52,7 +58,7 @@ namespace Assets.SSE
             {
                 Debug.LogException(e);
             }
-            Debug.Log("Stopped Responding!");
+            Debug.Log("SSE Stream cleaned up");
         }
     }
 }

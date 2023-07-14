@@ -7,26 +7,19 @@ using System;
 
 namespace Assets.HttpStuff
 {
-    public class MainMenuCalls : HttpCallerBase
+    public class MainMenuCalls : HttpCallerBase2
     {
         private string GetFullEndpointMainMenu(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(MainMenuEndpoints), endpoint); // could be basefunc but whatevers
         private string GetFullEndpointUserController(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(UserEndpoints), endpoint); // could be basefunc but whatevers
         private string GetFullEndpointSSEStream(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(SSEEndpoints), endpoint); // could be basefunc but whatevers
 
-        public override async UniTask InitializeEventStreamListening(Func<SSEClientData, UniTask> sseCallback)
+        public async UniTask<MainMenuState> GetMainMenuState(Guid userId)
         {
-            var builder = new UriBuilder(GetFullEndpointSSEStream(SSEEndpoints.EventStream));
-            //base.ConfigureStream(builder, sseCallback);
-        }
-
-        public async UniTask<MainMenuState> GetMainMenuState()
-        {
-            // will have to implement a way to put the bearer shit into the request motherfucker for authorization
-
             string fullEndpoint = GetFullEndpointMainMenu(MainMenuEndpoints.State);
-            var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.None);
+            var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.Required);
+            uriBuilder.AddParameter("userId", userId.ToString());
 
-            MainMenuState mainMenuState = await base.HttpClient.GetRequest<MainMenuState>(uriBuilder)
+            MainMenuState mainMenuState = await GetRequest<MainMenuState>(uriBuilder)
                 ?? throw new Exception("cant return null for mainMenuState");
 
             return mainMenuState;
@@ -38,7 +31,7 @@ namespace Assets.HttpStuff
             string fullEndpoint = GetFullEndpointUserController(UserEndpoints.Login);
             var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.BodyOnly, request);
 
-            var result = await HttpClient.PostRequest(uriBuilder);
+            var result = await PostRequest(uriBuilder);
             return result;
         }
 
@@ -46,8 +39,18 @@ namespace Assets.HttpStuff
         {
             string fullEndpoint = GetFullEndpointUserController(UserEndpoints.Register);
             var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.BodyOnly, request);
-            var result = await HttpClient.PostRequest(uriBuilder);
+            var result = await PostRequest(uriBuilder);
             return result;
+        }
+
+        public async UniTask<SSEStream> GetSSEStream(Guid playerId, Guid gameId)
+        {
+            string path = SSEEndpoints.GetFullEndpointPath(SSEEndpoints.MainMenuStream);
+            var builder = new UriBuilder(path, ParameterOptions.Required);
+            builder.AddParameter("playerId", playerId.ToString());
+            builder.AddParameter("gameId", gameId.ToString());
+            SSEStream stream = await base.GetSSEStream(builder);
+            return stream;
         }
     }
 }

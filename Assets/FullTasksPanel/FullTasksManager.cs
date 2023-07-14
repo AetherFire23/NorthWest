@@ -48,7 +48,6 @@ namespace Assets.FullTasksPanel
         private bool _isRefreshing = false;
         public override async UniTask Refresh(GameState gameState)
         {
-            Debug.Log("Refreshing!");
             if (_isRefreshing)
             {
                 Debug.Log("Cancelled refreshing fulltasksManager");

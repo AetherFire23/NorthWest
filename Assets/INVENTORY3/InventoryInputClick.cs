@@ -56,7 +56,7 @@ namespace Assets.INVENTORY3
                             return;
                         }
 
-                        await _calls.TransferItemOwnerShip(PlayerInfo.UID, clickedItem.Item.OwnerId, clickedItem.Id, PlayerInfo.GameId);
+                        await _calls.TransferItemOwnerShip(PlayerInfo.Id, clickedItem.Item.OwnerId, clickedItem.Id, PlayerInfo.GameId);
                         break;
                     }
             }

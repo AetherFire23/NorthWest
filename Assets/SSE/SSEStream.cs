@@ -36,7 +36,8 @@ namespace Assets.HttpStuff
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex);
+                Debug.Log($"<color=green> Expected Exception </color> SSE Disconnection : {ex.Message}");
+              //  Debug.LogException(ex);
             }
         }
 

@@ -19,7 +19,7 @@ namespace Assets.Scratch
 
             if (File.Exists(savePath))
             {
-                Debug.Log($"Data already exists. Will overwrite{savePath}");
+                Debug.Log($"Persistence : Data already exists. Will overwrite{savePath}");
                 File.Delete(savePath);
             }
 

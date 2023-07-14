@@ -1,4 +1,5 @@
-﻿using Shared_Resources.Entities;
+﻿using Assets.GameState_Management;
+using Shared_Resources.Entities;
 using Shared_Resources.Models;
 using Shared_Resources.Models.SSE;
 using System;
@@ -30,9 +31,10 @@ namespace Assets.HttpStuff
             }
         } 
 
-        public void UpdateLocalPlayerRoomId(Guid id)
+        public void UpdateLocalPlayerRoomId(string roomName)
         {
-            
+            var roomId = State.GetRoomByName(roomName).Id;
+            State.PlayerDTO.CurrentGameRoomId = roomId;
         }
     }
 }

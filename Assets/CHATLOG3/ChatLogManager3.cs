@@ -84,7 +84,6 @@ public class ChatLogManager3 : StateHolderBase<GameState>
 
     public async UniTask RefreshChatRoomParticipantsInChatRoom(Guid roomId)
     {
-        Debug.Log("Refre");
         _currentShownRoomId = roomId;
         var players =  _gameState.GetPlayersInChatRoom(_currentShownRoomId);
         await _playersInChatRoom.RefreshEntities(players);

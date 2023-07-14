@@ -17,6 +17,12 @@ namespace Assets.HttpStuff
         [SerializeField] private GameManagersContainer _managers;
         [SerializeField] private GameDataStore _gameDataStore;
 
+        [EventMethodMapping(SSEType.Heartbeat)] // heart
+        public async UniTask HeartBeat(SSEClientData data)
+        {
+            Debug.Log($"SSE HeartBeat successfully received");
+        }
+
         [EventMethodMapping(SSEType.RefreshPlayers)]
         public async UniTask Dummy2(SSEClientData data)
         {

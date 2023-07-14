@@ -15,12 +15,8 @@ public class RoomChangeManager : StateHolderBase<GameState>
     public override async UniTask Initialize(GameState gameState) // attention
     {
         MapRoomNamesAndRoomGameObjects();
-        PlaceLocalPlayerInRoomAndSnapCamera(gameState.Room.Name);
+        PlaceLocalPlayerInRoomAndSnapCamera(gameState.LocalPlayerRoom.Name);
     }
-
-    //    // TODO:
-    //    // warning pour les pieces qui manquent dans le editor
-    //}
 
     public void MapRoomNamesAndRoomGameObjects()
     {

@@ -177,7 +177,7 @@ public static class UnityExtensions
 
     public static void AddMethod(this Button button, Action newAction)
     {
-        UnityEngine.Debug.Log($"Just executed action {newAction.GetType().DeclaringType}");
+        //UnityEngine.Debug.Log($"Just executed action {newAction.GetType().DeclaringType}");
         button.onClick.AddListener(delegate
         {
             newAction();

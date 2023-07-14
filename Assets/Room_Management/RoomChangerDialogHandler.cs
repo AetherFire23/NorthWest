@@ -1,10 +1,12 @@
 using Assets;
 using Assets.Dialogs;
+using Assets.FullTasksPanel;
 using Assets.GameLaunch;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.HttpStuff;
 using Assets.Raycasts;
+using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
 using System;
@@ -17,6 +19,7 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
     [SerializeField] private RoomChangeManager _roomChangeManager;
     [SerializeField] private LocalPLayerManager _localPLayerManager;
     [SerializeField] private GameDataStore _gameDataStore;
+    [SerializeField] private GameManagersContainer _gameManagers;
     // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
 
     private bool _isPrompting => _dialog is not null;
@@ -40,13 +43,10 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
         if (_isPrompting) return;
         if (!Input.GetMouseButtonDown(0)) return;
 
-        var door = IIDRaycast.MouseRaycastScriptOrDefault<DoorTargetRoomScript>();
-        if (door is null) return;
-        //if (door.TargetRoomName.Equals(_gameState.Room.Name))
-        //{
-        //    Debug.Log("cant acces ssame room ");
-        //    return;
-        //}
+        //var door = IIDRaycast.MouseRaycastScriptOrDefault<DoorTargetRoomScript>();
+        //if (door is null) return;
+
+        if (!IIDRaycast.TryGetScript<DoorTargetRoomScript>(out var door)) return;
 
         string roomName = GetCorrectRoomName(door);
 
@@ -72,7 +72,7 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
             return;
         }
 
-        var callResult = await _calls.ChangeRoom(PlayerInfo.UID, roomName);
+        var callResult = await _calls.ChangeRoom(PlayerInfo.Id, roomName);
         // techniquement ca devrait tt le temps etre des events mesemble.
         // Genre ca resoudrait tous les conflits de prediction et tout 
         await _dialog.Destroy();
@@ -84,10 +84,9 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
         }
         else
         {
-            // await _gameLauncherAndRefresher.ForceRefreshManagers();
-            //_gameDataStore.State.PlayerDTO.CurrentGameRoomId = 
-            var roomId = _gameDataStore.State.GetRoomByName(roomName).Id;
-            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(roomName);
+            _gameDataStore.UpdateLocalPlayerRoomId(roomName); // for prediction 
+            _roomChangeManager.PlaceLocalPlayerInRoomAndSnapCamera(roomName); 
+            await _gameManagers.RefreshSpecificManager<FullTasksManager>(); 
         }
 
         _dialog = null;
@@ -96,7 +95,7 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
     //Connections are both-sided. If not the first connection, go to the second one.
     private string GetCorrectRoomName(DoorTargetRoomScript connection)
     {
-        var currentRoomName = _gameState.Room.Name;
+        var currentRoomName = _gameState.LocalPlayerRoom.Name;
 
         bool noDoors = currentRoomName != connection.Connection1 && currentRoomName != connection.Connection2;
         if (noDoors) return string.Empty; // empty means dont show prompt ! 

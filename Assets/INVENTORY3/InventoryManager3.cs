@@ -31,7 +31,7 @@ namespace Assets.INVENTORY3
             _gameState = gameState;
             await InitializePlayerSlots();
             await InitializeStaticButtons();
-            await this.SetRoomInventory(_gameState.Room.Name);
+            await this.SetRoomInventory(_gameState.LocalPlayerRoom.Name);
             _refreshGuard.IsInitialized = true;
         }
 

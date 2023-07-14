@@ -1,3 +1,5 @@
+using Assets;
+using System;
 using Assets.Dialogs.DIALOGSREFACTOR;
 using Assets.HttpStuff;
 using Assets.MainMenu.Authentication;
@@ -7,61 +9,65 @@ using Shared_Resources.DTOs;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
 using TMPro;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AuthenticationManager : MonoBehaviour // not stateHolder
 {
-    // player can register during authentication loop. 
-    // logic 
-    [SerializeField] private MainMenuCalls _menuClient;
-    // views
+    [SerializeField] private Canvas _authenticationCanvas;
+
     [SerializeField] private AuthenticationDialog _authenticationDialog;
     [SerializeField] private RegisterDialog _registerDialog;
+
+    
+
+    [SerializeField] private MainMenuCalls _menuClient;
     [SerializeField] private Button RegisterButton;
     [SerializeField] private TextMeshProUGUI _loginErrorText;
     [SerializeField] private TextMeshProUGUI _registerErrorText;
     [SerializeField] private TextMeshProUGUI _registerSucessText;
-
     [SerializeField] private Button ConfirmRegisterButton;
 
     ObservableBool _isRegisteringObservable = new ObservableBool(false);
     ObservableBool _hasLoginErrorObservable = new ObservableBool(false);
     ObservableBool _isAuthenticatedObservable = new ObservableBool(false);
     ObservableBool _hasRegisterError = new ObservableBool(false);
+
     public async UniTask WaitUntilAuthenticated()
     {
         await _authenticationDialog.Initialize();
         await _registerDialog.Initialize();
         await ConfigureObservables();
         await ConfigureButtonHandlers();
-        await AuthenticateLoop();
+        await RunAuthenticateLoopUntilTokenAndUserIdAreRetrieved();
     }
 
-    private async UniTask AuthenticateLoop()
+    private async UniTask RunAuthenticateLoopUntilTokenAndUserIdAreRetrieved()
     {
         while (!_isAuthenticatedObservable.Value)
         {
             await _authenticationDialog.WaitForResolveCoroutine();
-            (bool Success, string Token) successToken = await TryGetLoginToken(_authenticationDialog.GetLoginCredentials());
+            LoginResult loginResult = await TryGetLoginToken(_authenticationDialog.GetLoginCredentials());
 
-            if (!successToken.Success)
+            if (!loginResult.IsSuccessful)
             {
                 await HandleFailedTokenRequest();
                 continue;
             }
             else
             {
-                PersistenceModel.Instance.Token = successToken.Token;
+                PersistenceModel.Instance.Token = loginResult.Token;
+                PlayerInfo.UserId = loginResult.UserId;
                 _isAuthenticatedObservable.Value = true; // breaksout
             }
         }
+
+        // cleanup the WindowZ
+         _authenticationCanvas.enabled = false;
     }
 
     private async UniTask OnOkRegisterResolve()
     {
-        // try login
         var clientCallResult = await _menuClient.Register(_registerDialog.GetRegisterRequest());
 
         if (!clientCallResult.IsSuccessful)
@@ -89,11 +95,11 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
         _authenticationDialog.ToggleCanvas(true);
     }
 
-    private async UniTask<(bool Success, string Token)> TryGetLoginToken(LoginRequest request)
+    private async UniTask<LoginResult> TryGetLoginToken(LoginRequest request)
     {
         var result = await _menuClient.GetLoginToken(request);
-        var sucessToken = (result.IsSuccessful, result.Content as string ?? string.Empty);
-        return sucessToken;
+        LoginResult loginResult = result.DeserializeContent<LoginResult>();
+        return loginResult;
     }
 
     private async UniTask HandleFailedTokenRequest()

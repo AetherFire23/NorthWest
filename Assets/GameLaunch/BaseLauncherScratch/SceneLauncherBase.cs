@@ -27,7 +27,15 @@ namespace Assets.GameLaunch
             await FindAndInitializeUtilityMonoBehaviours();
 
             await BeforeInitializingManagers();
+
+            //must get State after Initializing managers since i need to authenticate
+            // before fetching any state so I dont have the necessary UID 
+            // when first launching
+            var state = (await FetchInitialState()) ?? throw new System.Exception("State is null");
+
+            await DataStore.InitializeAsync(state);
             await Managers.ExecuteInitialData();
+
             await AfterInitializingManagers();
 
             _refreshStopGuards.IsInitializing = false;
@@ -41,8 +49,7 @@ namespace Assets.GameLaunch
             DataStore = UnityExtensions.FindUniqueMonoBehaviour<DatastoreBase<TState>>();
 
             await PrefabLoader.InitializeAsync();
-            var state = await FetchInitialState();
-            await DataStore.InitializeAsync(state);
+        
             await Managers.InitializeAsync();
         }
 
