@@ -1,4 +1,5 @@
 ﻿using Assets.AssetLoading;
+using Assets.EntityRefresh;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.HttpStuff;
 using Assets.MainMenu.Launch;
@@ -19,7 +20,7 @@ namespace Assets.MainMenu.LobbiesAndGames
         [SerializeField] private RectTransform _contentScrollView;
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private MainMenuSceneLauncher _mainMenuSceneLauncher;
-        private SingleEntityRefresher<ActiveGameEntry, GameDto> _activeGameEntries;
+        private ScratchEntityBaseRefresher<ActiveGameEntry, GameDto> _activeGameEntries;
 
         private MainMenuState _state;
         private List<GameDto> _gameDtos => _state.UserDto.ActiveGamesForUser;
@@ -53,7 +54,7 @@ namespace Assets.MainMenu.LobbiesAndGames
             return newEntry;
         }
 
-        // join game is not a call its just a scene change 
+        // join game is not a call its just a scene change supported by wahts stored inside persistence
         private async UniTask OnJoinGameButtonClick(Guid gameId)
         {
             Debug.Log("Trying to join game");

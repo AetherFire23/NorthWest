@@ -8,7 +8,6 @@ using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Assets.MainMenu.Launch
 {

@@ -36,15 +36,15 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 
             DialogResult = result;
 
+            if (OnOkDialogResolve is null)
+            {
+                Debug.Log("evocation list was 0 for list!");
+                return;
+            }
             switch (DialogResult)
             {
                 case DialogResult.Ok:
                     {
-                        if (OnOkDialogResolve is null)
-                        {
-                            Debug.Log("evocation list was 0 for list!");
-                            break;
-                        }
                         await OnOkDialogResolve.Invoke();
                         break;
                     }

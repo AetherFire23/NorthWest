@@ -3,7 +3,6 @@ using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.HttpStuff;
 using Assets.Scratch;
 using Cysharp.Threading.Tasks;
-using Shared_Resources.Models;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
