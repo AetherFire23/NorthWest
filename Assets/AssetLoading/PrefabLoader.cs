@@ -43,7 +43,7 @@ namespace Assets.AssetLoading
         // Do not forget that reflection for typeof and nameof is quite fast
         public async UniTask<T> CreateInstanceOfAsync<T>(GameObject parent) where T : PrefabScriptBase
         {
-            if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($"{typeof(T)} did not exist");
+            if (!_references.ContainsKey(typeof(T))) throw new ArgumentNullException($" Prefab Loading error : {typeof(T)} did not exist");
 
             AssetReference assetReference = _references[typeof(T)];
             GameObject gameObject = await assetReference.InstantiateAsync(parent.transform).Task.AsUniTask();

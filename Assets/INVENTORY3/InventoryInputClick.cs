@@ -1,4 +1,5 @@
 ﻿using Assets.HttpStuff;
+using Assets.Scratch;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -39,7 +40,7 @@ namespace Assets.INVENTORY3
             {
                 case MouseReleaseAction.FromPlayerToRoom: //ownerShipChange
                     {
-                        await _calls.TransferItemOwnerShip(_inventoryManager.CurrentInventoryShownRoomId, clickedItem.Item.OwnerId, clickedItem.Id, PlayerInfo.GameId);
+                        await _calls.TransferItemOwnerShip(_inventoryManager.CurrentRoomInventoryShownId, clickedItem.OwnerId, clickedItem.Id, PersistenceReducer.GameId);
 
                         break;
                     }
@@ -51,7 +52,7 @@ namespace Assets.INVENTORY3
                             return;
                         }
 
-                        await _calls.TransferItemOwnerShip(PlayerInfo.Id, clickedItem.Item.OwnerId, clickedItem.Id, PlayerInfo.GameId);
+                        await _calls.TransferItemOwnerShip(PersistenceReducer.PlayerId, clickedItem.Item.OwnerId, clickedItem.Id, PersistenceReducer.GameId);
                         break;
                     }
             }

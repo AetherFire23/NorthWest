@@ -22,7 +22,7 @@ namespace Assets.HttpStuff
                 {
                     string parseableLine = await _disposables.StreamReader.ReadLineAsync().AsUniTask();
 
-                    if (string.IsNullOrEmpty(parseableLine))
+                    if (string.IsNullOrEmpty(parseableLine)) // not sure if this is even caleld ever
                     {
                         Debug.Log("No messages received");
                     }
@@ -40,16 +40,6 @@ namespace Assets.HttpStuff
                 //  Debug.LogException(ex);
             }
         }
-
-        public async UniTask DummyNotAwaited()
-        {
-            while (!_mustStopReceivingMessages)
-            {
-                Debug.Log("going and going");
-                await UniTask.Delay(200);
-            }
-        }
-
         public void Dispose()
         {
             _mustStopReceivingMessages = true;

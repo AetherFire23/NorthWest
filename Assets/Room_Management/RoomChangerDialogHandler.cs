@@ -4,6 +4,7 @@ using Assets.FullTasksPanel;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.HttpStuff;
 using Assets.Raycasts;
+using Assets.Scratch;
 using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
@@ -70,7 +71,7 @@ public class RoomChangerDialogHandler : StateHolderBase<GameState>
             return;
         }
 
-        var callResult = await _calls.ChangeRoom(PlayerInfo.Id, roomName);
+        var callResult = await _calls.ChangeRoom(PersistenceReducer.PlayerId, roomName);
         // techniquement ca devrait tt le temps etre des events mesemble.
         // Genre ca resoudrait tous les conflits de prediction et tout 
         await _dialog.Destroy();

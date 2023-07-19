@@ -7,6 +7,11 @@ namespace Assets.Scratch
 {
     public static class PersistenceAccess // make extension method instead to make this reusable
     {
+        private static JsonSerializerSettings _serializationSettings = new JsonSerializerSettings()
+        {
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+        };
+
         /// <summary>Use unique types. If you need more than one instance, use List</summary>
         public static void SaveData<T>(T data) where T : class, new()
         {
@@ -18,7 +23,7 @@ namespace Assets.Scratch
                 File.Delete(savePath);
             }
 
-            File.WriteAllText(savePath, JsonConvert.SerializeObject(data));
+            File.WriteAllText(savePath, JsonConvert.SerializeObject(data, _serializationSettings));
 
         }
 
@@ -70,6 +75,7 @@ namespace Assets.Scratch
             return null;
         }
 
+        // path is type name so 2 types will overwrite.
         private static string GetPathOf<T>() where T : class, new()
         {
             string subpath = $"{typeof(T).Name}.json";

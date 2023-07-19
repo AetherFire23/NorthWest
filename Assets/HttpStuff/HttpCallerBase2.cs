@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using Shared_Resources.Models;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.HttpStuff
 {
-    public abstract class HttpCallerBase2 : MonoBehaviour
+    public abstract class HttpCallerBase2 : MonoBehaviour, IDisposable
     {
         // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/http/httpclient-guidelines
         // should init client with a static method I think so that i can pass in the PooledConnectionLifetime 
@@ -40,7 +41,7 @@ namespace Assets.HttpStuff
             return clientCallResult;
         }
 
-        protected async UniTask<T> GetRequest<T>(UriBuilder infos)
+        protected async UniTask<ClientCallResult> GetRequest(UriBuilder infos)
         {
             using HttpResponseMessage response = await _client.GetAsync(infos.Path).AsUniTask();
             if (!response.IsSuccessStatusCode)
@@ -49,7 +50,7 @@ namespace Assets.HttpStuff
                 response.EnsureSuccessStatusCode();
             }
             string responseBody = await response.Content.ReadAsStringAsync().AsUniTask();
-            T result = JsonConvert.DeserializeObject<T>(responseBody);
+            ClientCallResult result = JsonConvert.DeserializeObject<ClientCallResult>(responseBody);
             return result;
         }
 

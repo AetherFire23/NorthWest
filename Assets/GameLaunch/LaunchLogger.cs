@@ -1,8 +1,8 @@
-﻿
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+
 namespace Assets.GameLaunch
 {
     public static class LaunchLogger
@@ -32,7 +32,6 @@ namespace Assets.GameLaunch
                         if (nullField.FieldType.Assembly != Assembly.GetExecutingAssembly()) continue;
                         Debug.LogError($"Gameobject {gameObject.name} has monobehaviour ${monoBehaviour} with null field ${nullField.Name} with type {nullField.FieldType.Name}");
                     }
-
                 }
             }
         }

@@ -20,6 +20,7 @@ namespace Assets.Scratch
 
         private void MapOptionsToOptionData(List<T> options)
         {
+            if(options.Any(x=> x is null)) throw new ArgumentNullException("at least 1 argument was null inside options");
             foreach (var option in options)
             {
                 var optionData = new OptionData(option.ToString());

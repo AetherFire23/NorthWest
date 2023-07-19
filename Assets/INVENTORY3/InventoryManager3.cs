@@ -20,10 +20,10 @@ namespace Assets.INVENTORY3
         // [SerializeField] private GameLauncherAndRefresher _gameLauncherAndRefresher;
         [SerializeField] private InventoryRefreshGuard _refreshGuard;
 
-        public RoomDTO CurrentShownRoom => _gameState.GetRoomById(CurrentInventoryShownRoomId);
+        public RoomDTO CurrentShownRoom => _gameState.GetRoomById(CurrentRoomInventoryShownId);
         private GameState _gameState { get; set; }
         public ItemInventory TrackedItem { get; set; }
-        public Guid CurrentInventoryShownRoomId { get; set; }
+        public Guid CurrentRoomInventoryShownId { get; set; }
 
         public override async UniTask Initialize(GameState gameState)
         {
@@ -137,7 +137,7 @@ namespace Assets.INVENTORY3
             _refreshGuard.IsSwitchingRoomInventory = true;
 
             RoomDTO room = _gameState.GetRoomByName(otherRoomName);
-            CurrentInventoryShownRoomId = room.Id;
+            CurrentRoomInventoryShownId = room.Id;
             _inventoryObjects.RoomNameText.text = room.Name;
             await this.RefreshItems(room.Name);
             _inventoryObjects.RoomInventoryCanvas.enabled = true;

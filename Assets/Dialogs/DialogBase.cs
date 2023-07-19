@@ -11,7 +11,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
 
         protected abstract string Name { get; }
 
-        public bool Resolved { get; set; } = false; // must start as false
+        public bool IsResolved { get; set; } = false; // must start as false
                                                     // public ObservableBool IsResolvedObservable { get; set; } = new ObservableBool(false);
         public DialogResult DialogResult { get; set; }
 
@@ -30,7 +30,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
         /// <summary> Provokes the dialog handlers</summary>
         public async UniTask ResolveDialog(DialogResult result, bool canInvokeOnSameResult = true)
         {
-            Resolved = true;
+            IsResolved = true;
 
             if (!canInvokeOnSameResult && DialogResult.Equals(result)) return;
 
@@ -62,7 +62,7 @@ namespace Assets.Dialogs.DIALOGSREFACTOR
             while (!resolved)
             {
                 await UniTask.DelayFrame(25);
-                resolved = Resolved;
+                resolved = IsResolved;
                 Debug.Log($"iswaiting : {resolved}, {Name}");
 
                 await UniTask.Yield();

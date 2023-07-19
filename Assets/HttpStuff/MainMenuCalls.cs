@@ -18,8 +18,10 @@ namespace Assets.HttpStuff
             var uriBuilder = new UriBuilder(fullEndpoint, ParameterOptions.Required);
             uriBuilder.AddParameter("userId", userId.ToString());
 
-            MainMenuState mainMenuState = await GetRequest<MainMenuState>(uriBuilder)
+            ClientCallResult mainMenuStateCall = await GetRequest(uriBuilder)
                 ?? throw new Exception("cant return null for mainMenuState");
+
+            var mainMenuState = mainMenuStateCall.DeserializeContent<MainMenuState>();
 
             return mainMenuState;
         }

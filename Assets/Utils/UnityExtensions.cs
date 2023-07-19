@@ -216,7 +216,10 @@ public static class UnityExtensions
     }
 
     /// <summary> Needs to be a delegate with syntax: async() => await task and have 0 idea why 
-    /// so to be clear, NOT AddTaskFunc(Task) but the other syntax </summary>
+    /// so to be clear, NOT AddTaskFunc(Task) but the other syntax 
+    /// apres reflexion je pense que cest pcq il peut pas avoir de parameter pour que ca soit generic 
+    /// </summary>
+    /// 
     public static void AddTaskFunc(this Button self, Func<UniTask> task)
     {
         self.onClick.AddListener(async () => await task.Invoke());

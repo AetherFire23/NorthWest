@@ -5,6 +5,7 @@ using Assets.Scratch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,17 +46,16 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
         {
             await _authenticationDialog.WaitForResolveCoroutine();
             LoginResult loginResult = await TryGetLoginToken(_authenticationDialog.GetLoginCredentials());
-
             if (!loginResult.IsSuccessful)
             {
                 await HandleFailedTokenRequest();
-                continue;
             }
             else
             {
-                PersistenceModel.Instance.Token = loginResult.Token;
-                PlayerInfo.UserId = loginResult.UserId;
+                PersistenceReducer.Token = loginResult.Token;
+                PersistenceReducer.UserId = loginResult.UserId;
                 _isAuthenticatedObservable.Value = true; // breaksout
+                _authenticationDialog.IsResolved = false;
             }
         }
 
@@ -101,9 +101,9 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
 
     private async UniTask HandleFailedTokenRequest()
     {
-        Debug.Log("wrong creds i think");
+        Debug.LogError("wrong creds i think");
         _hasLoginErrorObservable.Value = true;
-        _authenticationDialog.Resolved = false;
+        _authenticationDialog.IsResolved = false;
     }
 
     private async UniTask ConfigureObservables()
@@ -125,7 +125,7 @@ public class AuthenticationManager : MonoBehaviour // not stateHolder
             }
             else
             {
-                _registerDialog.Resolved = false;
+                _registerDialog.IsResolved = false;
                 _registerDialog.ToggleCanvas(true);
                 _authenticationDialog.ToggleCanvas(false);
             }

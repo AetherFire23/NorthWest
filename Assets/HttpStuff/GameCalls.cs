@@ -39,11 +39,11 @@ namespace Assets.HttpStuff
             infos.AddParameter("playerId", playerId.ToString());
             string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
             infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
-            GameState gameState = await GetRequest<GameState>(infos);
+            ClientCallResult gameStateCallResult = await GetRequest(infos);
+            GameState gamestate = gameStateCallResult.DeserializeContent<GameState>();
 
-
-            if (gameState == null) { Debug.LogError("webapi not found"); }
-            return gameState;
+            if (gamestate == null) { Debug.LogError("webapi not found"); }
+            return gamestate;
         }
 
         public async UniTask<ClientCallResult> UpdatePosition(Guid playerId, float x, float y)

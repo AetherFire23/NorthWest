@@ -19,6 +19,7 @@ namespace Assets.FullTasksPanel
 
         [SerializeField] private Button _taskButton;
         [SerializeField] private Canvas _taskScrollViewCanvas;
+
         // models
         private List<GameTaskBase> _gameTasks = new();
         private GameState _gameState;
@@ -31,7 +32,8 @@ namespace Assets.FullTasksPanel
         public override async UniTask Initialize(GameState gameState)
         {
             _taskButton.AddMethod(() => _taskScrollViewCanvas.enabled = !_taskScrollViewCanvas.enabled);
-            // will not work cos dll uses IGameTask I should not use reflection from the dll hoesntly
+
+            // tasksfrom DLL 
             _gameState = gameState;
             _gameTasks = typeof(GameTaskBase).Assembly.GetTypes()
                 .Where(x => x.IsClass && !x.IsAbstract

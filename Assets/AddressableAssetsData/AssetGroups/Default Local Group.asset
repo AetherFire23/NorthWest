@@ -112,6 +112,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 26ace954a05c6b649896c05db33a560d
+    m_Address: Assets/Addressable_Assets 1/GameLobbies/LobbyEntry.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d55df6266d63bf847ba9b794d5856bab
+    m_Address: Assets/Addressable_Assets 1/CurrentGamesPanel/GameEntry.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 790e86d84fd08df44942867f4551ce4c, type: 2}
   m_SchemaSet:

@@ -38,7 +38,7 @@ namespace Assets.LogManager3
             _filteringManager.AddRange(_gameState.Logs);
             await InitializeDropDowns(gameState);
             await InitializeButtons();
-            _filteringManager.SetPlayerFilter(PlayerInfo.Id);
+            _filteringManager.SetPlayerFilter(PersistenceReducer.PlayerId);
             await RefreshLogsWithCurrentFilter();
         }
 
