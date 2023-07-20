@@ -13,18 +13,19 @@ namespace Assets.EntityRefresh
     public class ScratchEntityBaseRefresher<TPrefab, TEntity>
         where TPrefab : PrefabScriptBase, IEntity
         where TEntity : IEntity
-    {
+    { 
         public List<TPrefab> Instances { get; set; } = new List<TPrefab>();
         private Func<TEntity, UniTask<TPrefab>> _createPrefab { get; set; }
         private Func<TPrefab, UniTask> _deletePrefab { get; set; }
 
         public ScratchEntityBaseRefresher(Func<TEntity, UniTask<TPrefab>> createPrefabFunc, Func<TPrefab, UniTask> deletePrefabFunc = null)
         {
+
             _createPrefab = createPrefabFunc;
             _deletePrefab = deletePrefabFunc;
         }
 
-        public async UniTask RefreshEntites(List<TEntity> upToDateEntities)
+        public async UniTask RefreshEntities(List<TEntity> upToDateEntities)
         {
             var refreshResult = EntityComparer.CompareEntities(Instances, upToDateEntities);
             foreach (TEntity entity in refreshResult.AppearedEntities)
@@ -36,10 +37,14 @@ namespace Assets.EntityRefresh
             {
                 if (_deletePrefab is null)
                 {
-                    GameObject.Destroy(prefab);
+                    Instances.Remove(prefab);
+
+                    GameObject.Destroy(prefab.gameObject);
                 }
                 else
                 {
+                    Instances.Remove(prefab);
+
                     await _deletePrefab.Invoke(prefab);
                 }
             }

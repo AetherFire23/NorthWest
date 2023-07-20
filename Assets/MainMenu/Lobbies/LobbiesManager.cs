@@ -38,7 +38,7 @@ namespace Assets.MainMenu.Lobbies
         public async UniTask RefreshLobbies()
         {
             var upToDateEntities = _state.UserDto.QueuedLobbies;
-            await _entityRefresher.RefreshEntites(upToDateEntities);
+            await _entityRefresher.RefreshEntities(upToDateEntities);
         }
 
         public async UniTask<LobbyEntry> CreateLobbyEntry(LobbyDto lobbyDto)

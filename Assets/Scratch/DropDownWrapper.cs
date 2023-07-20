@@ -6,13 +6,13 @@ using static TMPro.TMP_Dropdown;
 
 namespace Assets.Scratch
 {
-    public class DropDownManager<T> where T : class, IFormattable // should implement this for ToggleOptions honestly
+    public class DropDownWrapper<T> where T : class, IFormattable // should implement this for ToggleOptions honestly
     {
         private Dictionary<OptionData, T> _options = new Dictionary<OptionData, T>();
         private TMP_Dropdown _dropdown;
 
         public List<T> Options => _options.Values.ToList();
-        public DropDownManager(List<T> options, TMP_Dropdown down)
+        public DropDownWrapper(List<T> options, TMP_Dropdown down)
         {
             _dropdown = down;
             MapOptionsToOptionData(options);

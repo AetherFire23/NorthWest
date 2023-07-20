@@ -20,10 +20,10 @@ namespace Assets.LogManager3
         [SerializeField] private GameLogObjects _gameLogObjects;
 
         [SerializeField] private TMP_Dropdown _playerDropDown;
-        private DropDownManager<Player> _playerDropDownManager;
+        private DropDownWrapper<Player> _playerDropDownManager;
 
         [SerializeField] private TMP_Dropdown _roomsDropDown;
-        private DropDownManager<RoomDTO> _roomsDropDownManager;
+        private DropDownWrapper<RoomDTO> _roomsDropDownManager;
 
         private List<LogTextObject> _logChatObjects = new();
 
@@ -92,9 +92,9 @@ namespace Assets.LogManager3
         public async UniTask InitializeDropDowns(GameState gameState)
         {
             // managers
-            _playerDropDownManager = new DropDownManager<Player>(gameState.Players, _playerDropDown);
+            _playerDropDownManager = new DropDownWrapper<Player>(gameState.Players, _playerDropDown);
 
-            _roomsDropDownManager = new DropDownManager<RoomDTO>(gameState.GetRoomsInAlphabeticalOrder(), _roomsDropDown);
+            _roomsDropDownManager = new DropDownWrapper<RoomDTO>(gameState.GetRoomsInAlphabeticalOrder(), _roomsDropDown);
 
             _playerDropDown.AddDropDownAction(async () =>
             {

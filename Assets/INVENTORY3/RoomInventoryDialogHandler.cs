@@ -22,7 +22,7 @@ namespace Assets.INVENTORY3
 
             _isChangingRoom = true;
 
-            await _inventoryManager.SetRoomInventory(roomChest.RoomChestName);
+            await _inventoryManager.ChangeRoomInventoryAndRefresh(roomChest.RoomChestName);
 
             _isChangingRoom = false;
         }

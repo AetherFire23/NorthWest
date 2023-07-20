@@ -41,7 +41,7 @@ namespace Assets.MainMenu.LobbiesAndGames
 
         private async UniTask RefreshVisuals()
         {
-            await _activeGameEntries.RefreshEntites(_gameDtos);
+            await _activeGameEntries.RefreshEntities(_gameDtos);
         }
 
         private async UniTask<ActiveGameEntry> CreateNewActiveGame(GameDto dto)

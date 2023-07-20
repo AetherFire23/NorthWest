@@ -39,7 +39,6 @@ namespace Assets.SSE
             var methods = refresherSubclass.GetMethods()
                 .Where(x => x.GetCustomAttributes(typeof(EventMethodMappingAttribute), false).Any());
 
-
             foreach (MethodInfo method in methods)
             {
                 var customAttribute = method.GetCustomAttribute<EventMethodMappingAttribute>().EventType;

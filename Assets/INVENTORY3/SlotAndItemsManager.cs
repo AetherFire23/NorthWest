@@ -22,7 +22,7 @@ namespace Assets.INVENTORY3
             return emptySlot;
         }
 
-        public async UniTask<SlotInventory> CreateNewRoomSlotAndCreateNewItem(Item item)
+        public async UniTask<ItemInventory> CreateNewRoomSlotAndCreateNewItem(Item item)
         {
             var slot = await _prefabLoader.CreateInstanceOfAsync<SlotInventory>(_inventoryStaticGameObjects.RoomInventoryScrollView.gameObject);
             await slot.Initialize(true);
@@ -30,7 +30,7 @@ namespace Assets.INVENTORY3
             var itemInventory = await _prefabLoader.CreateInstanceOfAsync<ItemInventory>(slot.gameObject);
             await itemInventory.Initialize(slot, item); // is inserted in there
             _slots.Add(slot);
-            return slot;
+            return itemInventory;
         }
 
         public async UniTask<SlotInventory> CreateRoomInventorySlotAndInsertItem(ItemInventory item) // should never be empty though...
