@@ -55,7 +55,7 @@ namespace Assets.SSE
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Debug.Log($"{e.Message}");
             }
             Debug.Log("SSE Stream cleaned up");
         }

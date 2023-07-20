@@ -73,8 +73,15 @@ namespace Assets.GameLaunch
 
         protected void OnApplicationQuit()
         {
-            ClientCalls.Dispose();
-            _sseStream.Dispose();
+            try
+            {
+                ClientCalls.Dispose();
+                _sseStream.Dispose();
+            }
+            catch (Exception ex) 
+            {
+                Debug.Log($"Expected exception : {ex.Message}");
+            }
         }
     }
 }

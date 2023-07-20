@@ -3,6 +3,7 @@ using Assets.AssetLoading;
 using Assets.CHATLOG3;
 using Assets.Dialogs;
 using Assets.Dialogs.DIALOGSREFACTOR;
+using Assets.EntityRefresh;
 using Assets.GameLaunch.BaseLauncherScratch;
 using Assets.GameState_Management;
 using Assets.HttpStuff;
@@ -22,10 +23,15 @@ public class ChatLogManager3 : StateHolderBase<GameState>
     [SerializeField] DialogManager _dialogManager;
     // [SerializeField] GameLauncherAndRefresher _gameLauncherAndRefresher;
 
-    private List<Message> _allMessages = new();
-    private GameObjectDatabaseRefresher<ChatTextObject, Message> _chatTexts; // text in chat
-    private GameObjectDatabaseRefresher<PlayerInRoomButton, Player> _playersInChatRoom;
-    private GameObjectDatabaseRefresher<RoomTab, PrivateChatRoom> _roomTabs;
+    private List<Message> _allMessagesCache = new();
+    //private GameObjectDatabaseRefresher<ChatTextObject, Message> _chatTexts; // text in chat
+    //private GameObjectDatabaseRefresher<PlayerInRoomButton, Player> _playersInChatRoom;
+    //private GameObjectDatabaseRefresher<RoomTab, PrivateChatRoom> _roomTabs;
+
+    private EntityRefresher<ChatTextObject, Message> _chatTexts;
+    private EntityRefresher<PlayerInRoomButton, Player> _playersInChatRoom;
+    private EntityRefresher<RoomTab, PrivateChatRoom> _roomTabs;
+
     private List<InviteButton> _inviteButtons = new();
 
     private GameState _gameState;
@@ -36,18 +42,26 @@ public class ChatLogManager3 : StateHolderBase<GameState>
     {
         _gameState = firstGameState;
         _currentShownRoomId = _gameState.GameId;
-        _allMessages.AddRange(_gameState.NewMessages);
-        await InitializeGameObjectUpdaters();
+        _allMessagesCache.AddRange(_gameState.NewMessages);
+        await InitializeRefresher();
         await InitializeStaticButtons();
         await InitializeInviteButtons(_gameState.Players);
         await InitializeAddChatRoomButton();
         await RefreshPanelsForChatRoom(_currentShownRoomId);
     }
 
+    // --- Initialization Methods ---
+    public async UniTask InitializeRefresher()
+    {
+        _chatTexts = new(CreateChatText);
+        _playersInChatRoom = new(CreatePlayerInRoomButton);
+        _roomTabs = new(CreateRoomTab);
+    }
+
     public override async UniTask Refresh(GameState gameState)
     {
         _gameState = gameState;
-        _allMessages.AddRange(_gameState.NewMessages);
+        _allMessagesCache.AddRange(_gameState.NewMessages);
         await RefreshPanelsForChatRoom(_currentShownRoomId);
     }
 
@@ -63,8 +77,6 @@ public class ChatLogManager3 : StateHolderBase<GameState>
             _chatObjects.InputField.GetTextWithoutHiddenCharacters());// TRIM PLEASE SOON
         _chatObjects.InputField.text = string.Empty;
 
-        //await _gameLauncherAndRefresher.ForceRefreshManagers();
-
         _isSendingMessage = false;
     }
 
@@ -77,7 +89,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
 
     public async UniTask LoadMessagesInChatRoom(Guid chatRoomId)
     {
-        var messagesInChatRoom = _allMessages.Where(x => x.RoomId.Equals(chatRoomId)).ToList();
+        var messagesInChatRoom = _allMessagesCache.Where(x => x.RoomId.Equals(chatRoomId)).ToList();
         await _chatTexts.RefreshEntities(messagesInChatRoom);
     }
 
@@ -93,14 +105,6 @@ public class ChatLogManager3 : StateHolderBase<GameState>
         await _roomTabs.RefreshEntities(_gameState.PrivateChatRooms);
     }
 
-    // --- Initialization Methods ---
-    public async UniTask InitializeGameObjectUpdaters()
-    {
-        _chatTexts = new(CreateChatText);
-        _playersInChatRoom = new(CreatePlayerInRoomButton);
-        _roomTabs = new(CreateRoomTab);
-    }
-
     public async UniTask InitializeInviteButtons(List<Player> playersInGame)
     {
         foreach (var player in playersInGame)
@@ -114,7 +118,7 @@ public class ChatLogManager3 : StateHolderBase<GameState>
             };
             await CreateInviteButton(parameters);
         }
-    }
+    } 
 
     public async UniTask InitializeAddChatRoomButton()
     {

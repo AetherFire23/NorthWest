@@ -3,6 +3,7 @@ using Assets.Dialogs;
 using Assets.GameLaunch;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Models;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Scratch
@@ -10,7 +11,7 @@ namespace Assets.Scratch
     public class ScriptScratch : MonoBehaviour, IStartupBehavior
     {
         [SerializeField] private Transform _dialogCanvast;
-        [SerializeField] private TMPro.TMP_Dropdown _dropDown;
+        [SerializeField] private TMP_Dropdown _dropDown;
         [SerializeField] private PrefabLoader prefab;
         [SerializeField] private DialogManager _dialogManager;
 
@@ -18,9 +19,6 @@ namespace Assets.Scratch
         public async UniTask Initialize(GameState gameState)
         {
             if (_isInitialized) return;
-
-
-
         }
     }
 }

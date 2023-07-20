@@ -85,7 +85,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8710463347323398337}
-  - component: {fileID: 2399497551984748555}
   - component: {fileID: -8059624369869088209}
   m_Layer: 5
   m_Name: PlayerInRoomButton
@@ -116,20 +115,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 23.3194}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2399497551984748555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8710463347323398350}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d3af3391bc973e43bb3227a02d60808, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ButtonComponent: {fileID: 8710463348111209233}
-  ButtonTextComponent: {fileID: 8710463348149573982}
 --- !u!114 &-8059624369869088209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 8710463348111209233}
-  _buttonText: {fileID: 8710463348149573982}
+  _buttonTextMesh: {fileID: 8710463348149573982}
 --- !u!1 &8710463348111209247
 GameObject:
   m_ObjectHideFlags: 0

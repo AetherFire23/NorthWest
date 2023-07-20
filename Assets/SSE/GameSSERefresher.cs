@@ -26,7 +26,7 @@ namespace Assets.HttpStuff
         [EventMethodMapping(SSEType.RefreshPlayers)]
         public async UniTask Dummy2(SSEClientData data)
         {
-            // this will be server-side only, refresh players every 3 seconds
+            // this will be server-side only, refresh players every 3 seconds ie
             Debug.Log($"{nameof(SSEType.RefreshPlayers)}");
         }
 

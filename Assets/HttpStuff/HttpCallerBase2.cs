@@ -18,7 +18,6 @@ namespace Assets.HttpStuff
         private HttpClient _client = new HttpClient()
         {
             Timeout = System.Threading.Timeout.InfiniteTimeSpan,
-
         };
 
         public void ConfigureAuthenticationHeaders(string token)

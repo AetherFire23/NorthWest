@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Shared_Resources.Interfaces;
-
+using System.Text;
 namespace Assets.EntityRefresh
 {
     public static class EntityComparer
@@ -22,7 +22,10 @@ namespace Assets.EntityRefresh
                 DisappearedPrefabs = disappearedPrefabs,
             };
 
+            
             return compared;
         }
+
+        //public static ComparedEntities<TPrefab, TEntity>
     }
 }
