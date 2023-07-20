@@ -265,7 +265,6 @@ public static class UnityExtensions
         List<T> monoBehaviours = (GameObject.FindObjectsOfType<T>()).ToList();
 
         if (!monoBehaviours.Any()) throw new Exception($"Not found:{typeof(T)}");
-
         if (monoBehaviours.Count > 1) throw new Exception($"Too many of:{typeof(T)}");
 
         return monoBehaviours.First();

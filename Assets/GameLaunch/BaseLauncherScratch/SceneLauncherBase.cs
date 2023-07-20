@@ -20,14 +20,15 @@ namespace Assets.GameLaunch
         protected THTTPCaller ClientCalls { get; set; } // Could use different Calls for MainMenu
         protected ManagersContainerBase<TState> Managers { get; set; }
         private DatastoreBase<TState> DataStore { get; set; }
-        private BaseManagerRefreshStopGuards _refreshStopGuards { get; set; } = new();
 
         protected SSEStream _sseStream;
 
+        // because async, Start can run and run over itself over and over again so i need to block it.
+        private bool _isInitializing = false;
         private async UniTask Start()
         {
-            if (_refreshStopGuards.MustPreventInitialization()) return;
-            _refreshStopGuards.IsInitializing = true;
+            if (_isInitializing) return;
+            _isInitializing = true;
             await FindAndInitializeUtilityBehaviours();
 
             await BeforeInitializingManagers();
@@ -42,7 +43,7 @@ namespace Assets.GameLaunch
 
             await AfterInitializingManagers(state);
 
-            _refreshStopGuards.IsInitializing = false;
+            _isInitializing = false;
         }
 
         private async UniTask FindAndInitializeUtilityBehaviours()
@@ -53,7 +54,6 @@ namespace Assets.GameLaunch
             DataStore = UnityExtensions.FindUniqueMonoBehaviour<DatastoreBase<TState>>();
 
             await PrefabLoader.InitializeAsync();
-
             await Managers.InitializeAsync();
         }
 
@@ -65,7 +65,6 @@ namespace Assets.GameLaunch
             disposables.ForEach(x => x.Dispose());
 
             await SceneManager.LoadSceneAsync(nextSceneName).ToUniTask();
-            //await SceneManager.UnloadSceneAsync(currentSceneName).ToUniTask();
         }
 
         protected abstract UniTask<TState> FetchInitialState();

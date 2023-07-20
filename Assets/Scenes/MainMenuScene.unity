@@ -1074,7 +1074,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &417242009
 GameObject:
@@ -3581,7 +3581,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 755861239}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.020000042
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3671,7 +3671,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1364135509
 MonoBehaviour:
@@ -4042,10 +4042,6 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   - m_AssetGUID: 2788f4faddd33404a928a11cfee2aac7
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: da9ca87870d77664e86c15dea1ec41a0
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
@@ -4854,7 +4850,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1876417696}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.01999997
+  m_Size: 0.020000115
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5239,6 +5235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _contentScrollView: {fileID: 539161287}
   _prefabLoader: {fileID: 1387757149}
+  _mainMenuSceneLauncher: {fileID: 1364135507}
 --- !u!4 &1758005840
 Transform:
   m_ObjectHideFlags: 0

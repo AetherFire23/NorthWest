@@ -30,28 +30,6 @@ namespace Assets.Dialogs
             GameObject.Destroy(dialog.gameObject);
         }
 
-        // could maybe use reflection to force special implementation through this method
-        // this dialog needs to spawn some more Toggles but it does load the prefab loader...
-        // maybe I could have the selectionDialog be always in the 
-        /// <summary>
-        /// Dont forget to override ToString();
-        /// </summary>
-        public async UniTask<OptionsDialogScript> CreateAndInitializeOptionsDialog(string description, List<object> options, bool allowMultipleChecks, int minimumChecks, int maximumChecks)
-        {
-            var optionsDialog = await _prefabLoader.CreateInstanceOfAsync<OptionsDialogScript>(_dialogCanvas.gameObject);
-            await optionsDialog.Initialize(description, allowMultipleChecks, minimumChecks, maximumChecks);
-
-            // create the ToggleOptions from outside the optionsDialog because I don't have reference to the prefabloader inside of classes... Maybe I should make it a singleton?
-            // SHould verify if this is an async hazard
-            foreach (var option in options)
-            {
-                var toggleOption = await _prefabLoader.CreateInstanceOfAsync<ToggleOption2>(optionsDialog.OptionsDialogObjects.TogglesPanel.gameObject);
-                await toggleOption.Initialize(option);
-                optionsDialog.ToggleOptions.Add(toggleOption);
-            }
-
-            return optionsDialog;
-        }
         public async UniTask<OptionsDialogScript2> CreateAndInitializeOptionsDialog2(string description, List<object> options, bool allowMultipleChecks, int minimumChecks, int maximumChecks)
         {
             var optionsDialog = await _prefabLoader.CreateInstanceOfAsync<OptionsDialogScript2>(_dialogCanvas.gameObject);
