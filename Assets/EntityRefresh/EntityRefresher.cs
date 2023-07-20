@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.EntityRefresh
 {
-    public class ScratchEntityBaseRefresher<TPrefab, TEntity>
+    public class EntityRefresher<TPrefab, TEntity>
         where TPrefab : PrefabScriptBase, IEntity
         where TEntity : IEntity
     { 
@@ -18,7 +18,7 @@ namespace Assets.EntityRefresh
         private Func<TEntity, UniTask<TPrefab>> _createPrefab { get; set; }
         private Func<TPrefab, UniTask> _deletePrefab { get; set; }
 
-        public ScratchEntityBaseRefresher(Func<TEntity, UniTask<TPrefab>> createPrefabFunc, Func<TPrefab, UniTask> deletePrefabFunc = null)
+        public EntityRefresher(Func<TEntity, UniTask<TPrefab>> createPrefabFunc, Func<TPrefab, UniTask> deletePrefabFunc = null)
         {
 
             _createPrefab = createPrefabFunc;

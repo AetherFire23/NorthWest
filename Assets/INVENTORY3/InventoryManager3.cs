@@ -24,18 +24,19 @@ namespace Assets.INVENTORY3
         [SerializeField] private SlotAndItemsManager _slotManager;
         [SerializeField] private InventoryRefreshGuard _refreshGuard;
 
-        [SerializeField] private ScratchEntityBaseRefresher<ItemInventory, Item> _playerInventoryRefresher;
-        [SerializeField] private ScratchEntityBaseRefresher<ItemInventory, Item> _roomInventoryRefresher;
+        [SerializeField] private EntityRefresher<ItemInventory, Item> _playerInventoryRefresher;
+        [SerializeField] private EntityRefresher<ItemInventory, Item> _roomInventoryRefresher;
 
         public RoomDTO CurrentShownRoom => _gameState.GetRoomById(CurrentRoomInventoryShownId);
-        private GameState _gameState { get; set; }
-        //public ItemInventory TrackedItem { get; set; }
         public Guid CurrentRoomInventoryShownId => _gameState.GetRoomByName(_currentShownRoomName).Id;
-        private string _currentShownRoomName 
-        { 
-            get { return _inventoryObjects.RoomNameText.text; } 
-            set => _inventoryObjects.RoomNameText.text = value; 
+        private string _currentShownRoomName
+        {
+            get { return _inventoryObjects.RoomNameText.text; }
+            set => _inventoryObjects.RoomNameText.text = value;
         }
+        private const int _localPlayerSlotsAmount = 2;
+        private GameState _gameState { get; set; }
+
         public override async UniTask Initialize(GameState gameState)
         {
             _playerInventoryRefresher = new(CreatePlayerItem, OnDeletePlayerItem);
@@ -43,11 +44,9 @@ namespace Assets.INVENTORY3
 
             _gameState = gameState;
             _currentShownRoomName = _gameState.LocalPlayerRoom.Name;
-            await InitializePlayerSlots();
             await InitializeStaticButtons();
-
+            await InitializePlayerSlots();
             await RefreshInventories();
-            // await this.ChangeRoomInventoryAndRefresh(_gameState.LocalPlayerRoom.Name);
             _refreshGuard.IsInitialized = true;
         }
 
@@ -62,16 +61,8 @@ namespace Assets.INVENTORY3
             _refreshGuard.IsRefreshing = false;
         }
 
-        //public async UniTask InitializePlayerSlots()
-        //    => await UniTask.WhenAll(Enumerable.Range(0, 2).Select(_ => _slotManager.CreateEmptyPlayerSlot()));
-
         public async UniTask InitializePlayerSlots()
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                await _slotManager.CreateEmptyPlayerSlot();
-            }
-        }
+            => await UniTask.WhenAll(Enumerable.Range(0, _localPlayerSlotsAmount).Select(_ => _slotManager.CreateEmptyPlayerSlot()));
 
         public async UniTask<ItemInventory> CreateItemInNextPlayerSlot(Item item) //
         {
@@ -101,18 +92,13 @@ namespace Assets.INVENTORY3
 
         public async UniTask<ItemInventory> CreatePlayerItem(Item appearedItem)
         {
-            int playerSlotsCount = _slotManager.GetFreePlayerSlotCount();
-            bool outOfPlayerSlots = playerSlotsCount is 0;
-            if (outOfPlayerSlots) throw new Exception("Player does not have enough inventory slots so validate plz");
+            if (_slotManager.GetFreePlayerSlotCount() is 0) throw new Exception("Player does not have enough inventory slots so validate plz");
 
             var itemInventory = await CreateItemInNextPlayerSlot(appearedItem);
             return itemInventory;
         }
 
-        public async UniTask OnDeletePlayerItem(ItemInventory disappearedItem)
-        {
-            disappearedItem.Slot.DestroyItem();
-        }
+        public async UniTask OnDeletePlayerItem(ItemInventory disappearedItem) => disappearedItem.Slot.DestroyItem();
 
         public async UniTask RefreshRoomItems()
         {
@@ -122,8 +108,8 @@ namespace Assets.INVENTORY3
 
         public async UniTask<ItemInventory> CreateRoomItem(Item appearedItem)
         {
-            var itemInventory = await _slotManager.CreateNewRoomSlotAndCreateNewItem(appearedItem);
-            return itemInventory;
+            var item = await _slotManager.CreateNewRoomSlotAndCreateNewItem(appearedItem);
+            return item;
         }
 
         public async UniTask OnDeleteRoomItem(ItemInventory disappearedItem)
@@ -136,7 +122,6 @@ namespace Assets.INVENTORY3
 
         public async UniTask ChangeRoomInventoryAndRefresh(string otherRoomName) // ca ici puisque ca refresh ca remove
         {
-
             if (_refreshGuard.MustPreventChangingRoom()) return;
             await _refreshGuard.WaitUntilRefreshEndsCoroutine();
 

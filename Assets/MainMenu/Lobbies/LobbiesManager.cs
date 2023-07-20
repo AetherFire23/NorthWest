@@ -17,7 +17,7 @@ namespace Assets.MainMenu.Lobbies
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private RectTransform _lobbiesScrollView;
 
-        private ScratchEntityBaseRefresher<LobbyEntry, LobbyDto> _entityRefresher;
+        private EntityRefresher<LobbyEntry, LobbyDto> _entityRefresher;
         private MainMenuState _state;
         public override async UniTask Initialize(MainMenuState state)
         {

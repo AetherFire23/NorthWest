@@ -20,7 +20,7 @@ namespace Assets.MainMenu.LobbiesAndGames
         [SerializeField] private RectTransform _contentScrollView;
         [SerializeField] private PrefabLoader _prefabLoader;
         [SerializeField] private MainMenuSceneLauncher _mainMenuSceneLauncher;
-        private ScratchEntityBaseRefresher<ActiveGameEntry, GameDto> _activeGameEntries;
+        private EntityRefresher<ActiveGameEntry, GameDto> _activeGameEntries;
 
         private MainMenuState _state;
         private List<GameDto> _gameDtos => _state.UserDto.ActiveGamesForUser;
