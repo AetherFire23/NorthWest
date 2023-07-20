@@ -9,14 +9,12 @@ namespace Assets.Dialogs
     public class DialogManager : MonoBehaviour
     {
         // lets make it a multi-window ?
-        [SerializeField] RectTransform _dialogCanvas;
-        [SerializeField] PrefabLoader _prefabLoader;
+        [SerializeField] private RectTransform _dialogCanvas;
+        [SerializeField] private PrefabLoader _prefabLoader;
 
         List<DialogBase> _dialogs = new List<DialogBase>();
 
-        /// <summary>
-        /// Do not forget to initialize the window after calling this.
-        /// </summary>
+        /// <summary> Do not forget to initialize the window after calling this. </summary>
         public async UniTask<T> CreateDialog<T>() where T : DialogBase
         {
             var dialog = await _prefabLoader.CreateInstanceOfAsync<T>(_dialogCanvas.gameObject);
