@@ -1,4 +1,5 @@
 ﻿using Assets.GameLaunch;
+using Assets.GameLaunch.BaseLauncherScratch;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -77,7 +78,7 @@ namespace Assets.Automation
 
         private static List<FieldInfo> GetNullFields(MonoBehaviour mono)
         {
-            var superAssembly = typeof(IRefreshable).Assembly;
+            var superAssembly = typeof(IStateHolder).Assembly;
 
             var nullFields = mono.GetType()
                 .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)

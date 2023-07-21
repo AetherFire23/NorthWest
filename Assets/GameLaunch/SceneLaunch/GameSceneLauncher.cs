@@ -11,7 +11,6 @@ namespace Assets.GameLaunch.SceneLaunch
     public class GameSceneLauncher : SceneLauncherBase<GameState, GameCalls>
     {
         [SerializeField] private GameSSERefresher _refresher;
-        [SerializeField] private LoginCredentialsMock _loginMock;
         protected override async UniTask BeforeInitializingManagers()
         {
             var persistenceINfo = PersistenceModel.Instance;

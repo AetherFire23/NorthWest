@@ -2593,7 +2593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -555043.5, y: -763359.4}
+  m_AnchoredPosition: {x: -566430.2, y: -779034.4}
   m_SizeDelta: {x: 718, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &146369523
@@ -4144,8 +4144,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 393578935}
   m_HandleRect: {fileID: 393578934}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999658
+  m_Value: 0
+  m_Size: 0.99999654
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7389,7 +7389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00012207031, y: 368.09894}
+  m_AnchoredPosition: {x: -0.00012207031, y: 368.09906}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &355891053
@@ -11612,7 +11612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxDistance: 0
   CameraHeight: 0
-  BaseCameraSpeed: 0
+  BaseCameraSpeed: 3
   ScrollMoveSpeed: 0
   ClampedScrollMax: 0
 --- !u!1 &530996070
@@ -11650,7 +11650,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -4140539, y: -2531621}
+  m_AnchoredPosition: {x: -4155042.5, y: -2540489.8}
   m_SizeDelta: {x: 820, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &530996072

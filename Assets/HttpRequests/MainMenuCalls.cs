@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
+using Shared_Resources.Constants.Mapper;
 using Shared_Resources.Models;
 using Shared_Resources.Models.Requests;
 using System;

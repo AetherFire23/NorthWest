@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Scratch
 {
-    public class ScriptScratch : MonoBehaviour, IStartupBehavior
+    public class ScriptScratch : MonoBehaviour
     {
         [SerializeField] private Transform _dialogCanvast;
         [SerializeField] private TMP_Dropdown _dropDown;

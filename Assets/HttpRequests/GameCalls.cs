@@ -1,10 +1,12 @@
 ﻿using Assets.CHATLOG3;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.Constants.Endpoints;
+using Shared_Resources.Constants.Mapper;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
 using Shared_Resources.Scratches;
 using System;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 namespace Assets.HttpStuff
@@ -25,17 +27,16 @@ namespace Assets.HttpStuff
 
         //ChatController
         // private const string _uriSendInvitationResponse = "https://localhost:7060/TheCrew/SendInvitationResponse"; //require parameter
-
         // private const string _uriAddPrivateChatInvitation = "https://localhost:7060/TheCrew/AddPrivateChatInvitation"; //require parameter
 
 
         public string GetSSEEndpoint(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(SSEEndpoints), endpoint);
         //public string GetChatEndpoint(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(Chat), endpoint);
-        //public string GameEndpoints(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(GameEN), endpoint);
+        public string GetGameEndpoints(string endpoint) => EndpointPathsMapper.GetFullEndpoint(typeof(GameEndpoints), endpoint);
 
         public async UniTask<GameState> GetGameState(Guid playerId, DateTime? lastTimeStamp)
         {
-            var infos = new UriBuilder(_uriGetGameState, ParameterOptions.Required);
+            var infos = new UriBuilder(GameEndpoints.GetFullPath(GameEndpoints.GameState), ParameterOptions.Required);
             infos.AddParameter("playerId", playerId.ToString());
             string nullDateTimeAsString = lastTimeStamp.ToString() ?? ""; // DateTime is nullable
             infos.AddParameter("lastTimeStamp", nullDateTimeAsString);
@@ -48,7 +49,7 @@ namespace Assets.HttpStuff
 
         public async UniTask<ClientCallResult> UpdatePosition(Guid playerId, float x, float y)
         {
-            var infos = new UriBuilder(_updatePositionByPlayerModel, ParameterOptions.Required); // p-t parameoptiers a none ?
+            var infos = new UriBuilder(GameEndpoints.GetFullPath(GameEndpoints.UpdatePlayerPosition), ParameterOptions.Required); // p-t parameoptiers a none ?
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("x", x.ToString());
             infos.AddParameter("y", y.ToString());
@@ -58,7 +59,7 @@ namespace Assets.HttpStuff
 
         public async UniTask<ClientCallResult> TransferItemOwnerShip(Guid targetId, Guid ownerId, Guid itemId, Guid gameId)
         {
-            var infos = new UriBuilder(_uriTransferItem, ParameterOptions.Required);
+            var infos = new UriBuilder(GameEndpoints.GetFullPath(GameEndpoints.TransferItem), ParameterOptions.Required);
             //infos.AddParameter("ownerId", ownerId.ToString());
             infos.AddParameter("targetId", targetId.ToString());
             infos.AddParameter("ownerId", ownerId.ToString());
@@ -70,7 +71,7 @@ namespace Assets.HttpStuff
 
         public UniTask<ClientCallResult> ChangeRoom(Guid playerId, string targetRoomName)
         {
-            var infos = new UriBuilder(_uriChangeRoom, ParameterOptions.Required);
+            var infos = new UriBuilder(GameEndpoints.GetFullPath(GameEndpoints.ChangeRoom), ParameterOptions.Required);
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("targetRoomName", targetRoomName);
             var result = base.PutRequest2(infos);
@@ -79,12 +80,15 @@ namespace Assets.HttpStuff
 
         public async UniTask<ClientCallResult> TryExecuteGameTask(Guid playerId, GameTaskCodes taskCode, TaskParameters parameters)
         {
-            var infos = new UriBuilder(_uriTryExeGameTask, ParameterOptions.BodyAndParameter, parameters);
+            var infos = new UriBuilder(GameEndpoints.GetFullPath(GameEndpoints.ExecuteGameTask), ParameterOptions.BodyAndParameter, parameters);
             infos.AddParameter("playerId", playerId.ToString());
             infos.AddParameter("taskCode", Convert.ToInt32(taskCode).ToString());
             var result = await base.PutRequest2(infos);
             return result;
         }
+
+        // chat messages
+
 
         private const string _uriPutMessage = "https://localhost:7060/Chat/PutNewMessageToServer"; //require parameter 
         public async UniTask<ClientCallResult> PutNewMessageToServer(Guid guid, Guid roomId, string newMessage) // pourrais changer pis Guid du player 
