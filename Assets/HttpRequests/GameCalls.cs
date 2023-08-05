@@ -4,7 +4,6 @@ using Shared_Resources.Constants.Endpoints;
 using Shared_Resources.Constants.Mapper;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
-using Shared_Resources.Scratches;
 using System;
 using UnityEditor.Tilemaps;
 using UnityEngine;

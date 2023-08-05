@@ -5,7 +5,6 @@ using Assets.SSE;
 using Cysharp.Threading.Tasks;
 using Shared_Resources.GameTasks;
 using Shared_Resources.Models;
-using Shared_Resources.Scratches;
 using UnityEngine;
 
 public class TaskBuilder : MonoBehaviour

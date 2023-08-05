@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
+using Shared_Resources.GameTasks;
 using Shared_Resources.Interfaces;
-using Shared_Resources.Scratches;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;

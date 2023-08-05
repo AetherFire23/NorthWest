@@ -26,11 +26,14 @@ namespace Assets.SSE
         public async UniTask OnDataReceived(SSEClientData data)
         {
             var deleg = _enumDelegates.GetValueOrDefault(data.EventType)
-                ?? throw new ArgumentNullException($"Event data not foudn for {data.EventType}");
+                ?? throw new ArgumentNullException($"Event type not foudn for {data.EventType}");
 
             await deleg.Invoke(data);
         }
 
+        // in the SSEREfresher subclass, find all methods that react to event received from SSE CLient
+        // and create a delegate of that method, so that each EVentType can be mapped to the approprirate refresher method.
+        // ie. eventType == EventType.RefreshItems  will be ammped to RefreshItems method.
         public void PopulateEnumDelegates()
         {
             var refresherSubclass = typeof(SSERefresherBase<TREfresher>).Assembly.GetTypes()
